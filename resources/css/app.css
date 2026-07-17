@@ -1,3 +1,10 @@
+/* css import AdminLte */
+@import "admin-lte/dist/css/adminlte.min.css";
+
+
+@import "bootstrap-icons/font/bootstrap-icons.css";
+@import "overlayscrollbars/styles/overlayscrollbars.css";
+
 @import 'tailwindcss';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
