@@ -1,0 +1,106 @@
+        body.login-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: linear-gradient(150deg, #fff 0%, #fddddd 100%);
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .card-outline.card-primary {
+            border: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(176, 0, 32, 0.18);
+        }
+
+        .card-header {
+            background: #d62828;
+            padding: 2rem 1.5rem 1.5rem;
+            border-bottom: 0;
+            text-align: center;
+        }
+
+        .card-header img {
+            max-width: 180px;
+            height: auto;
+
+            padding: 8px;
+        }
+
+        .login-card-body {
+            padding: 2rem 2rem 1.5rem;
+            background: #ffffff;
+        }
+
+        .login-box-msg {
+            color: #7a7a7a;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.4rem;
+            font-size: 0.95rem;
+        }
+
+        .form-floating > .form-control {
+            border-radius: 12px;
+            border: 1px solid #e6b3b3;
+            padding-top: 1.2rem;
+            padding-bottom: 0.7rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-floating > .form-control:focus {
+            border-color: #d62828;
+            box-shadow: 0 0 0 0.2rem rgba(214, 40, 40, 0.2);
+        }
+
+        .form-floating > label {
+            color: #8f8f8f;
+        }
+
+        .input-group-text {
+            background: #fff;
+            color: #d62828;
+            border: 1px solid #e6b3b3;
+            border-left: 0;
+            border-radius: 0 12px 12px 0;
+        }
+
+        .input-group .form-floating {
+            flex: 1;
+        }
+
+        .input-group .form-floating .form-control {
+            border-radius: 12px 0 0 12px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background-color: #d62828;
+            border: 0;
+            border-radius: 999px;
+            padding: 0.8rem 1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: #9c001a;
+            box-shadow: 0 6px 18px rgba(214, 40, 40, 0.25);
+        }
+
+        .text-center {
+            color: #b00020;
+            font-weight: 600;
+        }
+
+        .text-center:hover {
+            color: #8c0018;
+        }
