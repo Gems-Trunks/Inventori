@@ -1,6 +1,19 @@
+// import bootstrap, adminlte, sweetalert, aplinejs,
 import "bootstrap";
 import "admin-lte";
 import "./bootstrap";
+
+import Swal from 'sweetalert2';
+window.Swal = Swal; 
+
+
+import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+
+Alpine.start();
+
+// Theme mode Script 
 
 const storageKey = "lte-theme";
 const root = document.documentElement;

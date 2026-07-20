@@ -11,10 +11,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate(
-            ['nrp' => '2052004'],
+            ['nrp' => '250504'],
             [
                 'nama' => 'bayu',
-                'password' => Hash::make('2052004'),
+                'password' => Hash::make('250504'),
                 'role' => 'admin',
             ]
         );
