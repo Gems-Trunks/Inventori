@@ -1,0 +1,63 @@
+/* ==========================================
+   1. BASE SIDEBAR & BRAND
+   ========================================== */
+.app-sidebar {
+    background-color: #f8f9fa !important;
+} 
+
+.sidebar-brand {
+    background-color: #d62828 !important;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.sidebar-brand .brand-link,
+.sidebar-brand .brand-text {
+    color: #ffffff !important;
+}
+
+/* ==========================================
+   2. LIGHT MODE (DEFAULT)
+   ========================================== */
+/* Style Dasar Link & Text */
+.sidebar-wrapper .nav-link {
+    color: #495057 !important;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+.sidebar-wrapper .nav-link .sidebar-link,
+.sidebar-wrapper .nav-link .nav-icon {
+    color: inherit; /* Ikut warna dari .nav-link */
+    margin-bottom: 0;
+}
+
+/* Hover State */
+.sidebar-wrapper .nav-link:hover {
+    background-color: #d62828 !important;
+    color: #ffffff !important;
+}
+
+/* Active State (Laravel routeIs) */
+.sidebar-wrapper .nav-link.active {
+    background-color: #d62828 !important;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* ==========================================
+   3. DARK MODE (data-bs-theme="dark")
+   ========================================== */
+[data-bs-theme='dark'] .app-sidebar {
+    background-color: #1e2124 !important;
+}
+
+[data-bs-theme='dark'] .sidebar-wrapper .nav-link {
+    color: #a0a5ab !important;
+}
+
+/* Hover & Active tetap menggunakan aksen merah di Dark Mode */
+[data-bs-theme='dark'] .sidebar-wrapper .nav-link:hover,
+[data-bs-theme='dark'] .sidebar-wrapper .nav-link.active {
+    background-color: #d62828 !important;
+    color: #ffffff !important;
+}  

@@ -1,9 +1,16 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
+
+use App\Http\Controllers\BukuTamuController;
+use App\Http\Controllers\DashboardController;
+
+// Auth Controller
 use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Auth;
-// Auth Controller
+use App\Http\Controllers\Auth\AuthController;
+
+
+
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -31,9 +38,13 @@ Route::middleware('guest')->group(function () {
 
 // Route buat aplikasi
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    //Route buku tamu
+    Route::controller(BukuTamuController::class)->prefix('/tamu')->name('tamu.')->group( function() {
+        Route::get('/', 'index')->name('index');
+    });
+
 
 
     //user Route

@@ -9,7 +9,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editUser" method="POST">
+                    <form id="editUser" action="{{ route('users.update', auth()->user()->id) }}" method="POST">
                      @csrf
                      @method('PUT')
                         <div class="mb-3">

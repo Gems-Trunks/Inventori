@@ -9,13 +9,21 @@
     <link href="{{ asset('asset/css/login_costum.css') }}" rel="stylesheet">
 </head>
 
+@if ($errors->any())
+    <div class="alert alert-danger py-2 mb-3">
+        {{ $errors->first() }}
+    </div>
+@else
+@endif
+
 <body class="login-page bg-body-secondary">
     <div class="login-box">
         <div class="card card-outline card-primary">
             <div class="card-header d-flex justify-content-center">
                 <a href="#" class="" style="text-decoration: none;">
                     <img src="{{ asset('asset/images/logos/logo_ppa.png') }}" alt="Logo PT PPA">
-                    <p class="text-light h3" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">PPA</p>
+                    <p class="text-light h3"
+                        style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">PPA</p>
                 </a>
             </div>
 
@@ -26,8 +34,10 @@
                     @csrf
                     <div class="input-group mb-2">
                         <div class="form-floating">
-                            <input id="loginNRP" name="nrp" type="text" class="form-control" placeholder="NRP" autocomplete="username" />
+                            <input id="loginNRP" value="{{ old('nrp') }}" name="nrp" type="text"
+                                class="form-control" placeholder="NRP" autocomplete="username" />
                             <label for="loginNRP">NRP</label>
+
                         </div>
                         <div class="input-group-text">
                             <span class="bi bi-person-vcard-fill"></span>
@@ -36,8 +46,10 @@
 
                     <div class="input-group mb-3">
                         <div class="form-floating">
-                            <input id="loginPassword" name="password" type="password" class="form-control" placeholder="Password" autocomplete="current-password" />
+                            <input id="loginPassword" name="password" type="password" class="form-control"
+                                placeholder="Password" autocomplete="current-password" />
                             <label for="loginPassword">Password</label>
+
                         </div>
                         <div class="input-group-text">
                             <span class="bi bi-lock-fill"></span>
@@ -60,4 +72,5 @@
         </div>
     </div>
 </body>
+
 </html>
