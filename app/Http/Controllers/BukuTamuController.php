@@ -2,9 +2,82 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BukuTamuExport;
+use App\Models\BukuTamuModel;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BukuTamuController extends Controller
 {
     //
+    public function index(Request $request)
+    {
+        $query = BukuTamuModel::query();
+        if($request->filled('search')){
+            $query->where('nama', 'like', '%' . $request->search . '%');
+        }
+
+        $dataTamu = $query->paginate(10)->withQueryString();
+
+        return view('buku_tamu.index', compact('dataTamu'));
+    }
+
+    public function create()
+    {
+        return view('buku_tamu.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'no_telp' => 'required|string|max:20',
+            'nrp' => 'nullable|string|max:50',
+            'instansi' => 'required|string|max:255',
+            'keperluan' => 'required|string',
+        ]);
+
+        BukuTamuModel::create($validatedData);
+
+        return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil ditambahkan!');
+    }
+
+    public function edit(string $no)
+    {
+        $tamu = BukuTamuModel::findOrFail($no);
+
+        return view('buku_tamu.edit', compact('tamu'));
+    }
+
+    
+    public function update(Request $request, string $no)
+    {
+        $validatedData = $request->validate([
+            'nama' => 'required|string|max:255',
+            'no_telp' => 'required|string|max:20',
+            'nrp' => 'nullable|string|max:50',
+            'instansi' => 'required|string|max:255',
+            'keperluan' => 'required|string',
+        ]);
+
+        $tamu = BukuTamuModel::findOrFail($no);
+
+        $tamu->update($validatedData);
+
+        return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil diperbarui!');
+    }
+
+    public function destroy(string $no)
+    {
+        $tamu = BukuTamuModel::findOrFail($no);
+
+        $tamu->delete();
+
+        return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil dihapus!');
+    }
+
+    public function export() {
+        return excel::download(new BukuTamuExport, 'buku_tamu.xlsx');
+    }
+
 }

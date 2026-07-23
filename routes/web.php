@@ -43,6 +43,13 @@ Route::middleware('auth')->group(function () {
     //Route buku tamu
     Route::controller(BukuTamuController::class)->prefix('/tamu')->name('tamu.')->group( function() {
         Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/store/', 'store')->name('store');
+        Route::get('/edit/{no}', 'edit')->name('edit');
+        Route::put('/update/{no}', 'update')->name('update');
+        Route::delete('/destroy/{no}', 'destroy')->name('destroy');
+        Route::get('/export', 'export')->name('export');
+
     });
 
 

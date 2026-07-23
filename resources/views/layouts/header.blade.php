@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0/dist/css/adminlte.min.css" />
 
     <link rel="stylesheet" href="{{ asset('asset/css/sidebar-costum.css') }}">
+    <link rel="stylesheet" href="{{ asset('asset/css/element-costum.css') }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -38,7 +39,7 @@
     {{-- theme Mode --}}
 </head>
 
-<body>
+<body class="sidebar-mini">
     <div class="app-wrapper">
 
         <!-- Header -->
@@ -65,7 +66,7 @@
                                 <p class="bold text-body">Halo,
                                     {{ Auth::user()->nama }}</p>
                             </li>
-                            <li class="d-flex justify-content-center text-center">
+                            <li class="d-flex justify-content-center text-center mb-3 btn btn-outline-warning btn-no-hover">
                                 @auth
                                     <button type="button" data-bs-toggle="modal" data-bs-target="#editUserModal"
                                         data-bs-id="{{ auth()->user()->id }}" data-bs-nama="{{ Auth::user()->nama }}"
@@ -76,7 +77,7 @@
                                 @endauth
 
                             </li>
-                            <li class="d-flex justify-content-center">
+                            <li class="d-flex justify-content-center btn btn-outline-danger btn-no-hover">
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-inline">
                                     @csrf
                                     <button class="text-danger outline-danger" type="button" onclick="logoutAlert()"><i

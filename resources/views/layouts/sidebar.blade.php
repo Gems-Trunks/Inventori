@@ -1,20 +1,23 @@
 <aside class="app-sidebar shadow" data-bs-theme="dark">
     <div class="sidebar-brand">
         <a href="#" class="brand-link">
-            <span class="brand-text fw-light">Inventori</span>
+            <img src="{{ asset('asset/images/logos/logo_ppa.png') }}" alt="AdminLTE Logo" class="brand-image img-white-border opacity-100 shadow" />
+            <span class="brand-text fw-bold">PUTRA PERKASA ABADI</span>
         </a>
     </div>
     <div class="sidebar-wrapper">
         <nav class="mt-2">
             <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
                 <li class="nav-item ">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard') }}"
+                        class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-speedometer"></i>
                         <p class="sidebar-link">Dashboard</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ request()->routeIs('bukuTamu') ? 'active' : '' }}">
+                    <a href="{{ route('tamu.index') }}"
+                        class="nav-link {{ request()->routeIs('tamu.*') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-book"></i>
                         <p class="sidebar-link">Buku Tamu</p>
                     </a>
