@@ -23,17 +23,52 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ request()->routeIs('inventaris') ? 'active' : '' }}">
+                    <a href="{{ route('inventaris.index') }}" class="nav-link {{ request()->routeIs('inventaris.*') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-box-seam"></i>
                         <p class="sidebar-link">Inventaris</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link ">
-                        <i class="nav-icon bi bi-file-earmark-text  "></i>
-                        <p class="sidebar-link">Inspeksi</p>
+                <a href="#" class="nav-link">
+                  <i class="nav-icon bi bi-speedometer"></i>
+                  <p>
+                    Inspeksi
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="../index.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Inspeksi Stavolt</p>
                     </a>
-                </li>
+                  </li>
+                  <li class="nav-item">
+                    <a href="../index2.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Inspeksi UPS</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="../index3.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Inspeksi Monitor/Tv</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="../index3.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Inspeksi CCTV</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="../index3.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Monitor Tv</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link {{ request()->routeIs('config') ? 'active' : '' }}">
                         <i class="nav-icon bi bi-gear"></i>

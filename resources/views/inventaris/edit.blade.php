@@ -1,0 +1,96 @@
+@extends('layouts.app')
+@section('judul', 'Edit Inventaris')
+@section('subjudul', 'Form Edit Data Inventaris')
+
+@section('konten')
+    <form action="{{ route('inventaris.update', $inventaris->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="card-body">
+            {{-- Nama --}}
+            <div class="mb-3">
+                <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama"
+                    name="nama" value="{{ old('nama', $inventaris->nama) }}" placeholder="Masukkan nama peminjam" required>
+                @error('nama')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- NRP --}}
+            <div class="mb-3">
+                <label for="nrp" class="form-label">NRP <span class="text-danger">*</span></label>
+                <input type="text" class="form-control @error('nrp') is-invalid @enderror" id="nrp"
+                    name="nrp" value="{{ old('nrp', $inventaris->nrp) }}" placeholder="Masukkan NRP" required>
+                @error('nrp')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Nama Perangkat --}}
+            <div class="mb-3">
+                <label for="nama_perangkat" class="form-label">Nama Perangkat <span class="text-danger">*</span></label>
+                <input type="text" class="form-control @error('nama_perangkat') is-invalid @enderror" id="nama_perangkat"
+                    name="nama_perangkat" value="{{ old('nama_perangkat', $inventaris->nama_perangkat) }}" placeholder="Contoh: Laptop / Monitor" required>
+                @error('nama_perangkat')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- No Asset --}}
+            <div class="mb-3">
+                <label for="no_asset" class="form-label">No. Asset <span class="text-danger">*</span></label>
+                <input type="text" class="form-control @error('no_asset') is-invalid @enderror" id="no_asset"
+                    name="no_asset" value="{{ old('no_asset', $inventaris->no_asset) }}" placeholder="Masukkan nomor asset" required>
+                @error('no_asset')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Status Peminjaman --}}
+            <div class="mb-3">
+                <label for="status_peminjaman" class="form-label">Status Peminjaman <span class="text-danger">*</span></label>
+                <select class="form-select @error('status_peminjaman') is-invalid @enderror" id="status_peminjaman" name="status_peminjaman" required>
+                    <option value="" disabled>-- Pilih Status --</option>
+                    <option value="Dipinjam" {{ old('status_peminjaman', $inventaris->status_peminjaman) == 'Dipinjam' ? 'selected' : '' }}>Dipinjam</option>
+                    <option value="Dikembalikan" {{ old('status_peminjaman', $inventaris->status_peminjaman) == 'Dikembalikan' ? 'selected' : '' }}>Dikembalikan</option>
+                </select>
+                @error('status_peminjaman')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Tanggal Peminjaman --}}
+            <div class="mb-3">
+                <label for="tanggal_peminjaman" class="form-label">Tanggal Peminjaman <span class="text-danger">*</span></label>
+                <input type="date" class="form-control @error('tanggal_peminjaman') is-invalid @enderror" id="tanggal_peminjaman"
+                    name="tanggal_peminjaman" value="{{ old('tanggal_peminjaman', $inventaris->tanggal_peminjaman) }}" required>
+                @error('tanggal_peminjaman')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+
+            {{-- Tanggal Pengembalian --}}
+            <div class="mb-3">
+                <label for="tanggal_pengembalian" class="form-label">Tanggal Pengembalian</label>
+                <input type="date" class="form-control @error('tanggal_pengembalian') is-invalid @enderror" id="tanggal_pengembalian"
+                    name="tanggal_pengembalian" value="{{ old('tanggal_pengembalian', $inventaris->tanggal_pengembalian) }}">
+                @error('tanggal_pengembalian')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <div class="card-footer d-flex gap-2">
+            <a href="{{ route('inventaris.index') }}" class="btn btn-sm btn-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Kembali
+            </a>
+            <button type="submit" class="btn btn-sm btn-warning text-white">
+                <i class="bi bi-pencil-square me-1"></i> Update Data
+            </button>
+            <a href="{{ route('inventaris.index') }}" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-x-circle me-1"></i> Batal
+            </a>
+        </div>
+    </form>
+@endsection

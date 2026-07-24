@@ -6,14 +6,17 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class modalProfile extends Component
+class modal_status_change extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct()
+
+    public string $action;
+    public function __construct(string $action, )
     {
         //
+        $this->action = $action;
     }
 
     /**
@@ -21,6 +24,6 @@ class modalProfile extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.modal-profile');
+        return view('components.modal-status-change');
     }
 }

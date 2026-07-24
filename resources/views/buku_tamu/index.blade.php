@@ -3,12 +3,21 @@
     @section('subjudul', 'Index Daftar Tamu')
 
     @section('konten')
-        <div class="card-header d-flex justify-content-end align-items-center">
-            <div class="card-tools d-flex align-items-center">
-                <x-data-filter :action="route('tamu.index')" placeholder="Cari data Tamu"></x-data-filter>
-                <div class="btn-group btn-group-sm ml-2">
-                    <a class="btn btn-outline-success" href="{{ route('tamu.create') }}"><i class="bi bi-plus"></i>Tambah
-                        Tamu</a>
+        <div class="card-header">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+                <div class="card bg-info-subtle mb-0" style="width: 12rem;">
+                    <div class="card-body p-2 text-center">
+                        <h6 class="card-title mb-1 small fw-bold text-uppercase">Total Tamu</h6>
+                        <h4 class="card-text fw-bold mb-0">{{ $dataTamu->count() }}</h4>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+                    <x-data-search :action="route('tamu.index')" placeholder="Cari data Tamu"></x-data-search>
+                    <a class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"
+                        href="{{ route('tamu.create') }}">
+                        <i class="bi bi-plus-lg"></i> Tambah Tamu
+                    </a>
                 </div>
             </div>
         </div>
@@ -58,11 +67,12 @@
                                         title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <form action="{{ route('tamu.destroy', $tamu->no) }}" id="form-delete-{{ $tamu->no }}" method="POST" class="d-inline"
-                                        >
+                                    <form action="{{ route('tamu.destroy', $tamu->no) }}"
+                                        id="form-delete-{{ $tamu->no }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" onclick="deleteConfirm('form-delete-{{ $tamu->no }}')"  class="btn btn-sm btn-danger" title="Hapus">
+                                        <button type="button" onclick="deleteConfirm('form-delete-{{ $tamu->no }}')"
+                                            class="btn btn-sm btn-danger" title="Hapus">
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
@@ -86,5 +96,5 @@
             &mdash; vanilla JS, no jQuery required. --}}
         </div>
 
-    
+
     @endsection

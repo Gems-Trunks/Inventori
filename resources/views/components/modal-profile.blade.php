@@ -2,10 +2,10 @@
 <div>
     <!-- When there is no desire, all things are at peace. - Laozi -->
         <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Profile</h1>
+                <div class="modal-header bg-warning-subtle">
+                    <h1 class="modal-title fs-5 " id="exampleModalLabel">Edit Profile</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

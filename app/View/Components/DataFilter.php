@@ -12,9 +12,9 @@ class DataFilter extends Component
      * Create a new component instance.
      */
 
-    public $action;
-    public $placeholder;
-    public $value;
+    public string $action;
+    public string $placeholder;
+    public string $value;
     public function __construct(string $action, string $placeholder = 'Cari data...', ?string $value = null)
     {
         //
@@ -28,6 +28,6 @@ class DataFilter extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.data-filter');
+        return view('components.data-search');
     }
 }

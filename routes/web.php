@@ -8,9 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
-
-
-
+use App\Http\Controllers\InventarisController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -50,6 +48,18 @@ Route::middleware('auth')->group(function () {
         Route::delete('/destroy/{no}', 'destroy')->name('destroy');
         Route::get('/export', 'export')->name('export');
 
+    });
+
+    //Route Inventaris 
+    Route::controller(InventarisController::class)->prefix('/inventaris')->name('inventaris.')->group( function() {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/store/', 'store')->name('store');
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::put('/update/{id}', 'update')->name('update');
+        Route::delete('/destroy/{id}', 'destroy')->name('destroy');
+        Route::get('/export', 'export')->name('export');
+        Route::put('/return/{id}', 'returnStatus')->name('returnStatus');
     });
 
 

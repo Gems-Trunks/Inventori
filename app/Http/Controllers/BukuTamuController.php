@@ -13,8 +13,14 @@ class BukuTamuController extends Controller
     public function index(Request $request)
     {
         $query = BukuTamuModel::query();
-        if($request->filled('search')){
-            $query->where('nama', 'like', '%' . $request->search . '%');
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', '%'.$search.'%')
+                    ->orWhere('no_telp', 'like', '%'.$search.'%')
+                    ->orWhere('instansi', 'like', '%'.$search.'%');
+            });
         }
 
         $dataTamu = $query->paginate(10)->withQueryString();
@@ -49,7 +55,6 @@ class BukuTamuController extends Controller
         return view('buku_tamu.edit', compact('tamu'));
     }
 
-    
     public function update(Request $request, string $no)
     {
         $validatedData = $request->validate([
@@ -76,8 +81,8 @@ class BukuTamuController extends Controller
         return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil dihapus!');
     }
 
-    public function export() {
-        return excel::download(new BukuTamuExport, 'buku_tamu.xlsx');
+    public function export()
+    {
+        return Excel::download(new BukuTamuExport, 'buku_tamu.xlsx');
     }
-
 }
