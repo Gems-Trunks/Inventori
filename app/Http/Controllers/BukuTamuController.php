@@ -23,7 +23,7 @@ class BukuTamuController extends Controller
             });
         }
 
-        $dataTamu = $query->paginate(10)->withQueryString();
+        $dataTamu = $query->latest()->paginate(10)->withQueryString();
 
         return view('buku_tamu.index', compact('dataTamu'));
     }

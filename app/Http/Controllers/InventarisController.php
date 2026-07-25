@@ -29,7 +29,7 @@ class InventarisController extends Controller
             });
         }
 
-        $dataInventaris = $query->paginate(10)->withQueryString();
+        $dataInventaris = $query->latest('DESC')->paginate(10)->withQueryString();
 
         $totalBelumDikembalikan = InventarisModel::where('status_peminjaman', 'Belum Dikembalikan', '', '')->count();
         $totalDikembalikan = InventarisModel::where('status_peminjaman', 'Dikembalikan', '', '')->count();

@@ -104,3 +104,7 @@
         .text-center:hover {
             color: #8c0018;
         }
+
+        .form-control, .form-control:focus{
+            background-color: #fff;
+        }

@@ -1,15 +1,24 @@
 <?php
 
 
+
+use Illuminate\Support\Facades\Route;
+
+
+// inspeksi
+
+use App\Http\Controllers\inspeksi\UpsController;
+use App\Http\Controllers\inspeksi\StavoltController;
+
 use App\Http\Controllers\BukuTamuController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InventarisController;
+
 
 // Auth Controller
 use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\InventarisController;
-use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
 //     return view('dashboard');
@@ -28,7 +37,6 @@ Route::get('/', function () {
 });
 
 // Auntetikasi
-
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'authenticate']);
@@ -63,11 +71,35 @@ Route::middleware('auth')->group(function () {
     });
 
 
+    // Route Inspeksi
+    // Route Stavolt
+    Route::controller(StavoltController::class)
+        ->prefix('/inspeksi/stavolt')
+        ->name('inspeksi.stavolt.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/{stavolt}/edit', 'edit')->name('edit');
+            Route::put('/{stavolt}', 'update')->name('update');
+            Route::delete('/{stavolt}', 'destroy')->name('destroy');
+        });
+
+    // Route UPS
+     Route::controller(UpsController::class)
+        ->prefix('/inspeksi/ups')
+        ->name('inspeksi.ups.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/{ups}/edit', 'edit')->name('edit');
+            Route::put('/{ups}', 'update')->name('update');
+            Route::delete('/{ups}', 'destroy')->name('destroy');
+        });
 
     //user Route
     Route::put('/users/{user}', [ProfileController::class, 'update'])->name('users.update');
-
-
 
     // Logout Route
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
