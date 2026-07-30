@@ -66,7 +66,7 @@ CREATE TABLE `cache_locks` (
 
 --
 -- Table structure for table `failed_jobs`
---
+-
 
 CREATE TABLE `failed_jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,

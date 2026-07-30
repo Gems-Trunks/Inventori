@@ -3,11 +3,13 @@
    ========================================== */
 .app-sidebar {
     background-color: #f8f9fa !important;
-} 
+    border-radius: 10px 10px 10px 10px !important;
+    margin: 0.4rem 0rem 0.4rem 0.4rem;
+}
 
 .sidebar-brand {
     background-color: #d62828 !important;
-    border-radius: 10px 10px 0px 0px;
+    border-radius: 10px 10px 0px 0px !important;
 }
 
 .sidebar-brand .brand-link,
@@ -47,21 +49,24 @@
 /* ==========================================
    3. DARK MODE (data-bs-theme="dark")
    ========================================== */
-[data-bs-theme='dark'] .app-sidebar {
+[data-bs-theme="dark"] .app-sidebar {
     background-color: #1e2124 !important;
 }
 
-[data-bs-theme='dark'] .sidebar-wrapper .nav-link {
+[data-bs-theme="dark"] .sidebar-wrapper .nav-link {
     color: #a0a5ab !important;
 }
 
 /* Hover & Active tetap menggunakan aksen merah di Dark Mode */
-[data-bs-theme='dark'] .sidebar-wrapper .nav-link:hover,
-[data-bs-theme='dark'] .sidebar-wrapper .nav-link.active {
+[data-bs-theme="dark"] .sidebar-wrapper .nav-link:hover,
+[data-bs-theme="dark"] .sidebar-wrapper .nav-link.active {
     background-color: #d62828 !important;
     color: #ffffff !important;
-}  
+}
 
 .brand-text {
     font-size: medium;
 }
+
+
+

@@ -98,7 +98,7 @@
                     @empty
                         <tr>
                             <td colspan="9" class="text-center text-muted py-3">
-                                Belum ada data tamu.
+                                Belum ada data Inventaris
                             </td>
                         </tr>
                     @endforelse

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\inspeksi\UpsController;
 use App\Http\Controllers\inspeksi\StavoltController;
+use App\Http\Controllers\inspeksi\MonitorController;
+use App\Http\Controllers\inspeksi\ProyektorController;
 
 use App\Http\Controllers\BukuTamuController;
 use App\Http\Controllers\DashboardController;
@@ -86,7 +88,7 @@ Route::middleware('auth')->group(function () {
         });
 
     // Route UPS
-     Route::controller(UpsController::class)
+    Route::controller(UpsController::class)
         ->prefix('/inspeksi/ups')
         ->name('inspeksi.ups.')
         ->group(function () {
@@ -96,6 +98,32 @@ Route::middleware('auth')->group(function () {
             Route::get('/{ups}/edit', 'edit')->name('edit');
             Route::put('/{ups}', 'update')->name('update');
             Route::delete('/{ups}', 'destroy')->name('destroy');
+        });
+
+    // Route Monitor
+    Route::controller(MonitorController::class)
+        ->prefix('/inspeksi/monitor')
+        ->name('inspeksi.monitor.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/{monitor}/edit', 'edit')->name('edit');
+            Route::put('/{monitor}', 'update')->name('update');
+            Route::delete('/{monitor}', 'destroy')->name('destroy');
+        });
+        
+    // Route Proyektor
+    Route::controller(ProyektorController::class)
+        ->prefix('/inspeksi/proyektor')
+        ->name('inspeksi.proyektor.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/{proyektor}/edit', 'edit')->name('edit');
+            Route::put('/{proyektor}', 'update')->name('update');
+            Route::delete('/{proyektor}', 'destroy')->name('destroy');
         });
 
     //user Route

@@ -12,7 +12,7 @@
         'merek' => ['Merek', 'Contoh: Matsunaga'],
         'type' => ['Tipe / Model', 'Masukkan tipe/model'],
         'sn' => ['Serial Number (SN)', 'Masukkan serial number'],
-        'departemen' => ['Departemen', 'Contoh: IT'],
+        'departemen' => ['Departemen', 'Contoh: ICT'],
         'lokasi' => ['Lokasi', 'Contoh: Ruang Server'],
     ];
 @endphp

@@ -1,15 +1,31 @@
-
 /* btn no hover */
-.btn-no-hover:hover, 
+.btn-no-hover:hover,
 .btn-no-hover:focus {
-  background-color: var(--bs-btn-bg) !important;
-  color: var(--bs-btn-color) !important;
-  border-color: var(--bs-btn-border-color) !important;
-  box-shadow: none !important;
+    background-color: var(--bs-btn-bg) !important;
+    color: var(--bs-btn-color) !important;
+    border-color: var(--bs-btn-border-color) !important;
+    box-shadow: none !important;
 }
 
-
 .img-white-border {
-  border:2px solid white;
-  border-radius: 50%;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+.bg-primary-red {
+    background: #f20000;
+    background: linear-gradient(
+        348deg,
+        rgba(242, 0, 0, 0.08) 0%,
+        rgba(255, 255, 255, 0.91) 100%
+    );
+}
+
+[data-bs-theme="dark"] .bg-primary-red {
+    background: #121212;
+    background: linear-gradient(
+        348deg,
+        rgba(242, 0, 0, 0.15) 0%,
+        rgba(18, 18, 18, 0.95) 100%
+    );
 }

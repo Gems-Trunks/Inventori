@@ -8,7 +8,7 @@
             <span class="input-group-text">
                 <i class="bi bi-search" aria-hidden="true"></i>
                 </span>
-            <input id="table-filter" type="search" name="searchw" class="form-control" placeholder="{{ $placeholder }}"
+            <input id="table-filter" type="search" name="search" class="form-control" placeholder="{{ $placeholder }}"
                     aria-label="Filter rows" value="{{ $value }}"/>
             <button class="btn btn-outline-primary" type="submit">
                 Cari

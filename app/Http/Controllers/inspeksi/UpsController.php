@@ -8,9 +8,23 @@ use Illuminate\Http\Request;
 
 class UpsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $ups = UpsModel::latest()->paginate(15);
+        $query = UpsModel::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                $q->where('nomor_aset', 'like', '%' . $search . '%')
+                  ->orWhere('casing', 'like', '%' . $search . '%')
+                  ->orWhere('merek', 'like', '%' . $search . '%')
+                  ->orWhere('type', 'like', '%' . $search . '%')
+                  ->orWhere('sn', 'like', '%' . $search . '%');
+            });
+        }
+
+        $ups = $query->latest()->paginate(15)->withQueryString();
 
 
         return view('Inspeksi.ups.index', compact('ups'));

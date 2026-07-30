@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models\inspeksi;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class MonitorModel extends Model
+{
+    use HasFactory;
+
+    protected $table = 'inspeksi_monitor';
+
+    protected $fillable = [
+        'nomor_aset', 'merek', 'type', 'sn', 'departemen', 'lokasi',
+        'tanggal_inspeksi', 'keterangan', 'tampilan_layer', 'kabel_power',
+        'bracket_dudukan', 'kebersihan', 'stop_kontak',
+        'tindakan_tampilan_layer', 'tindakan_kabel_power',
+        'tindakan_bracket_dudukan', 'tindakan_kebersihan',
+        'tindakan_stop_kontak', 'inspektor', 'jabatan_inspektor',
+        'diketahui_oleh',
+    ];
+}
