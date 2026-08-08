@@ -10,7 +10,7 @@
                 <x-counter-badge title='Total Barang Dikembalikan' bgColor="bg-success-subtle" :counter="$totalDikembalikan"></x-counter-badge>
               
 
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex flex-column flex-sm-row align-items-end align-items-sm-center gap-2">
                     <x-data-search :action="route('inventaris.index')" placeholder="Cari data barang"></x-data-search>
                     <a class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"
                         href="{{ route('inventaris.create') }}">

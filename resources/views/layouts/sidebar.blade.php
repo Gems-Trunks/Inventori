@@ -93,6 +93,12 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="{{ route('karyawan.index') }}" class="nav-link {{ request()->routeIs('karyawan.*') ? 'active' : '' }}">
+                            <i class="bi bi-person-badge"></i>
+                            <p class="sidebar-link">Data Karyawan</p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </div>

@@ -12,7 +12,8 @@
                     </div>
                 </div>
 
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex flex-column flex-sm-row align-items-end align-items-sm-center gap-2">
+
                     <x-data-search :action="route('tamu.index')" placeholder="Cari data Tamu"></x-data-search>
                     <a class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"
                         href="{{ route('tamu.create') }}">

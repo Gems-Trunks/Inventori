@@ -8,8 +8,22 @@ use Illuminate\Http\Request;
 
 class ProyektorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = ProyektorModel::query();    
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', '%'.$search.'%')
+                ->orWhere('nrp', 'like', '%'.$search.'%')
+                    ->orWhere('nama_perangkat', 'like', '%'.$search.'%')
+                    ->orWhere('no_asset', 'like', '%'.$search.'%')
+                    ->orWhere('status_peminjaman', 'like', '%'.$search.'%');
+            });
+        }
+                    
         $proyektors = ProyektorModel::latest()->paginate(15);
 
         return view('inspeksi.proyektor.index', compact('proyektors'));

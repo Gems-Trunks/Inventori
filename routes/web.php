@@ -21,6 +21,8 @@ use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\inspeksi\Ss6Controller;
+use App\Http\Controllers\KaryawanController;
 
 // Route::get('/', function () {
 //     return view('dashboard');
@@ -32,7 +34,7 @@ Route::get('/', function () {
             return redirect()->route('dashboard');
         }
 
-        return redirect()->route('security.dashboard');
+        // return redirect()->route('security.dashboard');
     }
 
     return redirect()->route('login');
@@ -64,13 +66,24 @@ Route::middleware('auth')->group(function () {
     Route::controller(InventarisController::class)->prefix('/inventaris')->name('inventaris.')->group( function() {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
-        Route::post('/store/', 'store')->name('store');
+        Route::post('/store', 'store')->name('store');
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::put('/update/{id}', 'update')->name('update');
         Route::delete('/destroy/{id}', 'destroy')->name('destroy');
         Route::get('/export', 'export')->name('export');
         Route::put('/return/{id}', 'returnStatus')->name('returnStatus');
     });
+
+    //Route Karyawan
+    Route::controller(KaryawanController::class)->prefix('/karyawan')->name('karyawan.')->group( function() {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/{karyawan}/edit', 'edit')->name('edit');
+        Route::put('/{karyawan}/update', 'update')->name('update');
+        Route::delete('/{karyawan}/destroy', 'destory')->name('destroy');
+    });
+
 
 
     // Route Inspeksi
@@ -126,6 +139,15 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{proyektor}', 'destroy')->name('destroy');
         });
 
+    // Route SS6
+    Route::controller(Ss6Controller::class)
+        ->prefix('/inspeksi/ss6')
+        ->name('inspeksi.ss6.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+        });
+
+    
     //user Route
     Route::put('/users/{user}', [ProfileController::class, 'update'])->name('users.update');
 

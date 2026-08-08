@@ -11,8 +11,12 @@
             href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0/dist/css/adminlte.min.css" />
 
+        <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@latest/pace-theme-default.min.css">
+
         <link rel="stylesheet" href="{{ asset('asset/css/sidebar-costum.css') }}">
-        <link rel="stylesheet" href="{{ asset('asset/css/element-costum.css') }}">
+        <link rel="stylesheet" href="{{ asset('asset/css/sidebar-costum.css') }}">
+        <link rel="stylesheet" href="{{ asset('asset/css/minimal.css') }}">
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -56,35 +60,47 @@
 
                     {{-- profile drop down --}}
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item dropdown dropdown-center">
-                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-circle text-lg"></i>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-person-circle fs-5"></i>
+                                <span class="d-none d-md-inline">{{ Auth::user()->nama }}</span>
                             </a>
 
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li class="d-flex justify-content-center text-center">
-                                    <p class="bold text-body">Halo,
-                                        {{ Auth::user()->nama }}
-                                    </p>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 p-2"
+                                style="min-width: 200px;">
+                                <!-- Header User Info -->
+                                <li class="px-3 py-2 text-center">
+                                    <span class="text-muted small d-block">Halo,</span>
+                                    <strong class=" fs-6">{{ Auth::user()->nama }}</strong>
                                 </li>
-                                <li
-                                    class="d-flex justify-content-center text-center mb-3 btn btn-outline-warning btn-no-hover">
-                                    @auth
-                                        <button type="button" data-bs-toggle="modal" data-bs-target="#editUserModal"
+
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+
+                                <!-- Action Buttons -->
+                                @auth
+                                    <li>
+                                        <button type="button"
+                                            class="dropdown-item d-flex align-items-center gap-2 rounded text-warning py-2 mb-1"
+                                            data-bs-toggle="modal" data-bs-target="#editUserModal"
                                             data-bs-id="{{ auth()->user()->id }}" data-bs-nama="{{ Auth::user()->nama }}"
                                             data-bs-nrp="{{ auth()->user()->nrp }}"
-                                            data-bs-password="{{ auth()->user()->password }}"
-                                            data-bs-url="{{ route('users.update', auth()->user()->id) }}"
-                                            class="text-warning outline-warning" href="#">Edit Profil</button>
-                                    @endauth
+                                            data-bs-url="{{ route('users.update', auth()->user()->id) }}">
+                                            <i class="bi bi-pencil-square"></i> Edit Profil
+                                        </button>
+                                    </li>
+                                @endauth
 
-                                </li>
-                                <li class="d-flex justify-content-center btn btn-outline-danger btn-no-hover">
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                        class="d-inline">
+                                <li>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="m-0">
                                         @csrf
-                                        <button class="text-danger outline-danger" type="button"
-                                            onclick="logoutAlert()"><i class="bi bi-power"></i>Log Out</button>
+                                        <button type="button"
+                                            class="dropdown-item d-flex align-items-center gap-2 rounded text-danger py-2"
+                                            onclick="logoutAlert()">
+                                            <i class="bi bi-power"></i> Log Out
+                                        </button>
                                     </form>
                                 </li>
                             </ul>

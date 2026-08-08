@@ -40,7 +40,7 @@
 @endif
 
 {{-- sidebar wrapper supaya gak collapse --}}
-<script>
+{{-- <script>
     const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
     const Default = {
         scrollbarTheme: 'os-theme-light',
@@ -67,7 +67,7 @@
             });
         }
     });
-</script>
+</script> --}}
 
 </body>
 

@@ -24,6 +24,8 @@ class ProfileController extends Controller
         unset($validated['password']);
     }
 
+    
+
     $user->update($validated);
 
     return redirect()->back()->with('success', 'Profile berhasil diperbaharui!');
