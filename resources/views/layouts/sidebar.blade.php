@@ -82,6 +82,12 @@
                                     <p>Inspeksi Proyektor</p>
                                 </a>
                             </li>
+                            <li class="nav-items">
+                                <a href="{{ route('inspeksi.ss6.index') }}" class="nav-link {{ request()->routeIs('inspeksi.ss6.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Inspeksi SS6</p>
+                                </a>
+                                </li>
                         </ul>
                     </li>
 

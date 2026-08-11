@@ -22,6 +22,7 @@ class User extends Authenticatable
         'nrp',
         'role',
         'password',
+        'jabatan',
     ];
 
     /**
@@ -46,4 +47,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
 }
