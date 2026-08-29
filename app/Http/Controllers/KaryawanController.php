@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\KaryawanModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class KaryawanController extends Controller
@@ -49,7 +51,16 @@ class KaryawanController extends Controller
 
             $data['qr_code'] = $teksQr;
 
+            
             KaryawanModel::create($data);
+            
+            User::create([
+                'nama' => $data['nama'],
+                'nrp' => $data['nrp'],
+                'jabatan' => $data['jabatan'],
+                'role' => 'user',
+                'password' => Hash::make($data['nrp'])
+            ]);
 
             DB::commit();
 
@@ -84,11 +95,29 @@ class KaryawanController extends Controller
             'qr_code' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $karyawan->update($data);
+     DB::beginTransaction();
 
-        return redirect()
-            ->route('karyawan.index')
-            ->with('success', 'Data karyawan berhasil diperbarui.');
+        try {
+            $karyawan->update($data);
+
+            // Update user table
+            User::where('nrp', $karyawan->getOriginal('nrp'))->update([
+                'nama' => $data['nama'],
+                'nrp' => $data['nrp'],
+                'jabatan' => $data['jabatan'],
+            ]);
+
+            DB::commit();
+
+            return redirect()
+                ->route('karyawan.index')
+                ->with('success', 'Data karyawan berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return back()->with('error', 'Gagal Memperbarui data ' . $e->getMessage());
+        }
     }
 
     public function destroy(KaryawanModel $karyawan)

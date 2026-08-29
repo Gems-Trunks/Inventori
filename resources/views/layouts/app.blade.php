@@ -19,4 +19,5 @@
         </div>
     </div>
 </main>
+@stack('scripts')
 @include('layouts.footer')

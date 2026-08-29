@@ -149,7 +149,6 @@ class Ss6Controller extends Controller
     {
         $inspeksi = Ss6Model::findOrFail($id);
 
-
         $pdf = PDF::loadView('pdf.inspeksi_ss6', compact('inspeksi'));
 
         $pdf->setPaper('A4', 'portrait');

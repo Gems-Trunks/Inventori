@@ -22,6 +22,7 @@ use App\Http\Controllers\Auth\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\inspeksi\Ss6Controller;
+use App\Http\Controllers\inspeksi\OfaController;
 use App\Http\Controllers\KaryawanController;
 
 // Route::get('/', function () {
@@ -81,7 +82,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', 'store')->name('store');
         Route::get('/{karyawan}/edit', 'edit')->name('edit');
         Route::put('/{karyawan}/update', 'update')->name('update');
-        Route::delete('/{karyawan}/destroy', 'destory')->name('destroy');
+        Route::delete('/{karyawan}/destroy', 'destroy')->name('destroy');
     });
 
 
@@ -145,6 +146,29 @@ Route::middleware('auth')->group(function () {
         ->name('inspeksi.ss6.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'create')->name('create');
+            Route::delete('/destroy/{id}', 'destroy')->name('destroy');
+            Route::get('/pdf/{id}', 'pdf')->name('pdf');
+        });
+
+    // Route Inspeksi Perangkat Onboard FleetSafe Assist (OFA)
+    Route::controller(OfaController::class)
+        ->prefix('/inspeksi/ofa')
+        ->name('inspeksi.ofa.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::post('/approve-all', 'approveAll')->name('approve-all');
+            Route::get('/download-approved', 'downloadApproved')->name('download-approved');
+            Route::post('/{ofa}/approve', 'approve')->name('approve');
+            Route::get('/{ofa}/edit', 'edit')->name('edit');
+            Route::put('/{ofa}', 'update')->name('update');
+            Route::delete('/{ofa}', 'destroy')->name('destroy');
+            Route::get('/{ofa}/pdf', 'pdf')->name('pdf');
         });
 
     

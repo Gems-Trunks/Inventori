@@ -88,16 +88,22 @@
                                     <p>Inspeksi SS6</p>
                                 </a>
                                 </li>
+                            <li class="nav-item">
+                                <a href="{{ route('inspeksi.ofa.index') }}" class="nav-link {{ request()->routeIs('inspeksi.ofa.*') ? 'active' : '' }}">
+                                    <i class="nav-icon bi bi-circle"></i>
+                                    <p>Inspeksi OFA</p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
 
                     <!-- Config -->
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="#" class="nav-link {{ request()->routeIs('config') ? 'active' : '' }}">
                             <i class="nav-icon bi bi-gear"></i>
                             <p class="sidebar-link">Config</p>
                         </a>
-                    </li>
+                    </li> --}}
 
                     <li class="nav-item">
                         <a href="{{ route('karyawan.index') }}" class="nav-link {{ request()->routeIs('karyawan.*') ? 'active' : '' }}">
