@@ -18,6 +18,14 @@ class MonitorModel extends Model
         'tindakan_tampilan_layer', 'tindakan_kabel_power',
         'tindakan_bracket_dudukan', 'tindakan_kebersihan',
         'tindakan_stop_kontak', 'inspektor', 'jabatan_inspektor',
-        'diketahui_oleh',
+        'diketahui_oleh', 'status_approval', 'approved_by', 'qr_code_persetujuan', 'approved_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tanggal_inspeksi' => 'date',
+            'approved_at' => 'datetime',
+        ];
+    }
 }

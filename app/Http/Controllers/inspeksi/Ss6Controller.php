@@ -4,21 +4,28 @@ namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\inspeksi\Ss6Model;
+use App\Services\ApprovalService;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use ZipArchive;
 
 class Ss6Controller extends Controller
 {
-    //
+    public function __construct(protected ApprovalService $approvalService)
+    {
+    }
+
     public function index(Request $req)
     {
-        $cols = ['no_asset', 'no_lambung', 'serial_number', 'diperiksa_oleh', 'diinspeksi_oleh'];
+        $dataSs6 = $this->filteredQuery($req)
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
 
-        $query = Ss6Model::query()->search($cols, $req->search);
-
-        $dataSs6 = $query->latest()->paginate(15);
-
-        return view('Inspeksi.ss6.index', compact('dataSs6'));
+        return view('Inspeksi.ss6.index', [
+            'dataSs6' => $dataSs6,
+            'isGroupLeader' => $req->user()->jabatan === 'GL',
+        ]);
     }
 
     public function create()
@@ -85,6 +92,11 @@ class Ss6Controller extends Controller
 
     public function update(Request $req, Ss6Model $inspeksi)
     {
+        if (!$this->approvalService->canUpdate($inspeksi)) {
+            return redirect()->route('inspeksi.ss6.index')
+                ->with('error', 'Inspeksi yang sudah di-approve tidak dapat diubah.');
+        }
+
         // 1. Buat array rules dasar terlebih dahulu
         $rules = [
             'no_asset' => 'required|string|max:255',
@@ -145,16 +157,71 @@ class Ss6Controller extends Controller
             ->with('success', 'Data inspeksi berhasil dihapus.');
     }
 
-    public function pdf($id)
+    public function pdf(Ss6Model $inspeksi)
     {
-        $inspeksi = Ss6Model::findOrFail($id);
+        return Pdf::loadView('pdf.inspeksi_ss6', compact('inspeksi'))
+            ->setPaper('A4', 'portrait')
+            ->stream("Checklist-Inspeksi-SS6-{$inspeksi->no_asset}.pdf");
+    }
 
-        $pdf = PDF::loadView('pdf.inspeksi_ss6', compact('inspeksi'));
+    public function approve(Request $request, Ss6Model $inspeksi)
+    {
+        $result = $this->approvalService->approve($request, $inspeksi);
 
-        $pdf->setPaper('A4', 'portrait');
+        if (!$result['success']) {
+            return back()->with($result['type'], $result['message']);
+        }
 
-        return $pdf->stream(
-            'Form-Inspeksi-Monitor-SS6-'.$inspeksi->no_asset.'.pdf'
+        return back()->with($result['type'], $result['message']);
+    }
+
+    public function approveAll(Request $request)
+    {
+        $result = $this->approvalService->approveMultiple(
+            $request,
+            $this->filteredQuery($request)
         );
+
+        if (!$result['success']) {
+            return back()->with($result['type'], $result['message']);
+        }
+
+        return redirect()->route('inspeksi.ss6.index', $request->only('search'))
+            ->with($result['type'], $result['message']);
+    }
+
+    public function downloadApproved(Request $request)
+    {
+        $inspections = $this->filteredQuery($request)->whereNotNull('approved_at')->latest()->get();
+        if ($inspections->isEmpty()) {
+            return back()->with('error', 'Belum ada inspeksi approved untuk diunduh.');
+        }
+
+        $temporaryFile = tempnam(sys_get_temp_dir(), 'ss6-approved-');
+        $zipPath = $temporaryFile . '.zip';
+        @unlink($temporaryFile);
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            abort(500, 'Gagal membuat arsip PDF.');
+        }
+
+        foreach ($inspections as $inspection) {
+            $pdf = Pdf::loadView('pdf.inspeksi_ss6', ['inspeksi' => $inspection])
+                ->setPaper('A4', 'portrait')
+                ->output();
+            $zip->addFromString("Checklist-SS6-{$inspection->no_asset}.pdf", $pdf);
+        }
+        $zip->close();
+
+        return response()->download($zipPath, 'Inspeksi-SS6-Approved.zip')->deleteFileAfterSend(true);
+    }
+
+    private function filteredQuery(Request $request)
+    {
+        return Ss6Model::query()->when($request->filled('search'), function ($query) use ($request) {
+            $cols = ['no_asset', 'no_lambung', 'serial_number', 'diperiksa_oleh', 'diinspeksi_oleh'];
+            $query->search($cols, $request->search);
+        });
     }
 }

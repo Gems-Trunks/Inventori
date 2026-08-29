@@ -8,8 +8,12 @@
    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-3">
 
       <x-counter-badge title="Total Data Inspeksi Monitor" bgColor="bg-info-subtle" :counter="$dataSs6->total()" />
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex flex-wrap align-items-center gap-2">
          <x-data-search :action="route('inspeksi.ss6.index')" placeholder="Cari data Inspeksi"></x-data-search>
+         @if ($isGroupLeader)
+            <form action="{{ route('inspeksi.ss6.approve-all') }}" method="POST">@csrf<input type="hidden" name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i class="bi bi-check2-all"></i> Approve Semua</button></form>
+         @endif
+         <a href="{{ route('inspeksi.ss6.download-approved', request()->only('search')) }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-file-zip"></i> Unduh PDF Approved</a>
          <a class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"
             href="{{ route('inspeksi.ss6.create') }}">
             <i class="bi bi-plus-lg"></i> Tambah Inspeksi
@@ -33,8 +37,8 @@
                   <th>No Lambung</th>
                   <th>Serial Number</th>
                   <th>Tanggal Inspeksi</th>
-                  <th>Diinspeksi Oleh</th>
-                  <th>Diperiksa Oleh</th>
+                  <th>Status</th>
+                  <th>Disetujui Oleh</th>
                   <th width="15%" class="text-center">Aksi</th>
 
                </tr>
@@ -61,33 +65,22 @@
                         {{ \Carbon\Carbon::parse($item->tanggal_inspeksi)->format('d M Y') }}
                      </td>
 
-                     <td>{{ $item->diinspeksi_oleh }}</td>
+                     <td><span class="badge {{ $item->approved_at ? 'text-bg-success' : 'text-bg-warning' }}">{{ $item->approved_at ? 'Approved' : 'Menunggu GL' }}</span></td>
 
-                     <td>{{ $item->diperiksa_oleh }}</td>
+                     <td>{{ $item->approved_by ?: '-' }}</td>
 
                      <td class="text-center">
 
                         <div class="btn-group gap-1">
-
-                           <a href="{{ route('inspeksi.ss6.edit', $item->id) }}" class="btn btn-warning btn-sm text-white">
-                              <i class="bi bi-pencil"></i>
-                           </a>
-
-                           <form action="{{ route('inspeksi.ss6.destroy', $item->id) }}" method="POST">
-
-                              @csrf
-                              @method('DELETE')
-
-                              <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data?')">
-
-                                 <i class="bi bi-trash"></i>
-
-                              </button>
-
-                           </form>
-                           <a href="{{ route('inspeksi.ss6.pdf', $item->id) }}" target="_blank" class="btn btn-danger btn-sm">
-                              <i class="bi bi-file-pdf"></i> PDF
-                           </a>
+                           @if ($item->approved_at)
+                              <a href="{{ route('inspeksi.ss6.pdf', $item) }}" target="_blank" class="btn btn-danger btn-sm"><i class="bi bi-file-pdf"></i> PDF</a>
+                           @else
+                              <a href="{{ route('inspeksi.ss6.edit', $item) }}" class="btn btn-warning btn-sm text-white"><i class="bi bi-pencil"></i></a>
+                              @if ($isGroupLeader)
+                              <form action="{{ route('inspeksi.ss6.approve', $item) }}" method="POST">@csrf<button class="btn btn-success btn-sm" onclick="return confirm('Approve inspeksi ini?')"><i class="bi bi-check-lg"></i></button></form>
+                              @endif
+                           @endif
+                           <form action="{{ route('inspeksi.ss6.destroy', $item) }}" method="POST">@csrf @method('DELETE')<button class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data?')"><i class="bi bi-trash"></i></button></form>
 
                         </div>
 

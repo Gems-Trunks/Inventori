@@ -31,6 +31,7 @@ class Ss6Model extends Model
 
         'diinspeksi_oleh',
         'diperiksa_oleh',
+        'status_approval', 'approved_by', 'qr_code_persetujuan', 'approved_at',
     ];
 
     protected $casts = [
@@ -41,5 +42,6 @@ class Ss6Model extends Model
         'kondisi_app_lock' => 'array',
         'software_ppa_teams' => 'array',
         'kondisi_baterai' => 'array',
+        'approved_at' => 'datetime',
     ];
 }

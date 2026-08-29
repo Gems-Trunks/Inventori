@@ -21,5 +21,14 @@ class ProyektorModel extends Model
         'kecerahan_kontras', 'tindakan_kecerahan_kontras',
         'koneksi_input_hdmi', 'koneksi_input_vga', 'koneksi_input_usb',
         'keterangan', 'inspektor', 'jabatan_inspektor', 'diketahui_oleh',
+        'status_approval', 'approved_by', 'qr_code_persetujuan', 'approved_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tanggal_inspeksi' => 'date',
+            'approved_at' => 'datetime',
+        ];
+    }
 }

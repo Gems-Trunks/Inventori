@@ -4,15 +4,28 @@ namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\inspeksi\MonitorModel;
+use App\Services\ApprovalService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use ZipArchive;
 
 class MonitorController extends Controller
 {
-    public function index()
+    public function __construct(protected ApprovalService $approvalService)
     {
-        $monitors = MonitorModel::latest()->paginate(15);
+    }
 
-        return view('inspeksi.monitor.index', compact('monitors'));
+    public function index(Request $request)
+    {
+        $monitors = $this->filteredQuery($request)
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('inspeksi.monitor.index', [
+            'monitors' => $monitors,
+            'isGroupLeader' => $request->user()->jabatan === 'GL',
+        ]);
     }
 
     public function create()
@@ -34,6 +47,11 @@ class MonitorController extends Controller
 
     public function update(Request $request, MonitorModel $monitor)
     {
+        if (!$this->approvalService->canUpdate($monitor)) {
+            return redirect()->route('inspeksi.monitor.index')
+                ->with('error', 'Inspeksi yang sudah di-approve tidak dapat diubah.');
+        }
+
         $monitor->update($this->validateRequest($request));
 
         return redirect()->route('inspeksi.monitor.index')->with('success', 'Data inspeksi monitor/TV berhasil diperbarui.');
@@ -44,6 +62,79 @@ class MonitorController extends Controller
         $monitor->delete();
 
         return redirect()->route('inspeksi.monitor.index')->with('success', 'Data inspeksi monitor/TV berhasil dihapus.');
+    }
+
+    public function pdf(MonitorModel $monitor)
+    {
+        return Pdf::loadView('pdf.inspeksi_monitor', compact('monitor'))
+            ->setPaper('A4', 'portrait')
+            ->stream("Checklist-Inspeksi-Monitor-{$monitor->nomor_aset}.pdf");
+    }
+
+    public function approve(Request $request, MonitorModel $monitor)
+    {
+        $result = $this->approvalService->approve($request, $monitor);
+
+        if (!$result['success']) {
+            return back()->with($result['type'], $result['message']);
+        }
+
+        return back()->with($result['type'], $result['message']);
+    }
+
+    public function approveAll(Request $request)
+    {
+        $result = $this->approvalService->approveMultiple(
+            $request,
+            $this->filteredQuery($request)
+        );
+
+        if (!$result['success']) {
+            return back()->with($result['type'], $result['message']);
+        }
+
+        return redirect()->route('inspeksi.monitor.index', $request->only('search'))
+            ->with($result['type'], $result['message']);
+    }
+
+    public function downloadApproved(Request $request)
+    {
+        $inspections = $this->filteredQuery($request)->whereNotNull('approved_at')->latest()->get();
+        if ($inspections->isEmpty()) {
+            return back()->with('error', 'Belum ada inspeksi approved untuk diunduh.');
+        }
+
+        $temporaryFile = tempnam(sys_get_temp_dir(), 'monitor-approved-');
+        $zipPath = $temporaryFile . '.zip';
+        @unlink($temporaryFile);
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            abort(500, 'Gagal membuat arsip PDF.');
+        }
+
+        foreach ($inspections as $inspection) {
+            $pdf = Pdf::loadView('pdf.inspeksi_monitor', ['monitor' => $inspection])
+                ->setPaper('A4', 'portrait')
+                ->output();
+            $zip->addFromString("Checklist-Monitor-{$inspection->nomor_aset}.pdf", $pdf);
+        }
+        $zip->close();
+
+        return response()->download($zipPath, 'Inspeksi-Monitor-Approved.zip')->deleteFileAfterSend(true);
+    }
+
+    private function filteredQuery(Request $request)
+    {
+        return MonitorModel::query()->when($request->filled('search'), function ($query) use ($request) {
+            $query->where(function ($query) use ($request) {
+                $query->where('nomor_aset', 'like', "%{$request->search}%")
+                    ->orWhere('merek', 'like', "%{$request->search}%")
+                    ->orWhere('type', 'like', "%{$request->search}%")
+                    ->orWhere('sn', 'like', "%{$request->search}%")
+                    ->orWhere('departemen', 'like', "%{$request->search}%");
+            });
+        });
     }
 
     private function validateRequest(Request $request): array

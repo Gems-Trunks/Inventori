@@ -21,22 +21,24 @@
                     </li>
 
                     <!-- Buku Tamu -->
-                    <li class="nav-item">
-                        <a href="{{ route('tamu.index') }}"
-                            class="nav-link {{ request()->routeIs('tamu.*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-book"></i>
-                            <p class="sidebar-link">Buku Tamu</p>
-                        </a>
-                    </li>
+                    @can('isAdmin')
+                        <li class="nav-item">
+                            <a href="{{ route('tamu.index') }}"
+                                class="nav-link {{ request()->routeIs('tamu.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-book"></i>
+                                <p class="sidebar-link">Buku Tamu</p>
+                            </a>
+                        </li>
 
-                    <!-- Inventaris -->
-                    <li class="nav-item">
-                        <a href="{{ route('inventaris.index') }}"
-                            class="nav-link {{ request()->routeIs('inventaris.*') ? 'active' : '' }}">
-                            <i class="nav-icon bi bi-box-seam"></i>
-                            <p class="sidebar-link">Inventaris</p>
-                        </a>
-                    </li>
+                        <!-- Inventaris -->
+                        <li class="nav-item">
+                            <a href="{{ route('inventaris.index') }}"
+                                class="nav-link {{ request()->routeIs('inventaris.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-box-seam"></i>
+                                <p class="sidebar-link">Inventaris</p>
+                            </a>
+                        </li>
+                    @endcan
 
                     <!-- Menu Dropdown Inspeksi -->
                     <li class="nav-item {{ request()->routeIs('inspeksi.*') ? 'menu-open' : '' }}">
@@ -69,12 +71,7 @@
                                     <p>Inspeksi Monitor/Tv</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="../index3.html" class="nav-link">
-                                    <i class="nav-icon bi bi-circle"></i>
-                                    <p>Inspeksi CCTV</p>
-                                </a>
-                            </li>
+
                             <li class="nav-item">
                                 <a href="{{ route('inspeksi.proyektor.index') }}"
                                     class="nav-link {{ request()->routeIs('inspeksi.proyektor.*') ? 'active' : '' }}">
@@ -83,13 +80,15 @@
                                 </a>
                             </li>
                             <li class="nav-items">
-                                <a href="{{ route('inspeksi.ss6.index') }}" class="nav-link {{ request()->routeIs('inspeksi.ss6.*') ? 'active' : '' }}">
+                                <a href="{{ route('inspeksi.ss6.index') }}"
+                                    class="nav-link {{ request()->routeIs('inspeksi.ss6.*') ? 'active' : '' }}">
                                     <i class="nav-icon bi bi-circle"></i>
                                     <p>Inspeksi SS6</p>
                                 </a>
-                                </li>
+                            </li>
                             <li class="nav-item">
-                                <a href="{{ route('inspeksi.ofa.index') }}" class="nav-link {{ request()->routeIs('inspeksi.ofa.*') ? 'active' : '' }}">
+                                <a href="{{ route('inspeksi.ofa.index') }}"
+                                    class="nav-link {{ request()->routeIs('inspeksi.ofa.*') ? 'active' : '' }}">
                                     <i class="nav-icon bi bi-circle"></i>
                                     <p>Inspeksi OFA</p>
                                 </a>
@@ -105,12 +104,16 @@
                         </a>
                     </li> --}}
 
+                    @can('isAdmin')
                     <li class="nav-item">
-                        <a href="{{ route('karyawan.index') }}" class="nav-link {{ request()->routeIs('karyawan.*') ? 'active' : '' }}">
+                        <a href="{{ route('karyawan.index') }}"
+                            class="nav-link {{ request()->routeIs('karyawan.*') ? 'active' : '' }}">
                             <i class="bi bi-person-badge"></i>
                             <p class="sidebar-link">Data Karyawan</p>
                         </a>
                     </li>
+                        
+                    @endcan
                 </ul>
             </nav>
         </div>

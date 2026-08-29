@@ -2,10 +2,17 @@
 @section('judul', 'Inspeksi Proyektor')
 @section('subjudul', 'Daftar Data Inspeksi Proyektor')
 @section('konten')
-    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-3"><x-counter-badge
-            title="Total Data Inspeksi Proyektor" bgColor="bg-info-subtle" :counter="$proyektors->total()" /><a
-            class="btn btn-sm btn-outline-success" href="{{ route('inspeksi.proyektor.create') }}"><i
-                class="bi bi-plus-lg"></i> Tambah Inspeksi</a></div>
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-3">
+        <x-counter-badge title="Total Data Inspeksi Proyektor" bgColor="bg-info-subtle" :counter="$proyektors->total()" />
+        <div class="d-flex flex-wrap gap-2">
+            <x-data-search :action="route('inspeksi.proyektor.index')" placeholder="Cari data Proyektor" />
+            @if ($isGroupLeader)
+                <form action="{{ route('inspeksi.proyektor.approve-all') }}" method="POST">@csrf<input type="hidden" name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i class="bi bi-check2-all"></i> Approve Semua</button></form>
+            @endif
+            <a href="{{ route('inspeksi.proyektor.download-approved', request()->only('search')) }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-file-zip"></i> Unduh PDF Approved</a>
+            <a href="{{ route('inspeksi.proyektor.create') }}" class="btn btn-sm btn-outline-success"><i class="bi bi-plus-lg"></i> Tambah Inspeksi</a>
+        </div>
+    </div>
     <div class="table-responsive">
         <table class="table table-bordered align-middle mb-0">
             <thead>
@@ -18,7 +25,8 @@
                     <th>Departemen</th>
                     <th>Lokasi</th>
                     <th>Tanggal Inspeksi</th>
-                    <th>Inspektor</th>
+                    <th>Status</th>
+                    <th>Disetujui Oleh</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>
@@ -34,15 +42,19 @@
                         <td>{{ $proyektor->lokasi ?: '-' }}</td>
                         <td>{{ $proyektor->tanggal_inspeksi ? \Carbon\Carbon::parse($proyektor->tanggal_inspeksi)->format('d M Y') : '-' }}
                         </td>
-                        <td>{{ $proyektor->inspektor ?: '-' }}</td>
+                        <td><span class="badge {{ $proyektor->approved_at ? 'text-bg-success' : 'text-bg-warning' }}">{{ $proyektor->approved_at ? 'Approved' : 'Menunggu GL' }}</span></td>
+                        <td>{{ $proyektor->approved_by ?: '-' }}</td>
                         <td class="text-center">
-                            <div class="btn-group btn-group-sm gap-1"><a
-                                    href="{{ route('inspeksi.proyektor.edit', $proyektor) }}" class="btn btn-warning text-white"
-                                    title="Edit"><i class="bi bi-pencil"></i></a>
-                                <form action="{{ route('inspeksi.proyektor.destroy', $proyektor) }}"
-                                    id="form-delete-{{ $proyektor->id }}" method="POST">@csrf @method('DELETE')<button
-                                        type="button" onclick="deleteConfirm('form-delete-{{ $proyektor->id }}')"
-                                        class="btn btn-danger" title="Hapus"><i class="bi bi-trash"></i></button></form>
+                            <div class="btn-group btn-group-sm gap-1">
+                                @if ($proyektor->approved_at)
+                                    <a href="{{ route('inspeksi.proyektor.pdf', $proyektor) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
+                                @else
+                                    <a href="{{ route('inspeksi.proyektor.edit', $proyektor) }}" class="btn btn-warning text-white" title="Edit"><i class="bi bi-pencil"></i></a>
+                                    @if ($isGroupLeader)
+                                    <form action="{{ route('inspeksi.proyektor.approve', $proyektor) }}" method="POST">@csrf<button class="btn btn-success" onclick="return confirm('Approve inspeksi ini?')" title="Approve"><i class="bi bi-check-lg"></i></button></form>
+                                    @endif
+                                @endif
+                                <form action="{{ route('inspeksi.proyektor.destroy', $proyektor) }}" method="POST">@csrf @method('DELETE')<button class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus data?')" title="Hapus"><i class="bi bi-trash"></i></button></form>
                             </div>
                         </td>
                     </tr>

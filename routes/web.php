@@ -96,9 +96,13 @@ Route::middleware('auth')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
+            Route::post('/approve-all', 'approveAll')->name('approve-all');
+            Route::get('/download-approved', 'downloadApproved')->name('download-approved');
+            Route::post('/{stavolt}/approve', 'approve')->name('approve');
             Route::get('/{stavolt}/edit', 'edit')->name('edit');
             Route::put('/{stavolt}', 'update')->name('update');
             Route::delete('/{stavolt}', 'destroy')->name('destroy');
+            Route::get('/{stavolt}/pdf', 'pdf')->name('pdf');
         });
 
     // Route UPS
@@ -109,9 +113,13 @@ Route::middleware('auth')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
+            Route::post('/approve-all', 'approveAll')->name('approve-all');
+            Route::get('/download-approved', 'downloadApproved')->name('download-approved');
+            Route::post('/{ups}/approve', 'approve')->name('approve');
             Route::get('/{ups}/edit', 'edit')->name('edit');
             Route::put('/{ups}', 'update')->name('update');
             Route::delete('/{ups}', 'destroy')->name('destroy');
+            Route::get('/{ups}/pdf', 'pdf')->name('pdf');
         });
 
     // Route Monitor
@@ -122,9 +130,13 @@ Route::middleware('auth')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
+            Route::post('/approve-all', 'approveAll')->name('approve-all');
+            Route::get('/download-approved', 'downloadApproved')->name('download-approved');
+            Route::post('/{monitor}/approve', 'approve')->name('approve');
             Route::get('/{monitor}/edit', 'edit')->name('edit');
             Route::put('/{monitor}', 'update')->name('update');
             Route::delete('/{monitor}', 'destroy')->name('destroy');
+            Route::get('/{monitor}/pdf', 'pdf')->name('pdf');
         });
         
     // Route Proyektor
@@ -135,9 +147,13 @@ Route::middleware('auth')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
+            Route::post('/approve-all', 'approveAll')->name('approve-all');
+            Route::get('/download-approved', 'downloadApproved')->name('download-approved');
+            Route::post('/{proyektor}/approve', 'approve')->name('approve');
             Route::get('/{proyektor}/edit', 'edit')->name('edit');
             Route::put('/{proyektor}', 'update')->name('update');
             Route::delete('/{proyektor}', 'destroy')->name('destroy');
+            Route::get('/{proyektor}/pdf', 'pdf')->name('pdf');
         });
 
     // Route SS6
@@ -148,10 +164,13 @@ Route::middleware('auth')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
-            Route::get('/edit/{id}', 'edit')->name('edit');
-            Route::put('/update/{id}', 'create')->name('create');
-            Route::delete('/destroy/{id}', 'destroy')->name('destroy');
-            Route::get('/pdf/{id}', 'pdf')->name('pdf');
+            Route::post('/approve-all', 'approveAll')->name('approve-all');
+            Route::get('/download-approved', 'downloadApproved')->name('download-approved');
+            Route::post('/{inspeksi}/approve', 'approve')->name('approve');
+            Route::get('/{inspeksi}/edit', 'edit')->name('edit');
+            Route::put('/{inspeksi}', 'update')->name('update');
+            Route::delete('/{inspeksi}', 'destroy')->name('destroy');
+            Route::get('/{inspeksi}/pdf', 'pdf')->name('pdf');
         });
 
     // Route Inspeksi Perangkat Onboard FleetSafe Assist (OFA)

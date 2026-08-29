@@ -4,30 +4,28 @@ namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\inspeksi\UpsModel;
+use App\Services\ApprovalService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use ZipArchive;
 
 class UpsController extends Controller
 {
+    public function __construct(protected ApprovalService $approvalService)
+    {
+    }
+
     public function index(Request $request)
     {
-        $query = UpsModel::query();
+        $ups = $this->filteredQuery($request)
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
 
-        if ($request->filled('search')) {
-            $search = $request->search;
-
-            $query->where(function ($q) use ($search) {
-                $q->where('nomor_aset', 'like', '%' . $search . '%')
-                  ->orWhere('casing', 'like', '%' . $search . '%')
-                  ->orWhere('merek', 'like', '%' . $search . '%')
-                  ->orWhere('type', 'like', '%' . $search . '%')
-                  ->orWhere('sn', 'like', '%' . $search . '%');
-            });
-        }
-
-        $ups = $query->latest()->paginate(15)->withQueryString();
-
-
-        return view('Inspeksi.ups.index', compact('ups'));
+        return view('Inspeksi.ups.index', [
+            'ups' => $ups,
+            'isGroupLeader' => $request->user()->jabatan === 'GL',
+        ]);
     }
 
     public function create()
@@ -52,6 +50,11 @@ class UpsController extends Controller
 
     public function update(Request $request, UpsModel $ups)
     {
+        if (!$this->approvalService->canUpdate($ups)) {
+            return redirect()->route('inspeksi.ups.index')
+                ->with('error', 'Inspeksi yang sudah di-approve tidak dapat diubah.');
+        }
+
         $data = $this->validateRequest($request);
 
         $ups->update($data);
@@ -66,6 +69,79 @@ class UpsController extends Controller
 
         return redirect()->route('inspeksi.ups.index')
             ->with('success', 'Data inspeksi UPS berhasil dihapus.');
+    }
+
+    public function pdf(UpsModel $ups)
+    {
+        return Pdf::loadView('pdf.inspeksi_ups', compact('ups'))
+            ->setPaper('A4', 'portrait')
+            ->stream("Checklist-Inspeksi-UPS-{$ups->nomor_aset}.pdf");
+    }
+
+    public function approve(Request $request, UpsModel $ups)
+    {
+        $result = $this->approvalService->approve($request, $ups);
+
+        if (!$result['success']) {
+            return back()->with($result['type'], $result['message']);
+        }
+
+        return back()->with($result['type'], $result['message']);
+    }
+
+    public function approveAll(Request $request)
+    {
+        $result = $this->approvalService->approveMultiple(
+            $request,
+            $this->filteredQuery($request)
+        );
+
+        if (!$result['success']) {
+            return back()->with($result['type'], $result['message']);
+        }
+
+        return redirect()->route('inspeksi.ups.index', $request->only('search'))
+            ->with($result['type'], $result['message']);
+    }
+
+    public function downloadApproved(Request $request)
+    {
+        $inspections = $this->filteredQuery($request)->whereNotNull('approved_at')->latest()->get();
+        if ($inspections->isEmpty()) {
+            return back()->with('error', 'Belum ada inspeksi approved untuk diunduh.');
+        }
+
+        $temporaryFile = tempnam(sys_get_temp_dir(), 'ups-approved-');
+        $zipPath = $temporaryFile . '.zip';
+        @unlink($temporaryFile);
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            abort(500, 'Gagal membuat arsip PDF.');
+        }
+
+        foreach ($inspections as $inspection) {
+            $pdf = Pdf::loadView('pdf.inspeksi_ups', ['ups' => $inspection])
+                ->setPaper('A4', 'portrait')
+                ->output();
+            $zip->addFromString("Checklist-UPS-{$inspection->nomor_aset}.pdf", $pdf);
+        }
+        $zip->close();
+
+        return response()->download($zipPath, 'Inspeksi-UPS-Approved.zip')->deleteFileAfterSend(true);
+    }
+
+    private function filteredQuery(Request $request)
+    {
+        return UpsModel::query()->when($request->filled('search'), function ($query) use ($request) {
+            $query->where(function ($query) use ($request) {
+                $query->where('nomor_aset', 'like', "%{$request->search}%")
+                    ->orWhere('merek', 'like', "%{$request->search}%")
+                    ->orWhere('type', 'like', "%{$request->search}%")
+                    ->orWhere('sn', 'like', "%{$request->search}%")
+                    ->orWhere('departemen', 'like', "%{$request->search}%");
+            });
+        });
     }
 
     protected function validateRequest(Request $request): array

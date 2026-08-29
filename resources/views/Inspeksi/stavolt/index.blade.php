@@ -7,8 +7,12 @@
     <div class="card-header">
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
             <x-counter-badge title="Total Data Inspeksi Stavolt" bgColor="bg-info-subtle" :counter="$stavolts->total()" />
-            <div class="d-flex align-items-center gap-2">
-
+            <div class="d-flex flex-wrap gap-2">
+                <x-data-search :action="route('inspeksi.stavolt.index')" placeholder="Cari data Stavolt" />
+                @if ($isGroupLeader)
+                    <form action="{{ route('inspeksi.stavolt.approve-all') }}" method="POST">@csrf<input type="hidden" name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i class="bi bi-check2-all"></i> Approve Semua</button></form>
+                @endif
+                <a href="{{ route('inspeksi.stavolt.download-approved', request()->only('search')) }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-file-zip"></i> Unduh PDF Approved</a>
                 <a class="btn btn-sm btn-outline-success" href="{{ route('inspeksi.stavolt.create') }}">
                     <i class="bi bi-plus-lg"></i> Tambah Inspeksi
                 </a>
@@ -28,7 +32,8 @@
                         <th>Departemen</th>
                         <th>Lokasi</th>
                         <th>Tanggal Inspeksi</th>
-                        <th>Inspektor</th>
+                        <th>Status</th>
+                        <th>Disetujui Oleh</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -44,17 +49,19 @@
                             <td>{{ $stavolt->lokasi ?: '-' }}</td>
                             <td>{{ $stavolt->tanggal_inspeksi ? \Carbon\Carbon::parse($stavolt->tanggal_inspeksi)->format('d M Y') : '-' }}
                             </td>
-                            <td>{{ $stavolt->inspektor ?: '-' }}</td>
+                            <td><span class="badge {{ $stavolt->approved_at ? 'text-bg-success' : 'text-bg-warning' }}">{{ $stavolt->approved_at ? 'Approved' : 'Menunggu GL' }}</span></td>
+                            <td>{{ $stavolt->approved_by ?: '-' }}</td>
                             <td class="text-center">
                                 <div class="btn-group btn-group-sm gap-1">
-                                    <a href="{{ route('inspeksi.stavolt.edit', $stavolt) }}"
-                                        class="btn btn-warning text-white" title="Edit"><i class="bi bi-pencil"></i></a>
-                                    <form action="{{ route('inspeksi.stavolt.destroy', $stavolt) }}"
-                                        id="form-delete-{{ $stavolt->id }}" method="POST">
-                                        @csrf @method('DELETE')
-                                        <button type="button" onclick="deleteConfirm('form-delete-{{ $stavolt->id }}')"
-                                            class="btn btn-danger" title="Hapus"><i class="bi bi-trash"></i></button>
-                                    </form>
+                                    @if ($stavolt->approved_at)
+                                        <a href="{{ route('inspeksi.stavolt.pdf', $stavolt) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
+                                    @else
+                                        <a href="{{ route('inspeksi.stavolt.edit', $stavolt) }}" class="btn btn-warning text-white" title="Edit"><i class="bi bi-pencil"></i></a>
+                                        @if ($isGroupLeader)
+                                        <form action="{{ route('inspeksi.stavolt.approve', $stavolt) }}" method="POST">@csrf<button class="btn btn-success" onclick="return confirm('Approve inspeksi ini?')" title="Approve"><i class="bi bi-check-lg"></i></button></form>
+                                        @endif
+                                    @endif
+                                    <form action="{{ route('inspeksi.stavolt.destroy', $stavolt) }}" method="POST">@csrf @method('DELETE')<button class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus data?')" title="Hapus"><i class="bi bi-trash"></i></button></form>
                                 </div>
                             </td>
                         </tr>

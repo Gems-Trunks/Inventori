@@ -4,15 +4,28 @@ namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\inspeksi\StavoltModel;
+use App\Services\ApprovalService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use ZipArchive;
 
 class StavoltController extends Controller
 {
-    public function index()
+    public function __construct(protected ApprovalService $approvalService)
     {
-        $stavolts = StavoltModel::latest()->paginate(15);
+    }
 
-        return view('inspeksi.stavolt.index', compact('stavolts'));
+    public function index(Request $request)
+    {
+        $stavolts = $this->filteredQuery($request)
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('inspeksi.stavolt.index', [
+            'stavolts' => $stavolts,
+            'isGroupLeader' => $request->user()->jabatan === 'GL',
+        ]);
     }
 
     public function create()
@@ -35,6 +48,11 @@ class StavoltController extends Controller
 
     public function update(Request $request, StavoltModel $stavolt)
     {
+        if (!$this->approvalService->canUpdate($stavolt)) {
+            return redirect()->route('inspeksi.stavolt.index')
+                ->with('error', 'Inspeksi yang sudah di-approve tidak dapat diubah.');
+        }
+
         $stavolt->update($this->validateRequest($request));
 
         return redirect()->route('inspeksi.stavolt.index')
@@ -47,6 +65,79 @@ class StavoltController extends Controller
 
         return redirect()->route('inspeksi.stavolt.index')
             ->with('success', 'Data inspeksi Stavolt berhasil dihapus.');
+    }
+
+    public function pdf(StavoltModel $stavolt)
+    {
+        return Pdf::loadView('pdf.inspeksi_stavolt', compact('stavolt'))
+            ->setPaper('A4', 'portrait')
+            ->stream("Checklist-Inspeksi-Stavolt-{$stavolt->nomor_aset}.pdf");
+    }
+
+    public function approve(Request $request, StavoltModel $stavolt)
+    {
+        $result = $this->approvalService->approve($request, $stavolt);
+
+        if (!$result['success']) {
+            return back()->with($result['type'], $result['message']);
+        }
+
+        return back()->with($result['type'], $result['message']);
+    }
+
+    public function approveAll(Request $request)
+    {
+        $result = $this->approvalService->approveMultiple(
+            $request,
+            $this->filteredQuery($request)
+        );
+
+        if (!$result['success']) {
+            return back()->with($result['type'], $result['message']);
+        }
+
+        return redirect()->route('inspeksi.stavolt.index', $request->only('search'))
+            ->with($result['type'], $result['message']);
+    }
+
+    public function downloadApproved(Request $request)
+    {
+        $inspections = $this->filteredQuery($request)->whereNotNull('approved_at')->latest()->get();
+        if ($inspections->isEmpty()) {
+            return back()->with('error', 'Belum ada inspeksi approved untuk diunduh.');
+        }
+
+        $temporaryFile = tempnam(sys_get_temp_dir(), 'stavolt-approved-');
+        $zipPath = $temporaryFile . '.zip';
+        @unlink($temporaryFile);
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            abort(500, 'Gagal membuat arsip PDF.');
+        }
+
+        foreach ($inspections as $inspection) {
+            $pdf = Pdf::loadView('pdf.inspeksi_stavolt', ['stavolt' => $inspection])
+                ->setPaper('A4', 'portrait')
+                ->output();
+            $zip->addFromString("Checklist-Stavolt-{$inspection->nomor_aset}.pdf", $pdf);
+        }
+        $zip->close();
+
+        return response()->download($zipPath, 'Inspeksi-Stavolt-Approved.zip')->deleteFileAfterSend(true);
+    }
+
+    private function filteredQuery(Request $request)
+    {
+        return StavoltModel::query()->when($request->filled('search'), function ($query) use ($request) {
+            $query->where(function ($query) use ($request) {
+                $query->where('nomor_aset', 'like', "%{$request->search}%")
+                    ->orWhere('merek', 'like', "%{$request->search}%")
+                    ->orWhere('type', 'like', "%{$request->search}%")
+                    ->orWhere('sn', 'like', "%{$request->search}%")
+                    ->orWhere('departemen', 'like', "%{$request->search}%");
+            });
+        });
     }
 
     protected function validateRequest(Request $request): array

@@ -19,5 +19,14 @@ class StavoltModel extends Model
         'indikator_voltase', 'tindakan_indikator_voltase',
         'respon_perubahan_beban', 'tindakan_respon_perubahan_beban',
         'inspektor', 'jabatan_inspektor', 'diketahui_oleh',
+        'status_approval', 'approved_by', 'qr_code_persetujuan', 'approved_at',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tanggal_inspeksi' => 'date',
+            'approved_at' => 'datetime',
+        ];
+    }
 }

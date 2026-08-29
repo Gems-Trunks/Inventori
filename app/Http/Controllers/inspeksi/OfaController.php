@@ -4,12 +4,17 @@ namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
 use App\Models\inspeksi\OfaModel;
+use App\Services\ApprovalService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use ZipArchive;
 
 class OfaController extends Controller
 {
+    public function __construct(protected ApprovalService $approvalService)
+    {
+    }
+
     public const CHECKLIST_SECTIONS = [
         'A. MAIN MODUL' => [
             'Letak modul sesuai lokasi yang disepakati',
@@ -70,7 +75,7 @@ class OfaController extends Controller
 
     public function update(Request $request, OfaModel $ofa)
     {
-        if ($ofa->approved_at) {
+        if (!$this->approvalService->canUpdate($ofa)) {
             return redirect()->route('inspeksi.ofa.index')
                 ->with('error', 'Inspeksi yang sudah di-approve tidak dapat diubah.');
         }
@@ -96,28 +101,28 @@ class OfaController extends Controller
 
     public function approve(Request $request, OfaModel $ofa)
     {
-        $this->ensureGroupLeader($request);
+        $result = $this->approvalService->approve($request, $ofa);
 
-        if ($ofa->approved_at) {
-            return back()->with('info', 'Inspeksi ini sudah di-approve.');
+        if (!$result['success']) {
+            return back()->with($result['type'], $result['message']);
         }
 
-        $ofa->update($this->approvalData($request));
-
-        return back()->with('success', 'Inspeksi berhasil di-approve.');
+        return back()->with($result['type'], $result['message']);
     }
 
     public function approveAll(Request $request)
     {
-        $this->ensureGroupLeader($request);
+        $result = $this->approvalService->approveMultiple(
+            $request,
+            $this->filteredQuery($request)
+        );
 
-        $pendingInspections = $this->filteredQuery($request)->whereNull('approved_at')->get();
-        foreach ($pendingInspections as $inspection) {
-            $inspection->update($this->approvalData($request));
+        if (!$result['success']) {
+            return back()->with($result['type'], $result['message']);
         }
 
         return redirect()->route('inspeksi.ofa.index', $request->only('search'))
-            ->with('success', "{$pendingInspections->count()} inspeksi berhasil di-approve.");
+            ->with($result['type'], $result['message']);
     }
 
     public function downloadApproved(Request $request)
@@ -213,22 +218,4 @@ class OfaController extends Controller
         });
     }
 
-    private function ensureGroupLeader(Request $request): void
-    {
-        abort_unless($request->user()->jabatan === 'GL', 403, 'Hanya Group Leader yang dapat melakukan approval.');
-    }
-
-    private function approvalData(Request $request): array
-    {
-        $groupLeader = $request->user();
-        $approvedAt = now();
-
-        return [
-            'status_approval' => 'approved',
-            'diperiksa_oleh' => $groupLeader->nama,
-            'approved_by' => $groupLeader->nama,
-            'qr_code_persetujuan' => "Nama: {$groupLeader->nama} | NRP: {$groupLeader->nrp} | Jabatan: {$groupLeader->jabatan} | Approved: {$approvedAt->format('d-m-Y H:i')}",
-            'approved_at' => $approvedAt,
-        ];
-    }
 }
