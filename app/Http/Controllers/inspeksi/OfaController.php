@@ -164,11 +164,11 @@ class OfaController extends Controller
             'serial_number_modul' => ['nullable', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
             'catatan_tambahan' => ['nullable', 'string'],
-            'item_pemeriksaaan' => ['required', 'array', 'min:1'],
-            'item_pemeriksaaan.*.nama' => ['required', 'string', 'max:255'],
-            'item_pemeriksaaan.*.section' => ['required', 'string', 'max:100'],
-            'item_pemeriksaaan.*.status' => ['required', 'in:baik,rusak,na'],
-            'item_pemeriksaaan.*.keterangan' => ['nullable', 'string', 'max:1000'],
+            'item_pemeriksaan' => ['required', 'array', 'min:1'],
+            'item_pemeriksaan.*.nama' => ['required', 'string', 'max:255'],
+            'item_pemeriksaan.*.section' => ['required', 'string', 'max:100'],
+            'item_pemeriksaan.*.status' => ['required', 'in:baik,rusak,na'],
+            'item_pemeriksaan.*.keterangan' => ['nullable', 'string', 'max:1000'],
             'tim_pelaksana' => ['required', 'array', 'min:1'],
             'tim_pelaksana.*.nama' => ['required', 'string', 'max:255'],
             'tim_pelaksana.*.nrp' => ['nullable', 'string', 'max:100'],
@@ -177,14 +177,14 @@ class OfaController extends Controller
             'tim_pelaksana.*.perusahaan' => ['required', 'string', 'max:255'],
         ]);
 
-        $data['item_pemeriksaaan'] = collect($data['item_pemeriksaaan'])->values()->all();
+        $data['item_pemeriksaan'] = collect($data['item_pemeriksaan'])->values()->all();
         $inspector = $request->user();
-        $data['diinspeksi_oleh'] = $inspector->nama;
+        $data['diinspeksi_oleh'] = $inspector->nrp;
 
         $inspectorTeam = [
             'nama' => $inspector->nama,
             'nrp' => $inspector->nrp,
-            'jabatan' => $inspector->jabatan,
+            'jabatan' => 'Technician',
             'departemen' => 'ICT',
             'perusahaan' => 'PT Putra Perkasa Abadi',
         ];

@@ -1,169 +1,169 @@
 <!DOCTYPE html>
 <html lang="id">
 
-   <head>
-      <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
 
-      <title>Form Inspeksi Perangkat Monitor SS6</title>
+    <title>Form Inspeksi Perangkat Monitor SS6</title>
 
-      <style>
-         @page {
+    <style>
+        @page {
             size: A4 portrait;
             margin: 10mm 10mm 10mm 10mm;
-         }
+        }
 
-         * {
+        * {
             box-sizing: border-box;
-         }
+        }
 
-         body {
+        body {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 9px;
             color: #000;
             margin: 0;
             padding: 0;
-         }
+        }
 
-         table {
+        table {
             width: 100%;
             border-collapse: collapse;
-         }
+        }
 
-         td,
-         th {
+        td,
+        th {
             border: 1px solid #000;
             padding: 4px;
             vertical-align: middle;
-         }
+        }
 
-         .no-border {
+        .no-border {
             border: none !important;
-         }
+        }
 
-         .text-center {
+        .text-center {
             text-align: center;
-         }
+        }
 
-         .text-left {
+        .text-left {
             text-align: left;
-         }
+        }
 
-         .text-right {
+        .text-right {
             text-align: right;
-         }
+        }
 
-         .bold {
+        .bold {
             font-weight: bold;
-         }
+        }
 
-         .header-table {
+        .header-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 5px;
-         }
+        }
 
-         .header-table td {
+        .header-table td {
             border: 1px solid #000;
-         }
+        }
 
-         .logo-area {
+        .logo-area {
             width: 18%;
             height: 70px;
             text-align: center;
             vertical-align: middle;
             font-weight: bold;
             font-size: 12px;
-         }
+        }
 
-         .title-area {
+        .title-area {
             width: 57%;
             text-align: center;
             vertical-align: middle;
             font-weight: bold;
-         }
+        }
 
-         .title-main {
+        .title-main {
             font-size: 14px;
             line-height: 18px;
-         }
+        }
 
-         .title-sub {
+        .title-sub {
             font-size: 12px;
             line-height: 16px;
-         }
+        }
 
-         .document-info {
+        .document-info {
             width: 25%;
             font-size: 8px;
-         }
+        }
 
-         .document-info td {
+        .document-info td {
             padding: 3px 4px;
-         }
+        }
 
-         .document-info .label {
+        .document-info .label {
             width: 45%;
-         }
+        }
 
-         .section-title {
+        .section-title {
             font-weight: bold;
             font-size: 10px;
             text-align: center;
             background: #eaeaea;
-         }
+        }
 
-         .asset-table {
+        .asset-table {
             margin-top: 3px;
             margin-bottom: 6px;
-         }
+        }
 
-         .asset-table td {
+        .asset-table td {
             height: 25px;
-         }
+        }
 
-         .asset-label {
+        .asset-label {
             width: 22%;
             font-weight: bold;
-         }
+        }
 
-         .asset-value {
+        .asset-value {
             width: 28%;
-         }
+        }
 
-         .condition-table {
+        .condition-table {
             margin-top: 3px;
-         }
+        }
 
-         .condition-table th {
+        .condition-table th {
             font-weight: bold;
             text-align: center;
             background: #eaeaea;
             height: 25px;
-         }
+        }
 
-         .condition-name {
+        .condition-name {
             width: 43%;
             font-weight: bold;
-         }
+        }
 
-         .condition-option {
+        .condition-option {
             width: 14.25%;
             text-align: center;
-         }
+        }
 
-         .condition-table td {
+        .condition-table td {
             height: 24px;
-         }
+        }
 
-         .check {
+        .check {
             text-align: center;
             font-size: 14px;
             font-weight: bold;
             font-family: "DejaVu Sans", sans-serif;
             line-height: 1;
-         }
+        }
 
-         .checkbox-mark {
+        .checkbox-mark {
             display: inline-block;
             width: 16px;
             height: 16px;
@@ -173,393 +173,398 @@
             font-family: "DejaVu Sans", sans-serif;
             text-align: center;
             vertical-align: middle;
-         }
+        }
 
-         /* .checkbox-mark.checked {
+        /* .checkbox-mark.checked {
             border: 1px solid #000;
          } */
 
-         .checkbox-mark.checked::after {
+        .checkbox-mark.checked::after {
             content: "✓";
-         }
+        }
 
-         .instruction {
+        .instruction {
             font-weight: bold;
             font-size: 8px;
             margin: 4px 0;
-         }
+        }
 
-         .charger-table {
+        .charger-table {
             margin-top: 6px;
-         }
+        }
 
-         .charger-label {
+        .charger-label {
             width: 43%;
             font-weight: bold;
-         }
+        }
 
-         .charger-value {
+        .charger-value {
             width: 57%;
-         }
+        }
 
-         .keterangan-title {
+        .keterangan-title {
             font-weight: bold;
             margin-top: 6px;
             margin-bottom: 2px;
-         }
+        }
 
-         .keterangan-box {
+        .keterangan-box {
             height: 65px;
             vertical-align: top;
             padding: 6px;
-         }
+        }
 
-         .bottom-table {
+        .bottom-table {
             margin-top: 6px;
-         }
+        }
 
-         .bottom-table td {
+        .bottom-table td {
             height: 28px;
-         }
+        }
 
-         .serial-label {
+        .serial-label {
             width: 22%;
             font-weight: bold;
-         }
+        }
 
-         .serial-value {
+        .serial-value {
             width: 28%;
-         }
+        }
 
-         .inspection-title {
+        .inspection-title {
             font-weight: bold;
             text-align: center;
-         }
+        }
 
-         .signature-table {
+        .signature-table {
             margin-top: 6px;
-         }
+        }
 
-         .signature-table td {
+        .signature-table td {
             height: 85px;
             vertical-align: top;
-         }
+        }
 
-         .signature-label {
+        .signature-label {
             font-weight: bold;
             text-align: left;
-         }
+        }
 
-         .signature-space {
-            height: 48px;
-         }
+        .signature-space {
+            height: 58px;
+            display: flex;
+            align-content: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 15px;
+        }
 
-         .signature-name {
+        .signature-name {
             text-align: center;
             font-weight: bold;
             text-decoration: underline;
-         }
+        }
 
-         .signature-role {
+        .signature-role {
             text-align: center;
             font-size: 8px;
-         }
+        }
 
-         .footer-table {
+        .footer-table {
             margin-top: 5px;
             font-size: 7px;
-         }
+        }
 
-         .footer-table td {
+        .footer-table td {
             padding: 3px;
-         }
+        }
 
-         .footer-left {
+        .footer-left {
             width: 33%;
-         }
+        }
 
-         .footer-center {
+        .footer-center {
             width: 34%;
             text-align: center;
-         }
+        }
 
-         .footer-right {
+        .footer-right {
             width: 33%;
             text-align: right;
-         }
-      </style>
-   </head>
+        }
+    </style>
+</head>
 
-   <body>
+<body>
 
-      @php
-         /*
-          * Data kondisi disimpan sebagai JSON, contoh:
-          * {"ketersediaan":"Ada","kondisi":"Baik"}
-          *
-          * Fungsi di bawah menangani dua kondisi:
-          * 1. Field sudah di-cast Laravel menjadi array
-          * 2. Field masih berupa JSON string dari database
-          */
-         $conditionData = function ($value) {
+    @php
+        /*
+         * Data kondisi disimpan sebagai JSON, contoh:
+         * {"ketersediaan":"Ada","kondisi":"Baik"}
+         *
+         * Fungsi di bawah menangani dua kondisi:
+         * 1. Field sudah di-cast Laravel menjadi array
+         * 2. Field masih berupa JSON string dari database
+         */
+        $conditionData = function ($value) {
             if (is_array($value)) {
-               return [
-                  'ketersediaan' => strtolower(trim((string) ($value['ketersediaan'] ?? ''))),
-                  'kondisi' => strtolower(trim((string) ($value['kondisi'] ?? ''))),
-               ];
+                return [
+                    'ketersediaan' => strtolower(trim((string) ($value['ketersediaan'] ?? ''))),
+                    'kondisi' => strtolower(trim((string) ($value['kondisi'] ?? ''))),
+                ];
             }
 
             if (is_string($value)) {
-               $decoded = json_decode($value, true);
+                $decoded = json_decode($value, true);
 
-               if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                  return [
-                     'ketersediaan' => strtolower(trim((string) ($decoded['ketersediaan'] ?? ''))),
-                     'kondisi' => strtolower(trim((string) ($decoded['kondisi'] ?? ''))),
-                  ];
-               }
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    return [
+                        'ketersediaan' => strtolower(trim((string) ($decoded['ketersediaan'] ?? ''))),
+                        'kondisi' => strtolower(trim((string) ($decoded['kondisi'] ?? ''))),
+                    ];
+                }
             }
 
             return [
-               'ketersediaan' => '',
-               'kondisi' => '',
+                'ketersediaan' => '',
+                'kondisi' => '',
             ];
-         };
+        };
 
-         /*
-          * ADA / TIDAK dibaca dari ketersediaan.
-          * BAIK / RUSAK dibaca dari kondisi.
-          */
-         $isChecked = function ($value, $option) use ($conditionData) {
+        /*
+         * ADA / TIDAK dibaca dari ketersediaan.
+         * BAIK / RUSAK dibaca dari kondisi.
+         */
+        $isChecked = function ($value, $option) use ($conditionData) {
             $data = $conditionData($value);
             $option = strtolower(trim($option));
 
             if ($option === 'ada') {
-               return $data['ketersediaan'] === 'ada';
+                return $data['ketersediaan'] === 'ada';
             }
 
             if ($option === 'tidak') {
-               return in_array($data['ketersediaan'], ['tidak', 'tidak ada', 'tidak tersedia'], true);
+                return in_array($data['ketersediaan'], ['tidak', 'tidak ada', 'tidak tersedia'], true);
             }
 
             if ($option === 'baik') {
-               return $data['kondisi'] === 'baik';
+                return $data['kondisi'] === 'baik';
             }
 
             if ($option === 'rusak') {
-               return $data['kondisi'] === 'rusak';
+                return $data['kondisi'] === 'rusak';
             }
 
             return false;
-         };
-      @endphp
+        };
+    @endphp
 
 
-      {{-- ============================================================
+    {{-- ============================================================
         HEADER
     ============================================================= --}}
-      <table class="header-table">
-         <tr>
+    <table class="header-table">
+        <tr>
 
             {{-- Logo / identitas perusahaan --}}
             <td class="logo-area">
-               <img src="{{ public_path('asset/images/logos/logo_ppa.jpeg') }}" height="70px" width="70px"
-                  alt="logo_ppa">
+                <img src="{{ public_path('asset/images/logos/logo_ppa.jpeg') }}" height="70px" width="70px"
+                    alt="logo_ppa">
             </td>
 
             {{-- Judul --}}
             <td class="title-area">
 
-               <div class="title-main">
-                  FORM INSPEKSI PERANGKAT
-               </div>
+                <div class="title-main">
+                    FORM INSPEKSI PERANGKAT
+                </div>
 
-               <div class="title-sub">
-                  MONITOR SS6
-               </div>
+                <div class="title-sub">
+                    MONITOR SS6
+                </div>
 
             </td>
 
             {{-- Informasi dokumen --}}
             <td class="document-info">
 
-               <table>
+                <table>
 
-                  <tr>
-                     <td class="label">
-                        No. Dokumen
-                     </td>
+                    <tr>
+                        <td class="label">
+                            No. Dokumen
+                        </td>
 
-                     <td>
-                        PPA-ADRO-F-ICTMD-012
-                     </td>
-                  </tr>
+                        <td>
+                            PPA-ADRO-F-ICTMD-012
+                        </td>
+                    </tr>
 
-                  <tr>
-                     <td class="label">
-                        Revisi
-                     </td>
+                    <tr>
+                        <td class="label">
+                            Revisi
+                        </td>
 
-                     <td>
-                        2
-                     </td>
-                  </tr>
+                        <td>
+                            2
+                        </td>
+                    </tr>
 
-                  <tr>
-                     <td class="label">
-                        Tgl. Efektif
-                     </td>
+                    <tr>
+                        <td class="label">
+                            Tgl. Efektif
+                        </td>
 
-                     <td>
-                        01 September 2024
-                     </td>
-                  </tr>
+                        <td>
+                            01 September 2024
+                        </td>
+                    </tr>
 
-                  <tr>
-                     <td class="label">
-                        Halaman
-                     </td>
+                    <tr>
+                        <td class="label">
+                            Halaman
+                        </td>
 
-                     <td>
-                        1 dari 1
-                     </td>
-                  </tr>
+                        <td>
+                            1 dari 1
+                        </td>
+                    </tr>
 
-               </table>
+                </table>
 
             </td>
 
-         </tr>
-      </table>
+        </tr>
+    </table>
 
 
-      {{-- ============================================================
+    {{-- ============================================================
         DETAIL ASET
     ============================================================= --}}
-      <table class="asset-table">
+    <table class="asset-table">
 
-         <tr>
+        <tr>
             <td colspan="4" class="section-title">
-               DETAIL ASET
+                DETAIL ASET
             </td>
-         </tr>
+        </tr>
 
-         <tr>
+        <tr>
 
             <td class="asset-label">
-               No Asset
+                No Asset
             </td>
 
             <td class="asset-value">
-               {{ $inspeksi->no_asset ?? '-' }}
+                {{ $inspeksi->no_asset ?? '-' }}
             </td>
 
             <td class="asset-label">
-               No Lambung Unit
+                No Lambung Unit
             </td>
 
             <td class="asset-value">
-               {{ $inspeksi->no_lambung ?? '-' }}
+                {{ $inspeksi->no_lambung ?? '-' }}
             </td>
 
-         </tr>
+        </tr>
 
-         <tr>
+        <tr>
 
             <td class="asset-label">
-               Tanggal Inspeksi
+                Tanggal Inspeksi
             </td>
 
             <td class="asset-value">
-               @if(!empty($inspeksi->tanggal_inspeksi))
-                  {{ \Carbon\Carbon::parse($inspeksi->tanggal_inspeksi)->format('d/m/Y') }}
-               @else
-                  -
-               @endif
+                @if (!empty($inspeksi->tanggal_inspeksi))
+                    {{ \Carbon\Carbon::parse($inspeksi->tanggal_inspeksi)->format('d/m/Y') }}
+                @else
+                    -
+                @endif
             </td>
 
             <td class="asset-label">
-               Serial Number
+                Serial Number
             </td>
 
             <td class="asset-value">
-               {{ $inspeksi->serial_number ?? '-' }}
+                {{ $inspeksi->serial_number ?? '-' }}
             </td>
 
-         </tr>
+        </tr>
 
-      </table>
+    </table>
 
 
-      {{-- ============================================================
+    {{-- ============================================================
         INSTRUKSI
     ============================================================= --}}
-      <div class="instruction">
-         (BERI TANDA ✓ ATAU X UNTUK PILIHAN)
-      </div>
+    <div class="instruction">
+        (BERI TANDA ✓ ATAU X UNTUK PILIHAN)
+    </div>
 
 
-      {{-- ============================================================
+    {{-- ============================================================
         KONDISI PERANGKAT
     ============================================================= --}}
-      <table class="condition-table">
+    <table class="condition-table">
 
-         <thead>
+        <thead>
 
             <tr>
 
-               <th class="condition-name">
-                  KONDISI PERANGKAT
-               </th>
+                <th class="condition-name">
+                    KONDISI PERANGKAT
+                </th>
 
-               <th class="condition-option">
-                  ADA
-               </th>
+                <th class="condition-option">
+                    ADA
+                </th>
 
-               <th class="condition-option">
-                  TIDAK
-               </th>
+                <th class="condition-option">
+                    TIDAK
+                </th>
 
-               <th class="condition-option">
-                  BAIK
-               </th>
+                <th class="condition-option">
+                    BAIK
+                </th>
 
-               <th class="condition-option">
-                  RUSAK
-               </th>
+                <th class="condition-option">
+                    RUSAK
+                </th>
 
             </tr>
 
-         </thead>
+        </thead>
 
-         <tbody>
+        <tbody>
 
             {{-- Monitor --}}
             <tr>
 
-               <td class="condition-name">
-                  Kondisi Monitor
-               </td>
+                <td class="condition-name">
+                    Kondisi Monitor
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_monitor ?? null, 'ada') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_monitor ?? null, 'ada') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_monitor ?? null, 'tidak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_monitor ?? null, 'tidak') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_monitor ?? null, 'baik') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_monitor ?? null, 'baik') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_monitor ?? null, 'rusak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_monitor ?? null, 'rusak') ? 'checked' : '' }}"></span>
+                </td>
 
             </tr>
 
@@ -567,29 +572,29 @@
             {{-- Bracket --}}
             <tr>
 
-               <td class="condition-name">
-                  Kondisi Bracket
-               </td>
+                <td class="condition-name">
+                    Kondisi Bracket
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_bracket ?? null, 'ada') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_bracket ?? null, 'ada') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_bracket ?? null, 'tidak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_bracket ?? null, 'tidak') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_bracket ?? null, 'baik') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_bracket ?? null, 'baik') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_bracket ?? null, 'rusak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_bracket ?? null, 'rusak') ? 'checked' : '' }}"></span>
+                </td>
 
             </tr>
 
@@ -597,29 +602,29 @@
             {{-- Car Charger --}}
             <tr>
 
-               <td class="condition-name">
-                  Kondisi Car Charger
-               </td>
+                <td class="condition-name">
+                    Kondisi Car Charger
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_car_charger ?? null, 'ada') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_car_charger ?? null, 'ada') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_car_charger ?? null, 'tidak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_car_charger ?? null, 'tidak') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_car_charger ?? null, 'baik') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_car_charger ?? null, 'baik') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_car_charger ?? null, 'rusak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_car_charger ?? null, 'rusak') ? 'checked' : '' }}"></span>
+                </td>
 
             </tr>
 
@@ -627,29 +632,29 @@
             {{-- Kabel Power --}}
             <tr>
 
-               <td class="condition-name">
-                  Kondisi Kabel Power
-               </td>
+                <td class="condition-name">
+                    Kondisi Kabel Power
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_kabel_power ?? null, 'ada') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_kabel_power ?? null, 'ada') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_kabel_power ?? null, 'tidak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_kabel_power ?? null, 'tidak') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_kabel_power ?? null, 'baik') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_kabel_power ?? null, 'baik') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_kabel_power ?? null, 'rusak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_kabel_power ?? null, 'rusak') ? 'checked' : '' }}"></span>
+                </td>
 
             </tr>
 
@@ -657,29 +662,29 @@
             {{-- APP Lock --}}
             <tr>
 
-               <td class="condition-name">
-                  Software APP Lock
-               </td>
+                <td class="condition-name">
+                    Software APP Lock
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_app_lock ?? null, 'ada') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_app_lock ?? null, 'ada') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_app_lock ?? null, 'tidak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_app_lock ?? null, 'tidak') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_app_lock ?? null, 'baik') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_app_lock ?? null, 'baik') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_app_lock ?? null, 'rusak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_app_lock ?? null, 'rusak') ? 'checked' : '' }}"></span>
+                </td>
 
             </tr>
 
@@ -687,29 +692,29 @@
             {{-- PPA Teams --}}
             <tr>
 
-               <td class="condition-name">
-                  Software PPA Teams
-               </td>
+                <td class="condition-name">
+                    Software PPA Teams
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->software_ppa_teams ?? null, 'ada') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->software_ppa_teams ?? null, 'ada') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->software_ppa_teams ?? null, 'tidak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->software_ppa_teams ?? null, 'tidak') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->software_ppa_teams ?? null, 'baik') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->software_ppa_teams ?? null, 'baik') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->software_ppa_teams ?? null, 'rusak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->software_ppa_teams ?? null, 'rusak') ? 'checked' : '' }}"></span>
+                </td>
 
             </tr>
 
@@ -717,207 +722,230 @@
             {{-- Baterai --}}
             <tr>
 
-               <td class="condition-name">
-                  Kondisi Baterai Monitor
-               </td>
+                <td class="condition-name">
+                    Kondisi Baterai Monitor
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_baterai ?? null, 'ada') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_baterai ?? null, 'ada') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_baterai ?? null, 'tidak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_baterai ?? null, 'tidak') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_baterai ?? null, 'baik') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_baterai ?? null, 'baik') ? 'checked' : '' }}"></span>
+                </td>
 
-               <td class="condition-option check">
-                  <span
-                     class="checkbox-mark {{ $isChecked($inspeksi->kondisi_baterai ?? null, 'rusak') ? 'checked' : '' }}"></span>
-               </td>
+                <td class="condition-option check">
+                    <span
+                        class="checkbox-mark {{ $isChecked($inspeksi->kondisi_baterai ?? null, 'rusak') ? 'checked' : '' }}"></span>
+                </td>
 
             </tr>
 
-         </tbody>
+        </tbody>
 
-      </table>
+    </table>
 
 
-      {{-- ============================================================
+    {{-- ============================================================
         OUTPUT POWER CHARGER
     ============================================================= --}}
-      <table class="charger-table">
+    <table class="charger-table">
 
-         <tr>
+        <tr>
 
             <td class="charger-label">
-               Output Power Charger
+                Output Power Charger
             </td>
 
             <td class="charger-value">
 
-               {{ $inspeksi->output_powercharge ?? '-' }}
+                {{ $inspeksi->output_powercharge ?? '-' }}
 
-               Volt DC
+                Volt DC
 
             </td>
 
-         </tr>
+        </tr>
 
-      </table>
+    </table>
 
 
-      {{-- ============================================================
+    {{-- ============================================================
         KETERANGAN
     ============================================================= --}}
-      <div class="keterangan-title">
-         KETERANGAN :
-      </div>
+    <div class="keterangan-title">
+        KETERANGAN :
+    </div>
 
-      <table>
+    <table>
 
-         <tr>
+        <tr>
 
             <td class="keterangan-box">
 
-               {!! nl2br(e($inspeksi->keterangan ?? '')) !!}
+                {!! nl2br(e($inspeksi->keterangan ?? '')) !!}
 
             </td>
 
-         </tr>
+        </tr>
 
-      </table>
+    </table>
 
 
-      {{-- ============================================================
+    {{-- ============================================================
         DATA INSPEKSI
     ============================================================= --}}
-      <table class="bottom-table">
+    <table class="bottom-table">
 
-         <tr>
+        <tr>
 
             <td class="serial-label">
-               Serial Number
+                Serial Number
             </td>
 
             <td class="serial-value">
-               {{ $inspeksi->serial_number ?? '-' }}
+                {{ $inspeksi->serial_number ?? '-' }}
             </td>
 
             <td class="inspection-title">
-               Di Inspeksi Oleh
+                Di Inspeksi Oleh
             </td>
 
-         </tr>
+        </tr>
 
-         <tr>
+        <tr>
 
             <td class="serial-label">
-               Di Inspeksi Oleh
+                Di Inspeksi Oleh
             </td>
 
             <td class="serial-value">
 
-               {{ $inspeksi->di_inspeksi_oleh ?? '-' }}
+                {{ $inspeksi->di_inspeksi_oleh ?? '-' }}
 
             </td>
 
             <td class="text-center">
 
-               {{ $inspeksi->jabatan_inspektor ?? 'ICT GL / ICT' }}
+                {{ $inspeksi->jabatan_inspektor ?? 'ICT GL / ICT' }}
 
             </td>
 
-         </tr>
+        </tr>
 
-      </table>
+    </table>
 
 
-      {{-- ============================================================
+    {{-- ============================================================
         TANDA TANGAN
     ============================================================= --}}
-      <table class="signature-table">
+    <table class="signature-table">
 
-         <tr>
+        <tr>
 
             <td style="width: 50%;">
 
-               <div class="signature-label">
-                  Di Inspeksi Oleh;
-               </div>
+                <div class="signature-label">
+                    Di Inspeksi Oleh;
+                </div>
 
-               <div class="signature-space"></div>
+                <div class="signature-space">
+                  <div class="signature-space" style="text-align: center;">
+                        @php
+                            $qr = new \chillerlan\QRCode\QRCode();
+                            $qrCode = $qr->render($inspeksi->QrCodeKaryawan->qr_code);
+                        @endphp
+                        <div style="margin-top: 4px; text-align: center;">
+                            <img src="{{ $qrCode }}" width="80" height="80" alt="QR Code"
+                                style="display: block; margin: 0 auto;">
+                        </div>
+                </div>
 
-               <div class="signature-name">
+                </div>
 
-                  {{ $inspeksi->di_inspeksi_oleh ?? '.................................' }}
+                <div class="signature-name">
 
-               </div>
+                    {{ $inspeksi->di_inspeksi_oleh ?? '.................................' }}
 
-               <div class="signature-role">
+                </div>
 
-                  ICT GL / ICT
+                <div class="signature-role">
 
-               </div>
+                    ICT
+
+                </div>
 
             </td>
 
 
             <td style="width: 50%;">
 
-               <div class="signature-label">
-                  Diperiksa Oleh;
-               </div>
+                <div class="signature-label">
+                    Diperiksa Oleh;
+                </div>
 
-               <div class="signature-space"></div>
+                <div class="signature-space" style="text-align: center;">
+                    @if ($inspeksi->approved_at && $inspeksi->qr_code_persetujuan)
+                        @php
+                            $qr = new \chillerlan\QRCode\QRCode();
+                            $qrCode = $qr->render($inspeksi->qr_code_persetujuan);
+                        @endphp
+                        <div style="margin-top: 4px; text-align: center;">
+                            <img src="{{ $qrCode }}" width="80" height="80" alt="QR Code"
+                                style="display: block; margin: 0 auto;">
+                        </div>
+                    @endif
+                </div>
 
-               <div class="signature-name">
+                <div class="signature-name">
 
-                  {{ $inspeksi->diperiksa_oleh ?? '.................................' }}
+                    {{ $inspeksi->diperiksa_oleh ?? '.................................' }}
 
-               </div>
+                </div>
 
-               <div class="signature-role">
+                <div class="signature-role">
 
-                  ICT
+                  GL ICT
 
-               </div>
+                </div>
 
             </td>
 
-         </tr>
+        </tr>
 
-      </table>
+    </table>
 
 
-      {{-- ============================================================
+    {{-- ============================================================
         FOOTER
     ============================================================= --}}
-      <table class="footer-table">
+    <table class="footer-table">
 
-         <tr>
+        <tr>
 
             <td class="footer-left">
-               PPA-ADRO-F-ICTMD-012
+                PPA-ADRO-F-ICTMD-012
             </td>
 
             <td class="footer-center">
-               FORM INSPEKSI PERANGKAT MONITOR SS6
+                FORM INSPEKSI PERANGKAT MONITOR SS6
             </td>
 
             <td class="footer-right">
-               Revisi 2
+                Revisi 2
             </td>
 
-         </tr>
+        </tr>
 
-      </table>
+    </table>
 
-   </body>
+</body>
 
 </html>

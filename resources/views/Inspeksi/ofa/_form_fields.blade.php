@@ -1,5 +1,5 @@
 @php
-    $storedItems = old('item_pemeriksaaan', $ofa->item_pemeriksaaan ?? []);
+    $storedItems = old('item_pemeriksaan', $ofa->item_pemeriksaan ?? []);
     $itemsByKey = collect($storedItems)->keyBy(fn($item) => ($item['section'] ?? '') . '|' . ($item['nama'] ?? ''));
     $tim = old(
         'tim_pelaksana',
@@ -82,18 +82,18 @@
                         <tr>
                             <td class="text-center">{{ $number + 1 }}</td>
                             <td>{{ $name }}<input type="hidden"
-                                    name="item_pemeriksaaan[{{ $itemIndex }}][nama]"
+                                    name="item_pemeriksaan[{{ $itemIndex }}][nama]"
                                     value="{{ $name }}"><input type="hidden"
-                                    name="item_pemeriksaaan[{{ $itemIndex }}][section]"
+                                    name="item_pemeriksaan[{{ $itemIndex }}][section]"
                                     value="{{ $section }}">
                             </td>
                             @foreach (['baik' => 'Baik', 'rusak' => 'Rusak', 'na' => 'N/A'] as $status => $label)
                                 <td class="text-center"><input type="radio" class="form-check-input"
-                                        name="item_pemeriksaaan[{{ $itemIndex }}][status]"
+                                        name="item_pemeriksaan[{{ $itemIndex }}][status]"
                                         value="{{ $status }}" @checked(($item['status'] ?? '') === $status) required
                                         aria-label="{{ $label }}"></td>
                             @endforeach
-                            <td><input name="item_pemeriksaaan[{{ $itemIndex }}][keterangan]"
+                            <td><input name="item_pemeriksaan[{{ $itemIndex }}][keterangan]"
                                     class="form-control form-control-sm" value="{{ $item['keterangan'] ?? '' }}"
                                     placeholder="Keterangan / tindakan"></td>
                         </tr>

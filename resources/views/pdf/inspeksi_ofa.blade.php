@@ -64,8 +64,8 @@
         }
 
         .logo-ppa {
-            width: 48px;
-            height: 48px;
+            width: 60px;
+            height: 60px;
             object-fit: contain;
             display: block;
             margin: 0 auto 2px auto;
@@ -452,7 +452,7 @@
     |--------------------------------------------------------------------------
     */
 
-        $items = $ofa->item_pemeriksaaan ?? [];
+        $items = $ofa->item_pemeriksaan ?? [];
 
         if (is_string($items)) {
             $items = json_decode($items, true) ?? [];
@@ -562,11 +562,9 @@
 
             <td rowspan="5" class="kop-logo">
 
-                <img src="{{ public_path('images/logo-ppa.png') }}" class="logo-ppa">
+                <img src="{{ public_path('images/logo-ppa-3.png') }}" class="logo-ppa">
 
-                <div class="ppa-text">
-                    PPA
-                </div>
+
 
             </td>
 
@@ -1026,61 +1024,59 @@
 
     <table class="team">
 
-    <tr>
-        <td colspan="7" class="team-title">
-            D. &nbsp; TIM PELAKSANA
-        </td>
-    </tr>
-
-    <tr>
-        <th class="no">No</th>
-        <th class="nama">Nama</th>
-        <th class="nrp">NRP</th>
-        <th class="jabatan">Jabatan</th>
-        <th class="departemen">Departemen</th>
-        <th class="perusahaan">Perusahaan</th>
-        <th class="ttd">Tanda tangan</th>
-    </tr>
-
-    @for ($i = 0; $i < 5; $i++)
-
-        @php
-            $anggota = $tim[$i] ?? [];
-        @endphp
-
         <tr>
-
-            <td class="no center">
-                {{ $i + 1 }}
+            <td colspan="7" class="team-title">
+                D. &nbsp; TIM PELAKSANA
             </td>
-
-            <td>
-                {{ $anggota['nama'] ?? '' }}
-            </td>
-
-            <td>
-                {{ $anggota['nrp'] ?? '' }}
-            </td>
-
-            <td>
-                {{ $anggota['jabatan'] ?? '' }}
-            </td>
-
-            <td>
-                {{ $anggota['departemen'] ?? '' }}
-            </td>
-
-            <td>
-                {{ $anggota['perusahaan'] ?? '' }}
-            </td>
-
-            <td></td>
-
         </tr>
 
-    @endfor
+        <tr>
+            <th class="no">No</th>
+            <th class="nama">Nama</th>
+            <th class="nrp">NRP</th>
+            <th class="jabatan">Jabatan</th>
+            <th class="departemen">Departemen</th>
+            <th class="perusahaan">Perusahaan</th>
+            <th class="ttd">Tanda tangan</th>
+        </tr>
 
-</table>
+        @for ($i = 0; $i < 5; $i++)
+            @php
+                $anggota = $tim[$i] ?? [];
+            @endphp
+
+            <tr>
+
+                <td class="no center">
+                    {{ $i + 1 }}
+                </td>
+
+                <td>
+                    {{ $anggota['nama'] ?? '' }}
+                </td>
+
+                <td>
+                    {{ $anggota['nrp'] ?? '' }}
+                </td>
+
+                <td>
+                    {{ $anggota['jabatan'] ?? '' }}
+                </td>
+
+                <td>
+                    {{ $anggota['departemen'] ?? '' }}
+                </td>
+
+                <td>
+                    {{ $anggota['perusahaan'] ?? '' }}
+                </td>
+
+                <td></td>
+
+            </tr>
+        @endfor
+
+    </table>
 
     {{-- =========================================================
      TANDA TANGAN
@@ -1099,18 +1095,26 @@
                     DISETUJUI
                 </div>
 
-                <div class="signature-space"></div>
+                <div class="signature-space">
+                   
+                    @if ($ofa->approved_at && $ofa->qr_code_persetujuan)
+                        @php
+                            $qr = new \chillerlan\QRCode\QRCode();
+                            $qrCode = $qr->render($ofa->qr_code_persetujuan);
+                        @endphp
+                        <div style="margin-top: 4px; text-align: center;">
+                            <img src="{{ $qrCode }}" width="48" height="48" alt="QR Code"
+                                style="display: block; margin: 0 auto;">
+                        </div>
+                    @endif
+                </div>
 
                 <div class="signature-line"></div>
 
                 <div class="signature-name">
                     {{ $ofa->diperiksa_oleh ?: 'GROUP LEADER' }}
                 </div>
-                @if ($ofa->approved_at && $ofa->qr_code_persetujuan)
-                    <div style="margin-top: 4px;">
-                        {!! QrCode::size(58)->generate($ofa->qr_code_persetujuan) !!}
-                    </div>
-                @endif
+
 
             </td>
 
@@ -1124,12 +1128,21 @@
                     DIPERIKSA
                 </div>
 
-                <div class="signature-space"></div>
+                <div class="signature-space">
+                    @php
+                            $qr = new \chillerlan\QRCode\QRCode();
+                            $qrCode = $qr->render($ofa->karyawanId->qr_code);
+                        @endphp
+                        <div style="margin-top: 4px; text-align: center;">
+                            <img src="{{ $qrCode }}" width="48" height="48" alt="QR Code"
+                                style="display: block; margin: 0 auto;">
+                        </div>
+                </div>
 
                 <div class="signature-line"></div>
 
                 <div class="signature-name">
-                    {{ $ofa->diinspeksi_oleh ?: 'ICT TECHNICIAN' }}
+                    {{ $ofa->karyawanId->nama ?: 'ICT TECHNICIAN' }}
                 </div>
 
             </td>

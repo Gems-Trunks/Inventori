@@ -2,6 +2,7 @@
 
 namespace App\Models\inspeksi;
 
+use App\Models\KaryawanModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -48,5 +49,10 @@ class OfaModel extends Model
             'tim_pelaksana' => 'array',
             'approved_at' => 'datetime',
         ];
+    }
+    
+
+    public function karyawanId() {
+        return $this->belongsTO(KaryawanModel::class,'diinspeksi_oleh', 'nrp');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\inspeksi;
 
+use App\Models\KaryawanModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -44,4 +45,8 @@ class Ss6Model extends Model
         'kondisi_baterai' => 'array',
         'approved_at' => 'datetime',
     ];
+
+    public function QrCodeKaryawan() {
+        return $this->belongsTo(KaryawanModel::class, 'diinspeksi_oleh', 'nrp');
+    }
 }

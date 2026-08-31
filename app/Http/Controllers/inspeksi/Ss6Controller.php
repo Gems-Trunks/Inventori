@@ -11,9 +11,7 @@ use ZipArchive;
 
 class Ss6Controller extends Controller
 {
-    public function __construct(protected ApprovalService $approvalService)
-    {
-    }
+    public function __construct(protected ApprovalService $approvalService) {}
 
     public function index(Request $req)
     {
@@ -48,16 +46,20 @@ class Ss6Controller extends Controller
 
         // 2. Definisikan field yang ingin di-loop
         $feilds = [
-            'kondisi_monitor', 'kondisi_bracket', 'kondisi_car_charger',
-            'kondisi_kabel_power', 'kondisi_app_lock', 'software_ppa_teams',
+            'kondisi_monitor',
+            'kondisi_bracket',
+            'kondisi_car_charger',
+            'kondisi_kabel_power',
+            'kondisi_app_lock',
+            'software_ppa_teams',
             'kondisi_baterai',
         ];
 
         // 3. Masukkan rules tambahan secara dinamis lewat loop
         foreach ($feilds as $field) {
             // Ganti 'required|string' di bawah sesuai dengan validasi yang kamu butuhkan (misal: 'required|in:baik,rusak')
-            $rules[$field.'_ketersediaan'] = 'required|string';
-            $rules[$field.'_kondisi'] = 'required|string';
+            $rules[$field . '_ketersediaan'] = 'required|string';
+            $rules[$field . '_kondisi'] = 'required|string';
         }
 
         // 4. Jalankan validasi menggunakan array rules yang sudah lengkap
@@ -66,16 +68,16 @@ class Ss6Controller extends Controller
         foreach ($feilds as $field) {
             // Gabung menjadi array key-value, lalu di-encode ke JSON string
             $validated[$field] = json_encode([
-                'ketersediaan' => $validated[$field.'_ketersediaan'],
-                'kondisi' => $validated[$field.'_kondisi'],
+                'ketersediaan' => $validated[$field . '_ketersediaan'],
+                'kondisi' => $validated[$field . '_kondisi'],
             ]);
 
-            unset($validated[$field.'_ketersediaan']);
-            unset($validated[$field.'_kondisi']);
+            unset($validated[$field . '_ketersediaan']);
+            unset($validated[$field . '_kondisi']);
         }
 
         // 5. Tambahkan data user yang login
-        $validated['diperiksa_oleh'] = auth()->user()->nama;
+        $validated['diinspeksi_oleh'] = auth()->user()->nrp;
 
         // 6. Simpan ke database
         Ss6Model::create($validated);
@@ -105,20 +107,24 @@ class Ss6Controller extends Controller
             'serial_number' => 'required|string|max:255',
             'output_powercharge' => 'required|string|max:255',
             'keterangan' => 'nullable|string',
-            ];
+        ];
 
         // 2. Definisikan field yang ingin di-loop
         $feilds = [
-            'kondisi_monitor', 'kondisi_bracket', 'kondisi_car_charger',
-            'kondisi_kabel_power', 'kondisi_app_lock', 'software_ppa_teams',
+            'kondisi_monitor',
+            'kondisi_bracket',
+            'kondisi_car_charger',
+            'kondisi_kabel_power',
+            'kondisi_app_lock',
+            'software_ppa_teams',
             'kondisi_baterai',
         ];
 
         // 3. Masukkan rules tambahan secara dinamis lewat loop
         foreach ($feilds as $field) {
             // Ganti 'required|string' di bawah sesuai dengan validasi yang kamu butuhkan (misal: 'required|in:baik,rusak')
-            $rules[$field.'_ketersediaan'] = 'required|string';
-            $rules[$field.'_kondisi'] = 'required|string';
+            $rules[$field . '_ketersediaan'] = 'required|string';
+            $rules[$field . '_kondisi'] = 'required|string';
         }
 
         // 4. Jalankan validasi menggunakan array rules yang sudah lengkap
@@ -127,18 +133,18 @@ class Ss6Controller extends Controller
         foreach ($feilds as $field) {
             // Gabung menjadi array key-value, lalu di-encode ke JSON string
             $validated[$field] = json_encode([
-                'ketersediaan' => $validated[$field.'_ketersediaan'],
-                'kondisi' => $validated[$field.'_kondisi'],
+                'ketersediaan' => $validated[$field . '_ketersediaan'],
+                'kondisi' => $validated[$field . '_kondisi'],
             ]);
 
-            unset($validated[$field.'_ketersediaan']);
-            unset($validated[$field.'_kondisi']);
+            unset($validated[$field . '_ketersediaan']);
+            unset($validated[$field . '_kondisi']);
         }
 
-        $validated['diperiksa_oleh'] = auth()->user()->nama;
+        $validated['diinspeksi_oleh'] = auth()->user()->nama;
 
         if (auth()->user()->jabatan == 'GL') {
-            $validated['dinspeksi_oleh'] = auth()->user()->nama;
+            $validated['diperiksa_oleh'] = auth()->user()->nama;
         }
 
         $inspeksi->update($validated);
@@ -156,6 +162,8 @@ class Ss6Controller extends Controller
             ->route('inspeksi.ss6.index')
             ->with('success', 'Data inspeksi berhasil dihapus.');
     }
+
+ 
 
     public function pdf(Ss6Model $inspeksi)
     {
