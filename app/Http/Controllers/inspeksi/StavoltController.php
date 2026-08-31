@@ -22,7 +22,7 @@ class StavoltController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('inspeksi.stavolt.index', [
+        return view('Inspeksi.stavolt.index', [
             'stavolts' => $stavolts,
             'isGroupLeader' => $request->user()->jabatan === 'GL',
         ]);
@@ -30,7 +30,7 @@ class StavoltController extends Controller
 
     public function create()
     {
-        return view('inspeksi.stavolt.create');
+        return view('Inspeksi.stavolt.create');
     }
 
     public function store(Request $request)
@@ -43,7 +43,7 @@ class StavoltController extends Controller
 
     public function edit(StavoltModel $stavolt)
     {
-        return view('inspeksi.stavolt.edit', compact('stavolt'));
+        return view('Inspeksi.stavolt.edit', compact('stavolt'));
     }
 
     public function update(Request $request, StavoltModel $stavolt)

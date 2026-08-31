@@ -15,7 +15,7 @@ class ProfileController extends Controller
     $validated = $request->validate([
         'nama'     => ['required', 'string', 'max:255'],
         'nrp'      => ['required', 'string', 'max:255', 'unique:users,nrp,' . $user->id], 
-        'password' => ['nullable', 'string', 'min:8', 'max:255'], // dibuat nullable (boleh kosong)
+        'password' => ['nullable', 'string', 'max:255'], // dibuat nullable (boleh kosong)
     ]);
 
     if ($request->filled('password')) {

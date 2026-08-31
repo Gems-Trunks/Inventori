@@ -87,9 +87,16 @@
                                             data-bs-toggle="modal" data-bs-target="#editUserModal"
                                             data-bs-id="{{ auth()->user()->id }}" data-bs-nama="{{ Auth::user()->nama }}"
                                             data-bs-nrp="{{ auth()->user()->nrp }}"
-                                            data-bs-url="{{ route('users.update', auth()->user()->id) }}">
+                                            data-bs-url="{{ route('profile.update', auth()->user()->id) }}">
                                             <i class="bi bi-pencil-square"></i> Edit Profil
                                         </button>
+                                    </li>
+
+                                    <li>
+                                        <a href="{{ route('account-settings.index') }}"
+                                            class="dropdown-item d-flex align-items-center gap-2 rounded text-info py-2 mb-1">
+                                            <i class="bi bi-gear"></i> Pengaturan Akun
+                                        </a>
                                     </li>
                                 @endauth
 

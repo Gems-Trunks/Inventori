@@ -22,7 +22,7 @@ class ProyektorController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        return view('inspeksi.proyektor.index', [
+        return view('Inspeksi.proyektor.index', [
             'proyektors' => $proyektors,
             'isGroupLeader' => $request->user()->jabatan === 'GL',
         ]);
@@ -30,7 +30,7 @@ class ProyektorController extends Controller
 
     public function create()
     {
-        return view('inspeksi.proyektor.create');
+        return view('Inspeksi.proyektor.create');
     }
 
     public function store(Request $request)
@@ -42,7 +42,7 @@ class ProyektorController extends Controller
 
     public function edit(ProyektorModel $proyektor)
     {
-        return view('inspeksi.proyektor.edit', compact('proyektor'));
+        return view('Inspeksi.proyektor.edit', compact('proyektor'));
     }
 
     public function update(Request $request, ProyektorModel $proyektor)

@@ -54,7 +54,14 @@
             <div>
                 <p class="text-white-50 mb-1">{{ now()->translatedFormat('l, d F Y') }}</p>
                 <h2 class="fw-bold mb-2">Selamat datang, {{ Auth::user()->nama }}!</h2>
-                <p class="mb-0 text-white-50">Pantau peminjaman perangkat, kunjungan tamu, dan inspeksi dalam satu tempat.
+                <p class="mb-0 text-white-50">
+                    @if(Auth::user()->role === 'admin')
+                        Pantau peminjaman perangkat, kunjungan tamu, dan inspeksi dalam satu tempat.
+                    @elseif(Auth::user()->jabatan === 'security')
+                        Pantau kunjungan tamu dan inspeksi dalam satu tempat.
+                    @else
+                        Pantau dan catat inspeksi perangkat dalam satu tempat.
+                    @endif
                 </p>
             </div>
             @can('isAdmin')
@@ -105,17 +112,19 @@
                 </div>
             </div>
         @endcan
-        <div class="col-sm-6 col-xl-3">
-            <div class="card dashboard-stat">
-                <div class="card-body d-flex align-items-center gap-3"><span
-                        class="stat-icon bg-danger-subtle text-danger"><i class="bi bi-clipboard2-check"></i></span>
-                    <div>
-                        <div class="text-body-secondary small">Total Inspeksi</div>
-                        <div class="fs-3 fw-bold">{{ $totalInspeksi }}</div>
+        @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->jabatan === 'gl' || Auth::user()->jabatan === 'staff' || Auth::user()->jabatan === 'non_staff')
+            <div class="col-sm-6 col-xl-3">
+                <div class="card dashboard-stat">
+                    <div class="card-body d-flex align-items-center gap-3"><span
+                            class="stat-icon bg-danger-subtle text-danger"><i class="bi bi-clipboard2-check"></i></span>
+                        <div>
+                            <div class="text-body-secondary small">Total Inspeksi</div>
+                            <div class="fs-3 fw-bold">{{ $totalInspeksi }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 
     <div class="row g-4 mb-4">
@@ -148,7 +157,33 @@
                         @endforelse
                     </div>
                 </div>
-            @endcan
+            @else
+                @can('BukuTamu')
+                    <div class="card dashboard-stat">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div>
+                                    <h5 class="mb-1">Kunjungan terbaru</h5><small class="text-body-secondary">Catatan dari buku
+                                        tamu</small>
+                                </div><a href="{{ route('tamu.index') }}" class="btn btn-sm btn-outline-danger">Lihat semua</a>
+                            </div>
+                            @forelse ($tamuTerbaru as $tamu)
+                                <div class="d-flex align-items-center gap-2 py-2 border-top"><span
+                                        class="dashboard-list-icon bg-success-subtle text-success"><i
+                                            class="bi bi-person"></i></span>
+                                    <div class="text-truncate">
+                                        <div class="fw-semibold text-truncate">{{ $tamu->nama }}</div><small
+                                            class="text-body-secondary">{{ $tamu->instansi ?: 'Instansi tidak diisi' }}</small>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-center text-body-secondary py-4"><i
+                                        class="bi bi-person-x fs-3 d-block mb-2"></i>Belum ada kunjungan tercatat.</div>
+                            @endforelse
+                        </div>
+                    </div>
+                @endcan
+            @endif
         </div>
         <div class="col-lg-5">
             @can('isAdmin')
@@ -181,34 +216,36 @@
 
     <div class="row g-4">
         <div class="col-lg-7">
-            <div class="card dashboard-stat">
-                <div class="card-body p-4">
-                    <h5 class="mb-1">Ringkasan inspeksi</h5>
-                    <p class="text-body-secondary small mb-3">Jumlah formulir inspeksi yang sudah tercatat.</p>
-                    <div class="row g-2 text-center">
-                        <div class="col-6 col-md-3">
-                            <div class="bg-body-tertiary rounded-3 p-3">
-                                <div class="fs-4 fw-bold">{{ $inspeksi['stavolt'] }}</div><small>Stavolt</small>
+            @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->jabatan === 'gl' || Auth::user()->jabatan === 'staff' || Auth::user()->jabatan === 'non_staff')
+                <div class="card dashboard-stat">
+                    <div class="card-body p-4">
+                        <h5 class="mb-1">Ringkasan inspeksi</h5>
+                        <p class="text-body-secondary small mb-3">Jumlah formulir inspeksi yang sudah tercatat.</p>
+                        <div class="row g-2 text-center">
+                            <div class="col-6 col-md-3">
+                                <div class="bg-body-tertiary rounded-3 p-3">
+                                    <div class="fs-4 fw-bold">{{ $inspeksi['stavolt'] }}</div><small>Stavolt</small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="bg-body-tertiary rounded-3 p-3">
-                                <div class="fs-4 fw-bold">{{ $inspeksi['ups'] }}</div><small>UPS</small>
+                            <div class="col-6 col-md-3">
+                                <div class="bg-body-tertiary rounded-3 p-3">
+                                    <div class="fs-4 fw-bold">{{ $inspeksi['ups'] }}</div><small>UPS</small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="bg-body-tertiary rounded-3 p-3">
-                                <div class="fs-4 fw-bold">{{ $inspeksi['monitor'] }}</div><small>Monitor/TV</small>
+                            <div class="col-6 col-md-3">
+                                <div class="bg-body-tertiary rounded-3 p-3">
+                                    <div class="fs-4 fw-bold">{{ $inspeksi['monitor'] }}</div><small>Monitor/TV</small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <div class="bg-body-tertiary rounded-3 p-3">
-                                <div class="fs-4 fw-bold">{{ $inspeksi['proyektor'] }}</div><small>Proyektor</small>
+                            <div class="col-6 col-md-3">
+                                <div class="bg-body-tertiary rounded-3 p-3">
+                                    <div class="fs-4 fw-bold">{{ $inspeksi['proyektor'] }}</div><small>Proyektor</small>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
         <div class="col-lg-5">
             <div class="card dashboard-stat">
@@ -220,10 +257,12 @@
                                         class="bi bi-person-plus d-block fs-5 mb-1"></i><small class="fw-semibold">Tambah
                                         tamu</small></a></div>
                         @endcan
-                        <div class="col-6"><a class="quick-link d-block p-3"
-                                href="{{ route('inspeksi.ups.create') }}"><i
-                                    class="bi bi-clipboard-plus d-block fs-5 mb-1"></i><small class="fw-semibold">Inspeksi
-                                    UPS</small></a></div>
+                        @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->jabatan === 'gl' || Auth::user()->jabatan === 'staff' || Auth::user()->jabatan === 'non_staff')
+                            <div class="col-6"><a class="quick-link d-block p-3"
+                                    href="{{ route('inspeksi.ups.create') }}"><i
+                                        class="bi bi-clipboard-plus d-block fs-5 mb-1"></i><small class="fw-semibold">Inspeksi
+                                        UPS</small></a></div>
+                        @endif
                     </div>
                 </div>
             </div>

@@ -24,6 +24,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\inspeksi\Ss6Controller;
 use App\Http\Controllers\inspeksi\OfaController;
 use App\Http\Controllers\KaryawanController;
+use App\Http\Controllers\AccountSettingsController;
+use App\Http\Controllers\UserManagementController;
 
 // Route::get('/', function () {
 //     return view('dashboard');
@@ -191,8 +193,26 @@ Route::middleware('auth')->group(function () {
         });
 
     
-    //user Route
-    Route::put('/users/{user}', [ProfileController::class, 'update'])->name('users.update');
+    // Account Settings Route
+    Route::controller(AccountSettingsController::class)->prefix('/account-settings')->name('account-settings.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::put('/profile', 'updateProfile')->name('update-profile');
+        Route::put('/password', 'updatePassword')->name('update-password');
+        Route::post('/avatar', 'updateAvatar')->name('update-avatar');
+    });
+
+    // User Management Route (Admin Only)
+    Route::middleware('can:isAdmin')->controller(UserManagementController::class)->prefix('/users')->name('users.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{user}/edit', 'edit')->name('edit');
+        Route::put('/{user}', 'update')->name('update');
+        Route::delete('/{user}', 'destroy')->name('destroy');
+    });
+
+    // Old Profile Modal Route (kept for backward compatibility)
+    Route::put('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
 
     // Logout Route
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
