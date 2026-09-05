@@ -7,9 +7,9 @@
             [
                 'nama' => $inspector->nama,
                 'nrp' => $inspector->nrp,
-                'jabatan' => $inspector->jabatan,
+                'jabatan' => 'Hardware Engineer',
                 'departemen' => 'ICT',
-                'perusahaan' => 'PT Putra Perkasa Abadi',
+                'perusahaan' => 'PT Star Perkasa Technology',
             ],
         ],
     );
@@ -55,8 +55,8 @@
             @enderror
         </div>
     @endforeach
-    <div class="col-md-4"><label class="form-label">Date</label><input class="form-control"
-            value="{{ isset($ofa) ? $ofa->created_at?->format('d-m-Y') : now()->format('d-m-Y') }}" readonly></div>
+    <div class="col-md-4"><label class="form-label">Date</label><input type="date" class="form-control"
+            value="{{ isset($ofa) ? $ofa->created_at?->format('d-m-Y') : now()->format('d-m-Y') }}"></div>
     <div class="col-12 mt-4">
         <h6 class="text-primary fw-bold border-bottom pb-2">Item Pemeriksaan</h6>
     </div>
@@ -129,11 +129,11 @@
                         <td><input name="tim_pelaksana[{{ $index }}][nrp]" class="form-control"
                                 value="{{ $anggota['nrp'] ?? '' }}"></td>
                         <td><input name="tim_pelaksana[{{ $index }}][jabatan]" class="form-control"
-                                value="{{ $anggota['jabatan'] ?? '' }}"></td>
+                                value="{{ $anggota['jabatan'] ?? '' }}" default="Hardware Engineer"></td>
                         <td><input name="tim_pelaksana[{{ $index }}][departemen]" class="form-control"
                                 value="{{ $anggota['departemen'] ?? '' }}"></td>
                         <td><input name="tim_pelaksana[{{ $index }}][perusahaan]" class="form-control"
-                                value="{{ $anggota['perusahaan'] ?? '' }}" required></td>
+                                value="{{ $anggota['perusahaan'] ?? '' }}" default="PT Star Perkasa Technology" required></td>
                         <td class="text-center"><button type="button"
                                 class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-trash"></i></button>
                         </td>

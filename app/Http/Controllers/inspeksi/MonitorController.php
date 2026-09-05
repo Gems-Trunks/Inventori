@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Exports\InspectionExport;
 use App\Models\inspeksi\MonitorModel;
 use App\Services\ApprovalService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
 
 class MonitorController extends Controller
@@ -33,9 +35,20 @@ class MonitorController extends Controller
         return view('inspeksi.monitor.create');
     }
 
+    public function export(Request $request)
+    {
+        return Excel::download(new InspectionExport($this->filteredQuery($request)->latest()->get(), [
+            'Nomor Aset' => 'nomor_aset', 'Merek' => 'merek', 'Tipe' => 'type', 'SN' => 'sn',
+            'Departemen' => 'departemen', 'Lokasi' => 'lokasi', 'Tanggal Inspeksi' => 'tanggal_inspeksi',
+            'Status' => 'approval_status', 'Disetujui Oleh' => 'approved_by',
+        ]), 'Inspeksi-Monitor.xlsx');
+    }
+
     public function store(Request $request)
     {
-        MonitorModel::create($this->validateRequest($request));
+        $data = $this->validateRequest($request);
+        $data['inspektor'] = $request->user()->nrp;
+        MonitorModel::create($data);
 
         return redirect()->route('inspeksi.monitor.index')->with('success', 'Data inspeksi monitor/TV berhasil disimpan.');
     }
@@ -52,7 +65,9 @@ class MonitorController extends Controller
                 ->with('error', 'Inspeksi yang sudah di-approve tidak dapat diubah.');
         }
 
-        $monitor->update($this->validateRequest($request));
+        $data = $this->validateRequest($request);
+        $data['inspektor'] = $monitor->inspektor ?: $request->user()->nrp;
+        $monitor->update($data);
 
         return redirect()->route('inspeksi.monitor.index')->with('success', 'Data inspeksi monitor/TV berhasil diperbarui.');
     }

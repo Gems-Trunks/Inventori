@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Exports\InspectionExport;
 use App\Models\inspeksi\OfaModel;
 use App\Services\ApprovalService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
 
 class OfaController extends Controller
@@ -59,6 +61,15 @@ class OfaController extends Controller
     public function create()
     {
         return view('Inspeksi.ofa.create', $this->formData());
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(new InspectionExport($this->filteredQuery($request)->latest()->get(), [
+            'Project' => 'project_name', 'Code Number Unit' => 'code_number_unit', 'Tipe Unit' => 'type_unit',
+            'Serial Number Modul' => 'serial_number_modul', 'Tanggal Inspeksi' => 'tanggal_inspeksi',
+            'Tim Pelaksana' => 'team_members', 'Status' => 'approval_status', 'Disetujui Oleh' => 'approved_by',
+        ]), 'Inspeksi-OFA.xlsx');
     }
 
     public function store(Request $request)
@@ -176,7 +187,7 @@ class OfaController extends Controller
             'tim_pelaksana.*.departemen' => ['nullable', 'string', 'max:255'],
             'tim_pelaksana.*.perusahaan' => ['required', 'string', 'max:255'],
         ]);
-
+        
         $data['item_pemeriksaan'] = collect($data['item_pemeriksaan'])->values()->all();
         $inspector = $request->user();
         $data['diinspeksi_oleh'] = $inspector->nrp;
@@ -184,9 +195,9 @@ class OfaController extends Controller
         $inspectorTeam = [
             'nama' => $inspector->nama,
             'nrp' => $inspector->nrp,
-            'jabatan' => 'Technician',
+            'jabatan' => 'Hardware Engineer',
             'departemen' => 'ICT',
-            'perusahaan' => 'PT Putra Perkasa Abadi',
+            'perusahaan' => 'PT Star Perkasa Technology',
         ];
         $otherTeam = collect($data['tim_pelaksana'])
             ->reject(fn ($member) => ($member['nrp'] ?? null) === $inspector->nrp)

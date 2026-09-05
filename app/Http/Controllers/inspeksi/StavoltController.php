@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Exports\InspectionExport;
 use App\Models\inspeksi\StavoltModel;
 use App\Services\ApprovalService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
 
 class StavoltController extends Controller
@@ -33,9 +35,20 @@ class StavoltController extends Controller
         return view('Inspeksi.stavolt.create');
     }
 
+    public function export(Request $request)
+    {
+        return Excel::download(new InspectionExport($this->filteredQuery($request)->latest()->get(), [
+            'Nomor Aset' => 'nomor_aset', 'Merek' => 'merek', 'Tipe' => 'type', 'SN' => 'sn',
+            'Departemen' => 'departemen', 'Lokasi' => 'lokasi', 'Tanggal Inspeksi' => 'tanggal_inspeksi',
+            'Status' => 'approval_status', 'Disetujui Oleh' => 'approved_by',
+        ]), 'Inspeksi-Stavolt.xlsx');
+    }
+
     public function store(Request $request)
     {
-        StavoltModel::create($this->validateRequest($request));
+        $data = $this->validateRequest($request);
+        $data['inspektor'] = $request->user()->nrp;
+        StavoltModel::create($data);
 
         return redirect()->route('inspeksi.stavolt.index')
             ->with('success', 'Data inspeksi Stavolt berhasil disimpan.');
@@ -53,7 +66,9 @@ class StavoltController extends Controller
                 ->with('error', 'Inspeksi yang sudah di-approve tidak dapat diubah.');
         }
 
-        $stavolt->update($this->validateRequest($request));
+        $data = $this->validateRequest($request);
+        $data['inspektor'] = $stavolt->inspektor ?: $request->user()->nrp;
+        $stavolt->update($data);
 
         return redirect()->route('inspeksi.stavolt.index')
             ->with('success', 'Data inspeksi Stavolt berhasil diperbarui.');

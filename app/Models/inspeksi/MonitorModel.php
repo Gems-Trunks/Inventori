@@ -2,6 +2,7 @@
 
 namespace App\Models\inspeksi;
 
+use App\Models\KaryawanModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,5 +28,10 @@ class MonitorModel extends Model
             'tanggal_inspeksi' => 'date',
             'approved_at' => 'datetime',
         ];
+    }
+
+    public function inspektorKaryawan()
+    {
+        return $this->belongsTo(KaryawanModel::class, 'inspektor', 'nrp');
     }
 }

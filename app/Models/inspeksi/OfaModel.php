@@ -51,7 +51,7 @@ class OfaModel extends Model
         ];
     }
     
-
+// ambil data nrp dari tabel karyawan
     public function karyawanId() {
         return $this->belongsTO(KaryawanModel::class,'diinspeksi_oleh', 'nrp');
     }

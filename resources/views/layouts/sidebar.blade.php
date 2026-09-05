@@ -96,6 +96,13 @@
                                         <p>Inspeksi OFA</p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('inspeksi.icc.index') }}"
+                                        class="nav-link {{ request()->routeIs('inspeksi.icc.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-circle"></i>
+                                        <p>Inspeksi ICC</p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     @endif

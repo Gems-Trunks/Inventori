@@ -6,6 +6,7 @@
         <x-counter-badge title="Total Data Inspeksi Monitor/TV" bgColor="bg-info-subtle" :counter="$monitors->total()" />
         <div class="d-flex flex-wrap gap-2">
             <x-data-search :action="route('inspeksi.monitor.index')" placeholder="Cari data Monitor" />
+            <a href="{{ route('inspeksi.monitor.export', request()->only('search')) }}" class="btn btn-sm btn-outline-success"><i class="bi bi-file-excel"></i> Export Excel</a>
             @if ($isGroupLeader)
                 <form action="{{ route('inspeksi.monitor.approve-all') }}" method="POST">@csrf<input type="hidden" name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i class="bi bi-check2-all"></i> Approve Semua</button></form>
             @endif
@@ -46,8 +47,8 @@
                         <td>{{ $monitor->approved_by ?: '-' }}</td>
                         <td class="text-center">
                             <div class="btn-group btn-group-sm gap-1">
+                                <a href="{{ route('inspeksi.monitor.pdf', $monitor) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
                                 @if ($monitor->approved_at)
-                                    <a href="{{ route('inspeksi.monitor.pdf', $monitor) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
                                 @else
                                     <a href="{{ route('inspeksi.monitor.edit', $monitor) }}" class="btn btn-warning text-white" title="Edit"><i class="bi bi-pencil"></i></a>
                                     @if ($isGroupLeader)

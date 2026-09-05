@@ -9,6 +9,7 @@
             <x-counter-badge title="Total Data Inspeksi Stavolt" bgColor="bg-info-subtle" :counter="$stavolts->total()" />
             <div class="d-flex flex-wrap gap-2">
                 <x-data-search :action="route('inspeksi.stavolt.index')" placeholder="Cari data Stavolt" />
+                <a href="{{ route('inspeksi.stavolt.export', request()->only('search')) }}" class="btn btn-sm btn-outline-success"><i class="bi bi-file-excel"></i> Export Excel</a>
                 @if ($isGroupLeader)
                     <form action="{{ route('inspeksi.stavolt.approve-all') }}" method="POST">@csrf<input type="hidden" name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i class="bi bi-check2-all"></i> Approve Semua</button></form>
                 @endif
@@ -53,14 +54,11 @@
                             <td>{{ $stavolt->approved_by ?: '-' }}</td>
                             <td class="text-center">
                                 <div class="btn-group btn-group-sm gap-1">
-                                    @if ($stavolt->approved_at)
-                                        <a href="{{ route('inspeksi.stavolt.pdf', $stavolt) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
-                                    @else
+                                    <a href="{{ route('inspeksi.stavolt.pdf', $stavolt) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
                                         <a href="{{ route('inspeksi.stavolt.edit', $stavolt) }}" class="btn btn-warning text-white" title="Edit"><i class="bi bi-pencil"></i></a>
                                         @if ($isGroupLeader)
                                         <form action="{{ route('inspeksi.stavolt.approve', $stavolt) }}" method="POST">@csrf<button class="btn btn-success" onclick="return confirm('Approve inspeksi ini?')" title="Approve"><i class="bi bi-check-lg"></i></button></form>
                                         @endif
-                                    @endif
                                     <form action="{{ route('inspeksi.stavolt.destroy', $stavolt) }}" method="POST">@csrf @method('DELETE')<button class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus data?')" title="Hapus"><i class="bi bi-trash"></i></button></form>
                                 </div>
                             </td>

@@ -5,6 +5,7 @@
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-3">
         <x-counter-badge title="Total Inspeksi OFA" bgColor="bg-info-subtle" :counter="$ofas->total()" />
         <div class="d-flex flex-wrap gap-2"><x-data-search :action="route('inspeksi.ofa.index')" placeholder="Cari data OFA" />
+            <a href="{{ route('inspeksi.ofa.export', request()->only('search')) }}" class="btn btn-sm btn-outline-success"><i class="bi bi-file-excel"></i> Export Excel</a>
             @if ($isGroupLeader)
                 <form action="{{ route('inspeksi.ofa.approve-all') }}" method="POST">@csrf<input type="hidden" name="search"
                         value="{{ request('search') }}"><button class="btn btn-sm btn-success"
@@ -53,7 +54,7 @@
 
                                     <a href="{{ route('inspeksi.ofa.pdf', $ofa) }}" class="btn btn-danger" target="_blank"
                                         title="PDF"><i class="bi bi-file-pdf"></i></a>
-                                    @if ($ofa->approved_at)
+                                    @if (!$ofa->approved_at)
                                         <a href="{{ route('inspeksi.ofa.edit', $ofa) }}" class="btn btn-warning text-white"
                                             title="Edit"><i class="bi bi-pencil"></i></a>
                                         @if ($isGroupLeader)

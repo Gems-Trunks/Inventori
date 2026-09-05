@@ -60,6 +60,16 @@
                             @enderror
                         </div>
                     @endforeach
+                    <div class="col-md-4">
+                        <label for="tanggal_inspeksi" class="form-label required">Tanggal Inspeksi</label>
+                        <input type="date" class="form-control @error('tanggal_inspeksi') is-invalid @enderror"
+                            id="tanggal_inspeksi" name="tanggal_inspeksi"
+                            value="{{ old('tanggal_inspeksi', $ups->tanggal_inspeksi ? substr($ups->tanggal_inspeksi, 0, 10) : '') }}"
+                            required>
+                        @error('tanggal_inspeksi')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
                     <div class="table-responsive my-4">
                         <table class="table table-bordered align-middle">
@@ -89,49 +99,27 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div >
+                        <div>
                             <label for="keterangan" class="form-label required">Keterangan</label>
                             <textarea name="keterangan" id="keterangan" class="form-control" @error('keterangan') @enderror
-                                value="{{ old('keterangan', $ups->keterangan ? $ups->keterangan : '-') }}" placeholder="Isi Keterangan" style="height: 100px;" required>
+                                value="{{ old('keterangan', $ups->keterangan ? $ups->keterangan : '-') }}" placeholder="Isi Keterangan"
+                                style="height: 100px;" required>
                             </textarea>
                             @error('keterangan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
-
-                    <div class="col-12 mt-4">
-                        <h6 class="text-primary fw-bold border-bottom pb-2">Detail Inspeksi & Penanggung Jawab</h6>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="tanggal_inspeksi" class="form-label required">Tanggal Inspeksi</label>
-                        <input type="date" class="form-control @error('tanggal_inspeksi') is-invalid @enderror"
-                            id="tanggal_inspeksi" name="tanggal_inspeksi"
-                            value="{{ old('tanggal_inspeksi', $ups->tanggal_inspeksi ? substr($ups->tanggal_inspeksi, 0, 10) : '') }}"
-                            required>
-                        @error('tanggal_inspeksi')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    @foreach (['inspektor' => ['Inspektor', 'Nama Petugas Inspeksi', true], 'diketahui_oleh' => ['Diketahui Oleh', 'Nama Supervisor / Atasan', false]] as $field => [$label, $placeholder, $required])
-                        <div class="col-md-4">
-                            <label for="{{ $field }}"
-                                class="form-label {{ $required ? 'required' : '' }}">{{ $label }}</label>
-                            <input type="text" class="form-control @error($field) is-invalid @enderror"
-                                id="{{ $field }}" name="{{ $field }}"
-                                value="{{ old($field, $ups->$field) }}" placeholder="{{ $placeholder }}"
-                                {{ $required ? 'required' : '' }}>
-                            @error($field)
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    @endforeach
                     <div class="col-12 text-end mt-4">
-                        <a href="{{ route('inspeksi.ups.index') }}" class="btn btn-light me-2">Batal</a>
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Perbarui
-                            Data</button>
+                        <button type="reset" class="btn btn-light me-2">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i> Update
+                        </button>
                     </div>
                 </div>
+
             </form>
         </div>
     </div>

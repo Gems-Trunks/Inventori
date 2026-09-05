@@ -10,6 +10,7 @@
       <x-counter-badge title="Total Data Inspeksi Monitor" bgColor="bg-info-subtle" :counter="$dataSs6->total()" />
       <div class="d-flex flex-wrap align-items-center gap-2">
          <x-data-search :action="route('inspeksi.ss6.index')" placeholder="Cari data Inspeksi"></x-data-search>
+         <a href="{{ route('inspeksi.ss6.export', request()->only('search')) }}" class="btn btn-sm btn-outline-success"><i class="bi bi-file-excel"></i> Export Excel</a>
          @if ($isGroupLeader)
             <form action="{{ route('inspeksi.ss6.approve-all') }}" method="POST">@csrf<input type="hidden" name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i class="bi bi-check2-all"></i> Approve Semua</button></form>
          @endif
@@ -72,8 +73,8 @@
                      <td class="text-center">
 
                         <div class="btn-group gap-1">
+                           <a href="{{ route('inspeksi.ss6.pdf', $item) }}" target="_blank" class="btn btn-danger btn-sm"><i class="bi bi-file-pdf"></i> PDF</a>
                            @if ($item->approved_at)
-                              <a href="{{ route('inspeksi.ss6.pdf', $item) }}" target="_blank" class="btn btn-danger btn-sm"><i class="bi bi-file-pdf"></i> PDF</a>
                            @else
                               <a href="{{ route('inspeksi.ss6.edit', $item) }}" class="btn btn-warning btn-sm text-white"><i class="bi bi-pencil"></i></a>
                               @if ($isGroupLeader)

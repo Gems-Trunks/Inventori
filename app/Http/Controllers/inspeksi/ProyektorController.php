@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Exports\InspectionExport;
 use App\Models\inspeksi\ProyektorModel;
 use App\Services\ApprovalService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
 
 class ProyektorController extends Controller
@@ -33,9 +35,20 @@ class ProyektorController extends Controller
         return view('Inspeksi.proyektor.create');
     }
 
+    public function export(Request $request)
+    {
+        return Excel::download(new InspectionExport($this->filteredQuery($request)->latest()->get(), [
+            'Nomor Aset' => 'nomor_aset', 'Merek' => 'merek', 'Tipe' => 'type', 'SN' => 'sn',
+            'Departemen' => 'departemen', 'Lokasi' => 'lokasi', 'Tanggal Inspeksi' => 'tanggal_inspeksi',
+            'Status' => 'approval_status', 'Disetujui Oleh' => 'approved_by',
+        ]), 'Inspeksi-Proyektor.xlsx');
+    }
+
     public function store(Request $request)
     {
-        ProyektorModel::create($this->validateRequest($request));
+        $data = $this->validateRequest($request);
+        $data['inspektor'] = $request->user()->nrp;
+        ProyektorModel::create($data);
 
         return redirect()->route('inspeksi.proyektor.index')->with('success', 'Data inspeksi proyektor berhasil disimpan.');
     }
@@ -52,7 +65,8 @@ class ProyektorController extends Controller
                 ->with('error', 'Inspeksi yang sudah di-approve tidak dapat diubah.');
         }
 
-        $proyektor->update($this->validateRequest($request));
+        $data = $proyektor->inspektor ?: $request->user()->nrp;
+        $proyektor->update(array_merge($this->validateRequest($request), ['inspektor' => $data]));
 
         return redirect()->route('inspeksi.proyektor.index')->with('success', 'Data inspeksi proyektor berhasil diperbarui.');
     }

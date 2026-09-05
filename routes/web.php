@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\inspeksi\Ss6Controller;
 use App\Http\Controllers\inspeksi\OfaController;
+use App\Http\Controllers\inspeksi\IccController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\AccountSettingsController;
 use App\Http\Controllers\UserManagementController;
@@ -96,6 +97,7 @@ Route::middleware('auth')->group(function () {
         ->name('inspeksi.stavolt.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/export', 'export')->name('export');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
             Route::post('/approve-all', 'approveAll')->name('approve-all');
@@ -113,6 +115,7 @@ Route::middleware('auth')->group(function () {
         ->name('inspeksi.ups.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/export', 'export')->name('export');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
             Route::post('/approve-all', 'approveAll')->name('approve-all');
@@ -130,6 +133,7 @@ Route::middleware('auth')->group(function () {
         ->name('inspeksi.monitor.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/export', 'export')->name('export');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
             Route::post('/approve-all', 'approveAll')->name('approve-all');
@@ -147,6 +151,7 @@ Route::middleware('auth')->group(function () {
         ->name('inspeksi.proyektor.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/export', 'export')->name('export');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
             Route::post('/approve-all', 'approveAll')->name('approve-all');
@@ -164,6 +169,7 @@ Route::middleware('auth')->group(function () {
         ->name('inspeksi.ss6.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/export', 'export')->name('export');
             Route::get('/create', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
             Route::post('/approve-all', 'approveAll')->name('approve-all');
@@ -181,6 +187,7 @@ Route::middleware('auth')->group(function () {
         ->name('inspeksi.ofa.')
         ->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/export', 'export')->name('export');
             Route::get('/create', 'create')->name('create');
             Route::post('/', 'store')->name('store');
             Route::post('/approve-all', 'approveAll')->name('approve-all');
@@ -190,6 +197,23 @@ Route::middleware('auth')->group(function () {
             Route::put('/{ofa}', 'update')->name('update');
             Route::delete('/{ofa}', 'destroy')->name('destroy');
             Route::get('/{ofa}/pdf', 'pdf')->name('pdf');
+        });
+
+    Route::controller(IccController::class)
+        ->prefix('/inspeksi/icc')
+        ->name('inspeksi.icc.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/export', 'export')->name('export');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/', 'store')->name('store');
+            Route::post('/approve-all', 'approveAll')->name('approve-all');
+            Route::get('/download-approved', 'downloadApproved')->name('download-approved');
+            Route::post('/{icc}/approve', 'approve')->name('approve');
+            Route::get('/{icc}/edit', 'edit')->name('edit');
+            Route::put('/{icc}', 'update')->name('update');
+            Route::delete('/{icc}', 'destroy')->name('destroy');
+            Route::get('/{icc}/pdf', 'pdf')->name('pdf');
         });
 
     

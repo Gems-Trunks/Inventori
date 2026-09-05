@@ -53,8 +53,8 @@
 
                     <div class="col-md-6 col-lg-4">
                         <label for="merek" class="form-label required">Merek</label>
-                        <input type="text" class="form-control @error('merek') is-invalid @enderror" id="merek" name="merek"
-                            value="{{ old('merek') }}" placeholder="Contoh: APC, ICA" required>
+                        <input type="text" class="form-control @error('merek') is-invalid @enderror" id="merek"
+                            name="merek" value="{{ old('merek') }}" placeholder="Contoh: APC, ICA" required>
                         @error('merek')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -62,8 +62,8 @@
 
                     <div class="col-md-6 col-lg-4">
                         <label for="type" class="form-label">Tipe / Model</label>
-                        <input type="text" class="form-control @error('type') is-invalid @enderror" id="type" name="type"
-                            value="{{ old('type') }}" placeholder="Contoh: Smart-UPS 1500VA">
+                        <input type="text" class="form-control @error('type') is-invalid @enderror" id="type"
+                            name="type" value="{{ old('type') }}" placeholder="Contoh: Smart-UPS 1500VA">
                         @error('type')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -71,8 +71,8 @@
 
                     <div class="col-md-6 col-lg-4">
                         <label for="sn" class="form-label">Serial Number (SN)</label>
-                        <input type="text" class="form-control @error('sn') is-invalid @enderror" id="sn" name="sn"
-                            value="{{ old('sn') }}" placeholder="Masukkan Serial Number">
+                        <input type="text" class="form-control @error('sn') is-invalid @enderror" id="sn"
+                            name="sn" value="{{ old('sn') }}" placeholder="Masukkan Serial Number">
                         @error('sn')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -96,6 +96,15 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div class="col-md-4">
+                        <label for="tanggal_inspeksi" class="form-label required">Tanggal Inspeksi</label>
+                        <input type="date" class="form-control @error('tanggal_inspeksi') is-invalid @enderror"
+                            id="tanggal_inspeksi" name="tanggal_inspeksi"
+                            value="{{ old('tanggal_inspeksi', date('Y-m-d')) }}" required>
+                        @error('tanggal_inspeksi')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <div class="table-responsive my-4">
                         <table class="table table-bordered align-middle">
                             <thead class="table-light">
@@ -113,14 +122,15 @@
                                             <span class="fw-semibold">{{ $item['label'] }}</span>
                                         </td>
                                         <td class="text-center">
-                                            <input class="form-check-input" type="radio" name="{{ $key }}" value="baik" {{ old($key) == 'baik' ? 'checked' : '' }} required>
+                                            <input class="form-check-input" type="radio" name="{{ $key }}"
+                                                value="baik" {{ old($key) == 'baik' ? 'checked' : '' }} required>
                                         </td>
                                         <td class="text-center">
-                                            <input class="form-check-input" type="radio" name="{{ $key }}" value="tidak" {{ old($key) == 'tidak' ? 'checked' : '' }} required>
+                                            <input class="form-check-input" type="radio" name="{{ $key }}"
+                                                value="tidak" {{ old($key) == 'tidak' ? 'checked' : '' }} required>
                                         </td>
                                         <td>
-                                            <textarea name="{{ $item['tindakan'] }}" class="form-control form-control-sm"
-                                                rows="2"
+                                            <textarea name="{{ $item['tindakan'] }}" class="form-control form-control-sm" rows="2"
                                                 placeholder="Keterangan / tindakan jika ada masalah">{{ old($item['tindakan']) }}</textarea>
                                         </td>
                                     </tr>
@@ -137,41 +147,6 @@
                             @enderror
                         </div>
                     </div>
-
-                    {{-- Detail Inspeksi --}}
-                    <div class="col-12 mt-4">
-                        <h6 class="text-primary fw-bold border-bottom pb-2">Detail Inspeksi & Penanggung Jawab</h6>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="tanggal_inspeksi" class="form-label required">Tanggal Inspeksi</label>
-                        <input type="date" class="form-control @error('tanggal_inspeksi') is-invalid @enderror"
-                            id="tanggal_inspeksi" name="tanggal_inspeksi"
-                            value="{{ old('tanggal_inspeksi', date('Y-m-d')) }}" required>
-                        @error('tanggal_inspeksi')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="inspektor" class="form-label required">Inspektor</label>
-                        <input type="text" class="form-control @error('inspektor') is-invalid @enderror" id="inspektor"
-                            name="inspektor" value="{{ old('inspektor') }}" placeholder="Nama Petugas Inspeksi" required>
-                        @error('inspektor')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="diketahui_oleh" class="form-label">Diketahui Oleh</label>
-                        <input type="text" class="form-control @error('diketahui_oleh') is-invalid @enderror"
-                            id="diketahui_oleh" name="diketahui_oleh" value="{{ old('diketahui_oleh') }}"
-                            placeholder="Nama Supervisor / Atasan">
-                        @error('diketahui_oleh')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
                     {{-- Submit Buttons --}}
                     <div class="col-12 text-end mt-4">
                         <button type="reset" class="btn btn-light me-2">

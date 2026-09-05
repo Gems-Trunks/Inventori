@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\inspeksi\OfaModel;
+use App\Models\inspeksi\IccModel;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -84,7 +85,62 @@ class ResetMonthlyInspection extends Command
                 }
             }
 
+            // ICC menggunakan tanggal_inspeksi sebagai periode inspeksi. Data unit
+            // dari bulan sebelumnya disalin sekali untuk setiap nomor lambung.
+            $startOfLastMonth = now()->subMonthNoOverflow()->startOfMonth();
+            $endOfLastMonth = now()->subMonthNoOverflow()->endOfMonth();
+            $startOfCurrentMonth = now()->startOfMonth();
+            $endOfCurrentMonth = now()->endOfMonth();
+
+            $previousIccs = IccModel::query()
+                ->whereBetween('tanggal_inspeksi', [$startOfLastMonth, $endOfLastMonth])
+                ->orderByDesc('tanggal_inspeksi')
+                ->orderByDesc('id')
+                ->get()
+                ->unique('no_lambung_unit');
+
+            $iccCreatedCount = 0;
+            $iccResetCount = 0;
+
+            foreach ($previousIccs as $icc) {
+                $existingRecord = IccModel::query()
+                    ->where('no_lambung_unit', $icc->no_lambung_unit)
+                    ->whereBetween('tanggal_inspeksi', [$startOfCurrentMonth, $endOfCurrentMonth])
+                    ->first();
+
+                if ($existingRecord) {
+                    $existingRecord->update([
+                        'status_approval' => 'menunggu',
+                        'approved_by' => null,
+                        'approved_at' => null,
+                        'qr_code_persetujuan' => null,
+                    ]);
+                    $iccResetCount++;
+
+                    continue;
+                }
+
+                IccModel::create([
+                    'no_lambung_unit' => $icc->no_lambung_unit,
+                    'tanggal_inspeksi' => $startOfCurrentMonth->toDateString(),
+                    'lokasi_inspeksi' => $icc->lokasi_inspeksi,
+                    'item_pemeriksaan' => $icc->item_pemeriksaan,
+                    'note' => $icc->note,
+                    'inspektor' => $icc->inspektor,
+                    'diketahui_oleh' => $icc->diketahui_oleh,
+                    'diperiksa_oleh' => $icc->diperiksa_oleh,
+                    'status_approval' => 'menunggu',
+                    'approved_by' => null,
+                    'approved_at' => null,
+                    'qr_code_persetujuan' => null,
+                ]);
+                $iccCreatedCount++;
+            }
+
             DB::commit();
+
+            $this->info("ICC - Record baru dibuat: {$iccCreatedCount}");
+            $this->info("ICC - Record di-reset: {$iccResetCount}");
 
             $this->info("✅ Reset inspeksi bulanan ({$currentMonth}/{$currentYear}) berhasil!");
             $this->info("   📝 Record baru dibuat: {$createdCount}");
@@ -100,4 +156,3 @@ class ResetMonthlyInspection extends Command
         return 0;
     }
 }
-

@@ -6,6 +6,7 @@
         <x-counter-badge title="Total Data Inspeksi Proyektor" bgColor="bg-info-subtle" :counter="$proyektors->total()" />
         <div class="d-flex flex-wrap gap-2">
             <x-data-search :action="route('inspeksi.proyektor.index')" placeholder="Cari data Proyektor" />
+            <a href="{{ route('inspeksi.proyektor.export', request()->only('search')) }}" class="btn btn-sm btn-outline-success"><i class="bi bi-file-excel"></i> Export Excel</a>
             @if ($isGroupLeader)
                 <form action="{{ route('inspeksi.proyektor.approve-all') }}" method="POST">@csrf<input type="hidden" name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i class="bi bi-check2-all"></i> Approve Semua</button></form>
             @endif
@@ -46,8 +47,8 @@
                         <td>{{ $proyektor->approved_by ?: '-' }}</td>
                         <td class="text-center">
                             <div class="btn-group btn-group-sm gap-1">
+                                <a href="{{ route('inspeksi.proyektor.pdf', $proyektor) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
                                 @if ($proyektor->approved_at)
-                                    <a href="{{ route('inspeksi.proyektor.pdf', $proyektor) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
                                 @else
                                     <a href="{{ route('inspeksi.proyektor.edit', $proyektor) }}" class="btn btn-warning text-white" title="Edit"><i class="bi bi-pencil"></i></a>
                                     @if ($isGroupLeader)

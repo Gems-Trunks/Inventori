@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Exports\InspectionExport;
 use App\Models\inspeksi\UpsModel;
 use App\Services\ApprovalService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
 
 class UpsController extends Controller
@@ -33,9 +35,19 @@ class UpsController extends Controller
         return view('Inspeksi.ups.create');
     }
 
+    public function export(Request $request)
+    {
+        return Excel::download(new InspectionExport($this->filteredQuery($request)->latest()->get(), [
+            'Nomor Aset' => 'nomor_aset', 'Merek' => 'merek', 'Tipe' => 'type', 'SN' => 'sn',
+            'Departemen' => 'departemen', 'Lokasi' => 'lokasi', 'Tanggal Inspeksi' => 'tanggal_inspeksi',
+            'Status' => 'approval_status', 'Disetujui Oleh' => 'approved_by',
+        ]), 'Inspeksi-UPS.xlsx');
+    }
+
     public function store(Request $request)
     {
         $data = $this->validateRequest($request);
+        $data['inspektor'] = $request->user()->nrp;
 
         UpsModel::create($data);
 
@@ -56,6 +68,7 @@ class UpsController extends Controller
         }
 
         $data = $this->validateRequest($request);
+        $data['inspektor'] = $ups->inspektor ?: $request->user()->nrp;
 
         $ups->update($data);
 

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Exports\InspectionExport;
 use App\Models\inspeksi\Ss6Model;
 use App\Services\ApprovalService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use ZipArchive;
 
@@ -29,6 +31,14 @@ class Ss6Controller extends Controller
     public function create()
     {
         return view('Inspeksi.ss6.create');
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(new InspectionExport($this->filteredQuery($request)->latest()->get(), [
+            'No Asset' => 'no_asset', 'No Lambung' => 'no_lambung', 'Serial Number' => 'serial_number',
+            'Tanggal Inspeksi' => 'tanggal_inspeksi', 'Status' => 'approval_status', 'Disetujui Oleh' => 'approved_by',
+        ]), 'Inspeksi-SS6.xlsx');
     }
 
     public function store(Request $req)

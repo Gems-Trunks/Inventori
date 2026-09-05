@@ -4,17 +4,23 @@
 
     @section('konten')
 
-        
+
         <div class="card-header">
             <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
                 <x-counter-badge title='Total Data Inspeksi UPS' bgColor="bg-info-subtle" :counter="$ups->total()"></x-counter-badge>
 
                 <div class="d-flex flex-wrap align-items-center gap-2">
                     <x-data-search :action="route('inspeksi.ups.index')" placeholder="Cari data UPS"></x-data-search>
+                    <a href="{{ route('inspeksi.ups.export', request()->only('search')) }}"
+                        class="btn btn-sm btn-outline-success"><i class="bi bi-file-excel"></i> Export Excel</a>
                     @if ($isGroupLeader)
-                        <form action="{{ route('inspeksi.ups.approve-all') }}" method="POST">@csrf<input type="hidden" name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i class="bi bi-check2-all"></i> Approve Semua</button></form>
+                        <form action="{{ route('inspeksi.ups.approve-all') }}" method="POST">@csrf<input type="hidden"
+                                name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success"
+                                onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i
+                                    class="bi bi-check2-all"></i> Approve Semua</button></form>
                     @endif
-                    <a href="{{ route('inspeksi.ups.download-approved', request()->only('search')) }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-file-zip"></i> Unduh PDF Approved</a>
+                    <a href="{{ route('inspeksi.ups.download-approved', request()->only('search')) }}"
+                        class="btn btn-sm btn-outline-danger"><i class="bi bi-file-zip"></i> Unduh PDF Approved</a>
                     <a class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"
                         href="{{ route('inspeksi.ups.create') }}">
                         <i class="bi bi-plus-lg"></i> Tambah Inspeksi
@@ -55,19 +61,30 @@
                             <td>
                                 {{ $item->tanggal_inspeksi ? \Carbon\Carbon::parse($item->tanggal_inspeksi)->format('d M Y') : '-' }}
                             </td>
-                            <td><span class="badge {{ $item->approved_at ? 'text-bg-success' : 'text-bg-warning' }}">{{ $item->approved_at ? 'Approved' : 'Menunggu GL' }}</span></td>
+                            <td><span
+                                    class="badge {{ $item->approved_at ? 'text-bg-success' : 'text-bg-warning' }}">{{ $item->approved_at ? 'Approved' : 'Menunggu GL' }}</span>
+                            </td>
                             <td>{{ $item->approved_by ?: '-' }}</td>
                             <td class="text-center">
                                 <div class="btn-group btn-group-sm gap-1" role="group">
-                                    @if ($item->approved_at)
-                                        <a href="{{ route('inspeksi.ups.pdf', $item) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
-                                    @else
-                                        <a href="{{ route('inspeksi.ups.edit', $item->id) }}" class="btn btn-warning text-white" title="Edit"><i class="bi bi-pencil"></i></a>
-                                        @if ($isGroupLeader)
-                                        <form action="{{ route('inspeksi.ups.approve', $item) }}" method="POST">@csrf<button class="btn btn-success" onclick="return confirm('Approve inspeksi ini?')" title="Approve"><i class="bi bi-check-lg"></i></button></form>
-                                        @endif
+                                    <a href="{{ route('inspeksi.ups.pdf', $item) }}" class="btn btn-danger" target="_blank"
+                                        title="PDF"><i class="bi bi-file-pdf"></i></a>
+                                    <a href="{{ route('inspeksi.ups.edit', $item->id) }}"
+                                        class="btn btn-warning text-white" title="Edit"><i class="bi bi-pencil"></i></a>
+
+                                    
+                                    @if ($isGroupLeader)
+                                        <form action="{{ route('inspeksi.ups.approve', $item) }}" method="POST">
+                                            @csrf<button class="btn btn-success"
+                                                onclick="return confirm('Approve inspeksi ini?')" title="Approve"><i
+                                                    class="bi bi-check-lg"></i></button></form>
                                     @endif
-                                    <form action="{{ route('inspeksi.ups.destroy', $item->id) }}" id="form-delete-{{ $item->id }}" method="POST" class="d-inline">@csrf @method('DELETE')<button type="button" onclick="deleteConfirm('form-delete-{{ $item->id }}')" class="btn btn-danger" title="Hapus"><i class="bi bi-trash"></i></button></form>
+                                    <form action="{{ route('inspeksi.ups.destroy', $item->id) }}"
+                                        id="form-delete-{{ $item->id }}" method="POST" class="d-inline">@csrf
+                                        @method('DELETE')<button type="button"
+                                            onclick="deleteConfirm('form-delete-{{ $item->id }}')"
+                                            class="btn btn-danger" title="Hapus"><i class="bi bi-trash"></i></button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>

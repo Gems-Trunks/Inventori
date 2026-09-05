@@ -828,13 +828,13 @@
 
             <td class="serial-value">
 
-                {{ $inspeksi->di_inspeksi_oleh ?? '-' }}
+                {{ $inspeksi->QrCodeKaryawan->nama ?? '-' }}
 
             </td>
 
             <td class="text-center">
 
-                {{ $inspeksi->jabatan_inspektor ?? 'ICT GL / ICT' }}
+                {{ $inspeksi->jabatan_inspektor ?? 'ICT' }}
 
             </td>
 
@@ -863,8 +863,8 @@
                             $qrCode = $qr->render($inspeksi->QrCodeKaryawan->qr_code);
                         @endphp
                         <div style="margin-top: 4px; text-align: center;">
-                            <img src="{{ $qrCode }}" width="80" height="80" alt="QR Code"
-                                style="display: block; margin: 0 auto;">
+                            <img src="{{ $qrCode }}" width="70" height="70" alt="QR Code"
+                                style="display: block; margin: 0 auto; margin-bottom: 30px;">
                         </div>
                 </div>
 
@@ -872,7 +872,7 @@
 
                 <div class="signature-name">
 
-                    {{ $inspeksi->di_inspeksi_oleh ?? '.................................' }}
+                    {{ $inspeksi->QrCodeKaryawan->nama ?? '.................................' }}
 
                 </div>
 
@@ -898,7 +898,7 @@
                             $qrCode = $qr->render($inspeksi->qr_code_persetujuan);
                         @endphp
                         <div style="margin-top: 4px; text-align: center;">
-                            <img src="{{ $qrCode }}" width="80" height="80" alt="QR Code"
+                            <img src="{{ $qrCode }}" width="70" height="70" alt="QR Code"
                                 style="display: block; margin: 0 auto;">
                         </div>
                     @endif
