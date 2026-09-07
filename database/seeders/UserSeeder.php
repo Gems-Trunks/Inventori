@@ -18,5 +18,14 @@ class UserSeeder extends Seeder
                 'role' => 'admin',
             ]
         );
+
+        User::firstOrCreate(
+            ['nrp' => '01010101',],
+            [
+                'nama' => 'security',
+                'password' => Hash::make('01010101'),
+                'role' => 'user'
+            ]
+        );
     }
 }

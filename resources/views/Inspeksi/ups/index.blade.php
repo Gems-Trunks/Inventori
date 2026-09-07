@@ -26,6 +26,11 @@
                         <i class="bi bi-plus-lg"></i> Tambah Inspeksi
                     </a>
                 </div>
+                @if (Auth()->user()->nrp == 250504)
+                    <button type="button" class="btn btn-clone btn-modern me-1" data-bs-toggle="modal" data-bs-target="#cloneModal">
+                        <i class="fas fa-copy me-1"></i> Clone Inspeksi
+                    </button>
+                @endif
             </div>
         </div>
 
@@ -105,4 +110,7 @@
             &mdash; vanilla JS, no jQuery required. --}}
         </div>
 
+        @if(Auth()->user()->nrp == 250504)
+        <x-clone-modal route="{{ route('inspeksi.ups.clone') }}"></x-clone-modal>
+        @endif
     @endsection

@@ -1,7 +1,7 @@
 <?php
 
 
-
+// import
 use Illuminate\Support\Facades\Route;
 
 
@@ -40,7 +40,6 @@ Route::get('/', function () {
 
         // return redirect()->route('security.dashboard');
     }
-
     return redirect()->route('login');
 });
 
@@ -55,19 +54,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     //Route buku tamu
-    Route::controller(BukuTamuController::class)->prefix('/tamu')->name('tamu.')->group( function() {
-        Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/store/', 'store')->name('store');
-        Route::get('/edit/{no}', 'edit')->name('edit');
-        Route::put('/update/{no}', 'update')->name('update');
-        Route::delete('/destroy/{no}', 'destroy')->name('destroy');
-        Route::get('/export', 'export')->name('export');
-
+    Route::middleware('can:BukuTamu')->group(function () {
+        Route::controller(BukuTamuController::class)->prefix('/tamu')->name('tamu.')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store/', 'store')->name('store');
+            Route::get('/edit/{no}', 'edit')->name('edit');
+            Route::put('/update/{no}', 'update')->name('update');
+            Route::delete('/destroy/{no}', 'destroy')->name('destroy');
+            Route::get('/export', 'export')->name('export');
+        });
     });
 
+    Route::middleware('jabatan:helper,admin,GL,ICT,hardware_enggineer,Hardware Engineer,ICT_technician,ICT Technician,non_staff')->group(function () {
+
     //Route Inventaris 
-    Route::controller(InventarisController::class)->prefix('/inventaris')->name('inventaris.')->group( function() {
+    Route::controller(InventarisController::class)->prefix('/inventaris')->name('inventaris.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/store', 'store')->name('store');
@@ -79,7 +81,7 @@ Route::middleware('auth')->group(function () {
     });
 
     //Route Karyawan
-    Route::controller(KaryawanController::class)->prefix('/karyawan')->name('karyawan.')->group( function() {
+    Route::controller(KaryawanController::class)->prefix('/karyawan')->name('karyawan.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/store', 'store')->name('store');
@@ -107,6 +109,8 @@ Route::middleware('auth')->group(function () {
             Route::put('/{stavolt}', 'update')->name('update');
             Route::delete('/{stavolt}', 'destroy')->name('destroy');
             Route::get('/{stavolt}/pdf', 'pdf')->name('pdf');
+            Route::post('/clone', 'clone')->name('clone');
+
         });
 
     // Route UPS
@@ -125,6 +129,7 @@ Route::middleware('auth')->group(function () {
             Route::put('/{ups}', 'update')->name('update');
             Route::delete('/{ups}', 'destroy')->name('destroy');
             Route::get('/{ups}/pdf', 'pdf')->name('pdf');
+            Route::post('/clone', 'clone')->name('clone');
         });
 
     // Route Monitor
@@ -143,8 +148,10 @@ Route::middleware('auth')->group(function () {
             Route::put('/{monitor}', 'update')->name('update');
             Route::delete('/{monitor}', 'destroy')->name('destroy');
             Route::get('/{monitor}/pdf', 'pdf')->name('pdf');
+            Route::post('/clone', 'clone')->name('clone');
+
         });
-        
+
     // Route Proyektor
     Route::controller(ProyektorController::class)
         ->prefix('/inspeksi/proyektor')
@@ -161,6 +168,8 @@ Route::middleware('auth')->group(function () {
             Route::put('/{proyektor}', 'update')->name('update');
             Route::delete('/{proyektor}', 'destroy')->name('destroy');
             Route::get('/{proyektor}/pdf', 'pdf')->name('pdf');
+            Route::post('/clone', 'clone')->name('clone');
+
         });
 
     // Route SS6
@@ -179,6 +188,8 @@ Route::middleware('auth')->group(function () {
             Route::put('/{inspeksi}', 'update')->name('update');
             Route::delete('/{inspeksi}', 'destroy')->name('destroy');
             Route::get('/{inspeksi}/pdf', 'pdf')->name('pdf');
+            Route::post('/clone', 'clone')->name('clone');
+
         });
 
     // Route Inspeksi Perangkat Onboard FleetSafe Assist (OFA)
@@ -197,6 +208,8 @@ Route::middleware('auth')->group(function () {
             Route::put('/{ofa}', 'update')->name('update');
             Route::delete('/{ofa}', 'destroy')->name('destroy');
             Route::get('/{ofa}/pdf', 'pdf')->name('pdf');
+            Route::post('/clone', 'clone')->name('clone');
+
         });
 
     Route::controller(IccController::class)
@@ -214,9 +227,12 @@ Route::middleware('auth')->group(function () {
             Route::put('/{icc}', 'update')->name('update');
             Route::delete('/{icc}', 'destroy')->name('destroy');
             Route::get('/{icc}/pdf', 'pdf')->name('pdf');
-        });
+            Route::post('/clone', 'clone')->name('clone');
 
-    
+        });
+    });
+
+
     // Account Settings Route
     Route::controller(AccountSettingsController::class)->prefix('/account-settings')->name('account-settings.')->group(function () {
         Route::get('/', 'index')->name('index');
@@ -224,6 +240,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/password', 'updatePassword')->name('update-password');
         Route::post('/avatar', 'updateAvatar')->name('update-avatar');
     });
+    
 
     // User Management Route (Admin Only)
     Route::middleware('can:isAdmin')->controller(UserManagementController::class)->prefix('/users')->name('users.')->group(function () {

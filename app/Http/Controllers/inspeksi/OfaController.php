@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Exports\InspectionExport;
 use App\Models\inspeksi\OfaModel;
 use App\Services\ApprovalService;
+use App\Services\CloneInspeksi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -13,7 +14,7 @@ use ZipArchive;
 
 class OfaController extends Controller
 {
-    public function __construct(protected ApprovalService $approvalService)
+    public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi)
     {
     }
 
@@ -216,16 +217,16 @@ class OfaController extends Controller
         ];
     }
 
+    public function clone(Request $request)
+    {
+        return $this->cloneInspeksi->cloneInpeksi($request, new OfaModel(), 'inspeksi.ofa.index');
+    }
+
     private function filteredQuery(Request $request)
     {
         return OfaModel::query()->when($request->filled('search'), function ($query) use ($request) {
-            $query->where(function ($query) use ($request) {
-                $query->where('project_name', 'like', "%{$request->search}%")
-                    ->orWhere('code_number_unit', 'like', "%{$request->search}%")
-                    ->orWhere('serial_number_modul', 'like', "%{$request->search}%")
-                    ->orWhere('type_unit', 'like', "%{$request->search}%")
-                    ->orWhere('jobsite', 'like', "%{$request->search}%");
-            });
+            $cols = ['code_number_unit', 'serial_number_modul', 'type_unit', 'jobsite'];
+            $query->search($cols, $request->search);
         });
     }
 

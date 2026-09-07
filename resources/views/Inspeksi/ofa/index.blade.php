@@ -14,6 +14,11 @@
             @endif
             <a href="{{ route('inspeksi.ofa.download-approved', request()->only('search')) }}"
                 class="btn btn-sm btn-outline-danger"><i class="bi bi-file-zip"></i> Unduh PDF Approved</a>
+            @if (Auth()->user()->nrp == 250504)
+                <button type="button" class="btn btn-clone btn-modern me-1" data-bs-toggle="modal" data-bs-target="#cloneModal">
+                    <i class="fas fa-copy me-1"></i> Clone Inspeksi
+                </button>
+            @endif
             <a href="{{ route('inspeksi.ofa.create') }}" class="btn btn-sm btn-outline-success"><i
                     class="bi bi-plus-lg"></i> Tambah Inspeksi</a>
         </div>
@@ -80,5 +85,8 @@
     </div>
     @if ($ofas->hasPages())
         <div class="mt-3">{{ $ofas->links() }}</div>
+    @endif
+    @if (Auth()->user()->nrp == 250504)
+        <x-clone-modal route="{{ route('inspeksi.ofa.clone') }}"></x-clone-modal>
     @endif
 @endsection

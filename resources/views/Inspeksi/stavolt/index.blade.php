@@ -14,6 +14,11 @@
                     <form action="{{ route('inspeksi.stavolt.approve-all') }}" method="POST">@csrf<input type="hidden" name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i class="bi bi-check2-all"></i> Approve Semua</button></form>
                 @endif
                 <a href="{{ route('inspeksi.stavolt.download-approved', request()->only('search')) }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-file-zip"></i> Unduh PDF Approved</a>
+                @if (Auth()->user()->nrp == 250504)
+                    <button type="button" class="btn btn-clone btn-modern me-1" data-bs-toggle="modal" data-bs-target="#cloneModal">
+                        <i class="fas fa-copy me-1"></i> Clone Inspeksi
+                    </button>
+                @endif
                 <a class="btn btn-sm btn-outline-success" href="{{ route('inspeksi.stavolt.create') }}">
                     <i class="bi bi-plus-lg"></i> Tambah Inspeksi
                 </a>
@@ -74,6 +79,9 @@
     </div>
     @if ($stavolts->hasPages())
         <div class="card-footer bg-white">{{ $stavolts->links() }}</div>
+    @endif
+    @if (Auth()->user()->nrp == 250504)
+        <x-clone-modal route="{{ route('inspeksi.stavolt.clone') }}"></x-clone-modal>
     @endif
     </div>
 @endsection

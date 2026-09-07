@@ -42,8 +42,8 @@
                         </li>
                     @endcan
 
-                    <!-- Menu Dropdown Inspeksi - GL, Staff, Non-staff, Admin -->
-                    @if(Auth::user()->can('isGL') || Auth::user()->can('isStaff') || Auth::user()->can('is_non_staff') || Auth::user()->can('isAdmin'))
+                    <!-- Menu Dropdown Inspeksi - Jabatan ICT, GL, dan Admin -->
+                    @if(Auth::user()->can('isIct') || Auth::user()->can('isGL') || Auth::user()->can('isAdmin'))
                         <li class="nav-item {{ request()->routeIs('inspeksi.*') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link {{ request()->routeIs('inspeksi.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-tools"></i>

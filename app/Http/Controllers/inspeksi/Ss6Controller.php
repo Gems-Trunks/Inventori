@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Exports\InspectionExport;
 use App\Models\inspeksi\Ss6Model;
 use App\Services\ApprovalService;
+use App\Services\CloneInspeksi;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -13,7 +14,7 @@ use ZipArchive;
 
 class Ss6Controller extends Controller
 {
-    public function __construct(protected ApprovalService $approvalService) {}
+    public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi) {}
 
     public function index(Request $req)
     {
@@ -241,5 +242,10 @@ class Ss6Controller extends Controller
             $cols = ['no_asset', 'no_lambung', 'serial_number', 'diperiksa_oleh', 'diinspeksi_oleh'];
             $query->search($cols, $request->search);
         });
+    }
+
+    public function clone(Request $request)
+    {
+        return $this->cloneInspeksi->cloneInpeksi($request, new Ss6Model(), 'inspeksi.ss6.index');
     }
 }

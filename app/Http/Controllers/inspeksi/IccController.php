@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Exports\InspectionExport;
 use App\Models\inspeksi\IccModel;
 use App\Services\ApprovalService;
+use App\Services\CloneInspeksi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -30,7 +31,7 @@ class IccController extends Controller
         14 => 'Fungsi Deteksi Kamera: Sistem mendeteksi kamera aktif & merekam dengan benar',
     ];
 
-    public function __construct(protected ApprovalService $approvalService) {}
+    public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi) {}
 
     public function index(Request $request)
     {
@@ -156,11 +157,13 @@ class IccController extends Controller
     private function filteredQuery(Request $request)
     {
         return IccModel::query()->when($request->filled('search'), function ($query) use ($request) {
-            $query->where(function ($query) use ($request) {
-                $query->where('no_lambung_unit', 'like', "%{$request->search}%")
-                    ->orWhere('lokasi_inspeksi', 'like', "%{$request->search}%")
-                    ->orWhere('inspektor', 'like', "%{$request->search}%");
-            });
+            $cols = ['no_lambung_unit', 'lokasi_inspeksi', 'inspektor'];
+            $query->search($cols, $request->search);
         });
+    }
+
+    public function clone(Request $request)
+    {
+        return $this->cloneInspeksi->cloneInpeksi($request, new IccModel(), 'inspeksi.icc.index');
     }
 }

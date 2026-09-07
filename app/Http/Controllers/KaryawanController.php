@@ -24,7 +24,7 @@ class KaryawanController extends Controller
             });
         }
 
-        $dataKaryawan = $query->latest()->paginate(15);
+        $dataKaryawan = $query->latest()->paginate(10);
 
         return view('karyawan.index', compact('dataKaryawan'));
     }

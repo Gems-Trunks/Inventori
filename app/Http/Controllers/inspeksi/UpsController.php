@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Exports\InspectionExport;
 use App\Models\inspeksi\UpsModel;
 use App\Services\ApprovalService;
+use App\Services\CloneInspeksi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -13,7 +14,7 @@ use ZipArchive;
 
 class UpsController extends Controller
 {
-    public function __construct(protected ApprovalService $approvalService)
+    public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi)
     {
     }
 
@@ -23,6 +24,7 @@ class UpsController extends Controller
             ->latest()
             ->paginate(15)
             ->withQueryString();
+
 
         return view('Inspeksi.ups.index', [
             'ups' => $ups,
@@ -147,13 +149,8 @@ class UpsController extends Controller
     private function filteredQuery(Request $request)
     {
         return UpsModel::query()->when($request->filled('search'), function ($query) use ($request) {
-            $query->where(function ($query) use ($request) {
-                $query->where('nomor_aset', 'like', "%{$request->search}%")
-                    ->orWhere('merek', 'like', "%{$request->search}%")
-                    ->orWhere('type', 'like', "%{$request->search}%")
-                    ->orWhere('sn', 'like', "%{$request->search}%")
-                    ->orWhere('departemen', 'like', "%{$request->search}%");
-            });
+            $cols = ['nomor_aset', 'merek', 'type', 'sn', 'departemen'];
+            $query->search($cols, $request->search);
         });
     }
 
@@ -187,5 +184,11 @@ class UpsController extends Controller
             'inspektor' => 'nullable|string|max:255',
             'diketahui_oleh' => 'nullable|string|max:255',
         ]);
+    }
+
+    public function clone(Request $request) {
+      
+
+        return $this->cloneInspeksi->cloneInpeksi($request, new UpsModel(), 'inspeksi.ups.index');
     }
 }

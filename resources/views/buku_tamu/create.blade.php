@@ -7,54 +7,57 @@
     <form action="{{ route('tamu.store') }}" method="POST">
         @csrf
         <div class="card-body">
-            {{-- Nama --}}
-            <div class="mb-3">
-                <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
-                <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama"
-                    value="{{ old('nama') }}" placeholder="Masukkan nama tamu" required>
-                @error('nama')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+            <div class="row">
+                {{-- Nama --}}
+                <div class="col-md-6 mb-3">
+                    <label for="nama" class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('nama') is-invalid @enderror" id="nama"
+                        name="nama" value="{{ old('nama') }}" placeholder="Masukkan nama tamu" required>
+                    @error('nama')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            {{-- No Telepon --}}
-            <div class="mb-3">
-                <label for="no_telp" class="form-label">No. Telepon <span class="text-danger">*</span></label>
-                <input type="text" class="form-control @error('no_telp') is-invalid @enderror" id="no_telp"
-                    name="no_telp" value="{{ old('no_telp') }}" placeholder="Contoh: 081234567890" required>
-                @error('no_telp')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+                {{-- No Telepon --}}
+                <div class="col-md-6 mb-3">
+                    <label for="no_telp" class="form-label">No. Telepon <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('no_telp') is-invalid @enderror" id="no_telp"
+                        name="no_telp" value="{{ old('no_telp') }}" placeholder="Contoh: 081234567890" required>
+                    @error('no_telp')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            {{-- NRP / NIK --}}
-            <div class="mb-3">
-                <label for="nrp" class="form-label">NRP / NIK</label>
-                <input type="text" class="form-control @error('nrp') is-invalid @enderror" id="nrp" name="nrp"
-                    value="{{ old('nrp') }}" placeholder="Masukkan NRP tamu">
-                @error('nrp')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+                {{-- NRP / NIK --}}
+                <div class="col-md-6 mb-3">
+                    <label for="nrp" class="form-label">NRP / NIK</label>
+                    <input type="text" class="form-control @error('nrp') is-invalid @enderror" id="nrp"
+                        name="nrp" value="{{ old('nrp') }}" placeholder="Masukkan NRP tamu">
+                    @error('nrp')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            {{-- Instansi --}}
-            <div class="mb-3">
-                <label for="instansi" class="form-label">Instansi / Perusahaan <span class="text-danger">*</span></label>
-                <input type="text" class="form-control @error('instansi') is-invalid @enderror" id="instansi"
-                    name="instansi" value="{{ old('instansi') }}" placeholder="Asal Instansi" required>
-                @error('instansi')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+                {{-- Instansi --}}
+                <div class="col-md-6 mb-3">
+                    <label for="instansi" class="form-label">Instansi / Perusahaan <span
+                            class="text-danger">*</span></label>
+                    <input type="text" class="form-control @error('instansi') is-invalid @enderror" id="instansi"
+                        name="instansi" value="{{ old('instansi') }}" placeholder="Asal Instansi" required>
+                    @error('instansi')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-            {{-- Keperluan --}}
-            <div class="mb-3">
-                <label for="keperluan" class="form-label">Keperluan <span class="text-danger">*</span></label>
-                <textarea class="form-control @error('keperluan') is-invalid @enderror" id="keperluan" name="keperluan" rows="3"
-                    placeholder="Jelaskan maksud dan tujuan kunjungan" required>{{ old('keperluan') }}</textarea>
-                @error('keperluan')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+                {{-- Keperluan --}}
+                <div class="col-12 mb-3">
+                    <label for="keperluan" class="form-label">Keperluan <span class="text-danger">*</span></label>
+                    <textarea class="form-control @error('keperluan') is-invalid @enderror" id="keperluan" name="keperluan" rows="3"
+                        placeholder="Jelaskan maksud dan tujuan kunjungan" required>{{ old('keperluan') }}</textarea>
+                    @error('keperluan')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
         </div>
 

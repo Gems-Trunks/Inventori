@@ -79,7 +79,7 @@
         }
 
         .kop-info table td:nth-child(2) {
-            width: 3%;
+            width: 6%;
             text-align: center;
         }
 
@@ -116,7 +116,7 @@
         }
 
         .identity td.value {
-            width: 31%;
+            width: 33%;
         }
 
         .identity td.empty {
@@ -138,6 +138,7 @@
 
         .notes {
             min-height: 52px;
+            height: 10%;
             white-space: pre-line;
         }
 
@@ -173,12 +174,12 @@
 
 <body>
     @php
-        // Data inspektor & approver tetap dinamis dari relasi karyawan
+        // --- Data inspektor & approver (tetap dinamis dari relasi karyawan) ---
         $inspectorName = $inspection->inspektorKaryawan?->nama ?? ($inspection->inspektor ?? '');
         $inspectorQr = $inspection->inspektorKaryawan?->qr_code ?? $inspection->inspektor;
 
-        // Info dokumen (No. Dokumen / Revisi / Tgl Efektif / Halaman) dan label
-        // departemen diambil dari $documentInfo supaya bisa beda-beda tergantung
+        // --- Info dokumen (No. Dokumen / Revisi / Tgl Efektif / Halaman) ---
+        // Departemen diambil dari $documentInfo supaya bisa beda-beda tergantung
         // jenis inspeksi (UPS, Genset, AC, dll) tanpa mengubah struktur template.
         $noDokumen = $documentInfo['no_dokumen'] ?? '-';
         $revisi = $documentInfo['revisi'] ?? '-';
@@ -188,11 +189,12 @@
         $deptFull = $documentInfo['dept_full'] ?? 'Information Communication & Technology';
         $logoPath = $documentInfo['logo_path'] ?? public_path('images/logo-ppa.png');
 
-        // Field IDENTITAS PERANGKAT tetap dinamis: controller mengirim
-        // $identityFields sebagai array asosiatif berurutan sesuai urutan
-        // tampil yang diinginkan (kiri-kanan, kiri-kanan, ...), persis
-        // seperti urutan di form PPA. Template hanya membaginya 2 per baris.
-        // Fallback di bawah dipakai kalau controller belum mengirim variabel ini.
+        // --- Field IDENTITAS PERANGKAT ---
+        // Tetap dinamis: controller mengirim $identityFields sebagai array
+        // asosiatif berurutan sesuai urutan tampil yang diinginkan
+        // (kiri-kanan, kiri-kanan, ...), persis seperti urutan di form PPA.
+        // Template hanya membaginya 2 per baris. Fallback di bawah dipakai
+        // kalau controller belum mengirim variabel ini.
         $identityFields = $identityFields ?? [
             'Nomor Aset' => $inspection->nomor_aset,
             'Departemen' => $inspection->departemen,
@@ -206,6 +208,14 @@
         // Pecah jadi baris berisi maksimal 2 pasang label:value, sama seperti
         // grid 4 kolom (Label | Value | Label | Value) pada dokumen PPA.
         $identityRows = collect($identityFields)->map(fn($value, $label) => [$label, $value])->values()->chunk(2);
+
+        // Helper tampilan nilai: pakai '-' hanya untuk null/string kosong,
+        // supaya nilai legit seperti "0" tidak ikut ditimpa jadi '-'.
+        $displayValue = fn($value) => $value !== null && $value !== '' ? $value : '-';
+
+        // Satu instance QRCode dipakai ulang untuk inspektor & approver,
+        // tidak perlu di-instantiate dua kali.
+        $qr = new \chillerlan\QRCode\QRCode();
     @endphp
 
     {{-- ===== KOP DOKUMEN ===== --}}
@@ -250,9 +260,15 @@
 
     {{-- ===== IDENTITAS PERANGKAT ===== --}}
     <table class="identity">
+        <colgroup>
+            <col style="width: 17%">
+            <col style="width: 33%">
+            <col style="width: 17%">
+            <col style="width: 33%">
+        </colgroup>
         <thead class="section-header">
             <tr>
-                <th colspan="6">IDENTITAS PERANGKAT</th>
+                <th colspan="4">IDENTITAS PERANGKAT</th>
             </tr>
         </thead>
         <tbody>
@@ -260,15 +276,13 @@
                 <tr>
                     @foreach ($row as [$label, $value])
                         <td class="label">{{ $label }}</td>
-                        <td class="colon">:</td>
-                        <td class="value">{{ $value ?: '-' }}</td>
+                        <td class="value">{{ $displayValue($value) }}</td>
                     @endforeach
-                    {{-- kalau baris cuma punya 1 pasang (jumlah field ganjil),
+                    {{-- Kalau baris cuma punya 1 pasang (jumlah field ganjil),
                          genapkan lebar grid dengan sel kosong seperti baris
-                         terakhir "S/N" pada dokumen PPA --}}
+                         terakhir "S/N" pada dokumen PPA. --}}
                     @if ($row->count() === 1)
                         <td class="label empty">&nbsp;</td>
-                        <td class="colon empty">&nbsp;</td>
                         <td class="value empty">&nbsp;</td>
                     @endif
                 </tr>
@@ -324,13 +338,11 @@
         <tr>
             <td class="signature-space">
                 @if ($inspectorQr)
-                    @php $qr = new \chillerlan\QRCode\QRCode(); @endphp
                     <img src="{{ $qr->render($inspectorQr) }}" width="60" height="60" alt="QR Inspektor">
                 @endif
             </td>
             <td class="signature-space">
                 @if ($inspection->approved_at && $inspection->qr_code_persetujuan)
-                    @php $qr = new \chillerlan\QRCode\QRCode(); @endphp
                     <img src="{{ $qr->render($inspection->qr_code_persetujuan) }}" width="60" height="60"
                         alt="QR Persetujuan">
                 @endif

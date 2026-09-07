@@ -15,6 +15,8 @@ class InventarisController extends Controller
     //
     public function index(Request $request)
     {
+        $column = ['nrp', 'nama', 'nama_perangkat', 'no_asset', 'status_peminjaman'];
+    
         $query = InventarisModel::query();
 
         if ($request->filled('search')) {

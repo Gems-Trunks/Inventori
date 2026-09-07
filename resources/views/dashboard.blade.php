@@ -112,7 +112,7 @@
                 </div>
             </div>
         @endcan
-        @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->jabatan === 'gl' || Auth::user()->jabatan === 'staff' || Auth::user()->jabatan === 'non_staff')
+        @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->can('isGL') || Auth::user()->can('isIct'))
             <div class="col-sm-6 col-xl-3">
                 <div class="card dashboard-stat">
                     <div class="card-body d-flex align-items-center gap-3"><span
@@ -216,7 +216,7 @@
 
     <div class="row g-4">
         <div class="col-lg-7">
-            @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->jabatan === 'gl' || Auth::user()->jabatan === 'staff' || Auth::user()->jabatan === 'non_staff')
+            @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->can('isGL') || Auth::user()->can('isIct'))
                 <div class="card dashboard-stat">
                     <div class="card-body p-4">
                         <h5 class="mb-1">Ringkasan inspeksi</h5>
@@ -257,7 +257,7 @@
                                         class="bi bi-person-plus d-block fs-5 mb-1"></i><small class="fw-semibold">Tambah
                                         tamu</small></a></div>
                         @endcan
-                        @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->jabatan === 'gl' || Auth::user()->jabatan === 'staff' || Auth::user()->jabatan === 'non_staff')
+                        @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->can('isGL') || Auth::user()->can('isIct'))
                             <div class="col-6"><a class="quick-link d-block p-3"
                                     href="{{ route('inspeksi.ups.create') }}"><i
                                         class="bi bi-clipboard-plus d-block fs-5 mb-1"></i><small class="fw-semibold">Inspeksi
