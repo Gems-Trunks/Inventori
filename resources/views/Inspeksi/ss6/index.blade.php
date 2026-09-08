@@ -14,10 +14,12 @@
          @if ($isGroupLeader)
             <form action="{{ route('inspeksi.ss6.approve-all') }}" method="POST">@csrf<input type="hidden" name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i class="bi bi-check2-all"></i> Approve Semua</button></form>
          @endif
-         <a href="{{ route('inspeksi.ss6.download-approved', request()->only('search')) }}" class="btn btn-sm btn-outline-danger"><i class="bi bi-file-zip"></i> Unduh PDF Approved</a>
+          <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+             data-bs-target="#downloadApprovedModal"><i class="bi bi-file-zip"></i> Unduh PDF Approved</button>
+         <x-download-approved-modal route="{{ route('inspeksi.ss6.download-approved') }}" :search="request('search')" />
          @if (Auth()->user()->nrp == 250504)
-            <button type="button" class="btn btn-clone btn-modern me-1" data-bs-toggle="modal" data-bs-target="#cloneModal">
-               <i class="fas fa-copy me-1"></i> Clone Inspeksi
+            <button type="button" class="btn btn-danger btn-modern me-1" data-bs-toggle="modal" data-bs-target="#cloneModal">
+               <i class="fas fa-copy me-1"></i> Clone Inspeksi 💀
             </button>
          @endif
          <a class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"

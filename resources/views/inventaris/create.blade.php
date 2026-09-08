@@ -54,10 +54,10 @@
                 <select class="form-select @error('status_peminjaman') is-invalid @enderror" id="status_peminjaman"
                     name="status_peminjaman" required>
                     <option value="" disabled selected>-- Pilih Status --</option>
-                    <option value="Dikembalikan" {{ old('status_peminjaman') == 'Dikembalikan' ? 'selected' : '' }}>Dikembalikan
-                    </option>
                     <option value="Belum Dikembalikan" {{ old('status_peminjaman') == 'Belum Dikembalikan' ? 'selected' : '' }}>
-                        Belum    Dikembalikan</option>
+                        Belum Dikembalikan</option>
+                    <option value="Dikembalikan" {{ old('status_peminjaman') == 'Dikembalikan' ? 'selected' : '' }}>
+                        Dikembalikan</option>
                 </select>
                 @error('status_peminjaman')
                     <div class="invalid-feedback">{{ $message }}</div>

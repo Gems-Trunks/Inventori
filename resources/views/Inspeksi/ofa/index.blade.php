@@ -5,18 +5,20 @@
     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-3">
         <x-counter-badge title="Total Inspeksi OFA" bgColor="bg-info-subtle" :counter="$ofas->total()" />
         <div class="d-flex flex-wrap gap-2"><x-data-search :action="route('inspeksi.ofa.index')" placeholder="Cari data OFA" />
-            <a href="{{ route('inspeksi.ofa.export', request()->only('search')) }}" class="btn btn-sm btn-outline-success"><i class="bi bi-file-excel"></i> Export Excel</a>
+            <a href="{{ route('inspeksi.ofa.export', request()->only('search')) }}" class="btn btn-sm btn-outline-success"><i
+                    class="bi bi-file-excel"></i> Export Excel</a>
             @if ($isGroupLeader)
-                <form action="{{ route('inspeksi.ofa.approve-all') }}" method="POST">@csrf<input type="hidden" name="search"
-                        value="{{ request('search') }}"><button class="btn btn-sm btn-success"
+                <form action="{{ route('inspeksi.ofa.approve-all') }}" method="POST">@csrf<input type="hidden"
+                        name="search" value="{{ request('search') }}"><button class="btn btn-sm btn-success"
                         onclick="return confirm('Approve semua inspeksi yang belum disetujui?')"><i
                             class="bi bi-check2-all"></i> Approve Semua</button></form>
             @endif
-            <a href="{{ route('inspeksi.ofa.download-approved', request()->only('search')) }}"
-                class="btn btn-sm btn-outline-danger"><i class="bi bi-file-zip"></i> Unduh PDF Approved</a>
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                data-bs-target="#downloadApprovedModal"><i class="bi bi-file-zip"></i> Unduh PDF Approved</button>
             @if (Auth()->user()->nrp == 250504)
-                <button type="button" class="btn btn-clone btn-modern me-1" data-bs-toggle="modal" data-bs-target="#cloneModal">
-                    <i class="fas fa-copy me-1"></i> Clone Inspeksi
+                <button type="button" class="btn btn-danger btn-modern me-1" data-bs-toggle="modal"
+                    data-bs-target="#cloneModal">
+                    <i class="fas fa-copy me-1"></i> Clone Inspeksi 💀
                 </button>
             @endif
             <a href="{{ route('inspeksi.ofa.create') }}" class="btn btn-sm btn-outline-success"><i
@@ -59,9 +61,9 @@
 
                                     <a href="{{ route('inspeksi.ofa.pdf', $ofa) }}" class="btn btn-danger" target="_blank"
                                         title="PDF"><i class="bi bi-file-pdf"></i></a>
+                                    <a href="{{ route('inspeksi.ofa.edit', $ofa) }}"
+                                        class="btn btn-warning text-white"title="Edit"><i class="bi bi-pencil"></i></a>
                                     @if (!$ofa->approved_at)
-                                        <a href="{{ route('inspeksi.ofa.edit', $ofa) }}" class="btn btn-warning text-white"
-                                            title="Edit"><i class="bi bi-pencil"></i></a>
                                         @if ($isGroupLeader)
                                             <form action="{{ route('inspeksi.ofa.approve', $ofa) }}" method="POST">
                                                 @csrf<button class="btn btn-success"
@@ -89,4 +91,5 @@
     @if (Auth()->user()->nrp == 250504)
         <x-clone-modal route="{{ route('inspeksi.ofa.clone') }}"></x-clone-modal>
     @endif
+    <x-download-approved-modal route="{{ route('inspeksi.ofa.download-approved') }}" :search="request('search')" />
 @endsection

@@ -48,14 +48,14 @@ class BukuTamuController extends Controller
         return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil ditambahkan!');
     }
 
-    public function edit(string $no)
+    public function edit(string $id)
     {
-        $tamu = BukuTamuModel::findOrFail($no);
+        $tamu = BukuTamuModel::findOrFail($id);
 
         return view('buku_tamu.edit', compact('tamu'));
     }
 
-    public function update(Request $request, string $no)
+    public function update(Request $request, string $id)
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
@@ -65,16 +65,16 @@ class BukuTamuController extends Controller
             'keperluan' => 'required|string',
         ]);
 
-        $tamu = BukuTamuModel::findOrFail($no);
+        $tamu = BukuTamuModel::findOrFail($id);
 
         $tamu->update($validatedData);
 
         return redirect()->route('tamu.index')->with('success', 'Data tamu berhasil diperbarui!');
     }
 
-    public function destroy(string $no)
+    public function destroy(string $id)
     {
-        $tamu = BukuTamuModel::findOrFail($no);
+        $tamu = BukuTamuModel::findOrFail($id);
 
         $tamu->delete();
 

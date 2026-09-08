@@ -1,9 +1,14 @@
 @php
     $storedItems = old('item_pemeriksaan', $ofa->item_pemeriksaan ?? []);
+
     $itemsByKey = collect($storedItems)->keyBy(fn($item) => ($item['section'] ?? '') . '|' . ($item['nama'] ?? ''));
-    $tim = old(
-        'tim_pelaksana',
-        $ofa->tim_pelaksana ?? [
+
+    if (isset($ofa)) {
+        // EDIT
+        $tim = old('tim_pelaksana', $ofa->tim_pelaksana ?? []);
+    } else {
+        // CREATE
+        $tim = old('tim_pelaksana', [
             [
                 'nama' => $inspector->nama,
                 'nrp' => $inspector->nrp,
@@ -11,8 +16,9 @@
                 'departemen' => 'ICT',
                 'perusahaan' => 'PT Star Perkasa Technology',
             ],
-        ],
-    );
+        ]);
+    }
+
     $itemIndex = 0;
 @endphp
 
@@ -55,7 +61,7 @@
             @enderror
         </div>
     @endforeach
-    <div class="col-md-4"><label class="form-label">Date</label><input type="date" class="form-control"
+    <div class="col-md-4"><label class="form-label">Date</label><input type="date" name="tanggal_inspeksi" class="form-control"
             value="{{ isset($ofa) ? $ofa->created_at?->format('d-m-Y') : now()->format('d-m-Y') }}"></div>
     <div class="col-12 mt-4">
         <h6 class="text-primary fw-bold border-bottom pb-2">Item Pemeriksaan</h6>
@@ -84,8 +90,7 @@
                             <td>{{ $name }}<input type="hidden"
                                     name="item_pemeriksaan[{{ $itemIndex }}][nama]"
                                     value="{{ $name }}"><input type="hidden"
-                                    name="item_pemeriksaan[{{ $itemIndex }}][section]"
-                                    value="{{ $section }}">
+                                    name="item_pemeriksaan[{{ $itemIndex }}][section]" value="{{ $section }}">
                             </td>
                             @foreach (['baik' => 'Baik', 'rusak' => 'Rusak', 'na' => 'N/A'] as $status => $label)
                                 <td class="text-center"><input type="radio" class="form-check-input"
@@ -133,7 +138,8 @@
                         <td><input name="tim_pelaksana[{{ $index }}][departemen]" class="form-control"
                                 value="{{ $anggota['departemen'] ?? '' }}"></td>
                         <td><input name="tim_pelaksana[{{ $index }}][perusahaan]" class="form-control"
-                                value="{{ $anggota['perusahaan'] ?? '' }}" default="PT Star Perkasa Technology" required></td>
+                                value="{{ $anggota['perusahaan'] ?? '' }}" default="PT Star Perkasa Technology"
+                                required></td>
                         <td class="text-center"><button type="button"
                                 class="btn btn-sm btn-outline-danger remove-row"><i class="bi bi-trash"></i></button>
                         </td>
@@ -143,7 +149,7 @@
         </table><button type="button" id="add-team-member" class="btn btn-sm btn-outline-primary"><i
                 class="bi bi-plus-lg"></i> Tambah Pelaksana</button>
     </div>
-    
+
 </div>
 
 @push('scripts')

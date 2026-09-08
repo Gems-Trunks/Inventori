@@ -52,7 +52,7 @@
                 <label for="status_peminjaman" class="form-label">Status Peminjaman <span class="text-danger">*</span></label>
                 <select class="form-select @error('status_peminjaman') is-invalid @enderror" id="status_peminjaman" name="status_peminjaman" required>
                     <option value="" disabled>-- Pilih Status --</option>
-                    <option value="Dipinjam" {{ old('status_peminjaman', $inventaris->status_peminjaman) == 'Dipinjam' ? 'selected' : '' }}>Dipinjam</option>
+                    <option value="Belum Dikembalikan" {{ old('status_peminjaman', $inventaris->status_peminjaman) == 'Belum Dikembalikan' ? 'selected' : '' }}>Belum Dikembalikan</option>
                     <option value="Dikembalikan" {{ old('status_peminjaman', $inventaris->status_peminjaman) == 'Dikembalikan' ? 'selected' : '' }}>Dikembalikan</option>
                 </select>
                 @error('status_peminjaman')

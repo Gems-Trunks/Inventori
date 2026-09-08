@@ -114,9 +114,17 @@ class ProyektorController extends Controller
 
     public function downloadApproved(Request $request)
     {
-        $inspections = $this->filteredQuery($request)->whereNotNull('approved_at')->latest()->get();
+        $period = $request->validate([
+            'month' => ['nullable', 'integer', 'between:1,12'],
+            'year' => ['nullable', 'integer', 'between:2000,2100'],
+        ]);
+        $month = $period['month'] ?? now()->month;
+        $year = $period['year'] ?? now()->year;
+        $inspections = $this->filteredQuery($request)->whereNotNull('approved_at')
+            ->whereYear('tanggal_inspeksi', $year)->whereMonth('tanggal_inspeksi', $month)
+            ->latest()->get();
         if ($inspections->isEmpty()) {
-            return back()->with('error', 'Belum ada inspeksi approved untuk diunduh.');
+            return back()->with('error', "Belum ada inspeksi approved untuk {$month}/{$year}.");
         }
 
         $temporaryFile = tempnam(sys_get_temp_dir(), 'proyektor-approved-');
@@ -132,7 +140,7 @@ class ProyektorController extends Controller
             $pdf = Pdf::loadView('pdf.inspeksi_proyektor', ['proyektor' => $inspection])
                 ->setPaper('A4', 'portrait')
                 ->output();
-            $zip->addFromString("Checklist-Proyektor-{$inspection->nomor_aset}.pdf", $pdf);
+            $zip->addFromString("Checklist-Proyektor-{$inspection->nomor_aset}-{$inspection->id}.pdf", $pdf);
         }
         $zip->close();
 

@@ -105,6 +105,13 @@ class InventarisController extends Controller
         ]);
 
         $inventaris = InventarisModel::findOrFail($id);
+
+        if ($validated['status_peminjaman'] === 'Dikembalikan') {
+            $validated['tanggal_pengembalian'] = now();
+        } else {
+            $validated['tanggal_pengembalian'] = null;
+        }
+
         $inventaris->update($validated);
 
         return redirect()->route('inventaris.index')->with('success', 'Data inventaris berhasil diubah.');

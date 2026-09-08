@@ -112,9 +112,17 @@ class IccController extends Controller
 
     public function downloadApproved(Request $request)
     {
-        $iccs = $this->filteredQuery($request)->whereNotNull('approved_at')->latest()->get();
+        $period = $request->validate([
+            'month' => ['nullable', 'integer', 'between:1,12'],
+            'year' => ['nullable', 'integer', 'between:2000,2100'],
+        ]);
+        $month = $period['month'] ?? now()->month;
+        $year = $period['year'] ?? now()->year;
+        $iccs = $this->filteredQuery($request)->whereNotNull('approved_at')
+            ->whereYear('tanggal_inspeksi', $year)->whereMonth('tanggal_inspeksi', $month)
+            ->latest()->get();
         if ($iccs->isEmpty()) {
-            return back()->with('error', 'Belum ada pemeliharaan ICC approved untuk diunduh.');
+            return back()->with('error', "Belum ada pemeliharaan ICC approved untuk {$month}/{$year}.");
         }
 
         $temporaryFile = tempnam(sys_get_temp_dir(), 'icc-approved-');
@@ -127,7 +135,7 @@ class IccController extends Controller
 
         foreach ($iccs as $icc) {
             $pdf = Pdf::loadView('pdf.inspeksi_icc', compact('icc'))->setPaper('A4', 'portrait')->output();
-            $zip->addFromString("Formulir-Pemeliharaan-ICC-{$icc->no_lambung_unit}.pdf", $pdf);
+            $zip->addFromString("Formulir-Pemeliharaan-ICC-{$icc->no_lambung_unit}-{$icc->id}.pdf", $pdf);
         }
         $zip->close();
 

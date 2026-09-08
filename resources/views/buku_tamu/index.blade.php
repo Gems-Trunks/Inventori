@@ -64,15 +64,15 @@
                                                 title="Detail">
                                                 <i class="bi bi-eye"></i>
                                             </a> --}}
-                                    <a href="{{ route('tamu.edit', $tamu->no) }}" class="btn btn-sm btn-warning text-white"
+                                    <a href="{{ route('tamu.edit', $tamu->id) }}" class="btn btn-sm btn-warning text-white"
                                         title="Edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
-                                    <form action="{{ route('tamu.destroy', $tamu->no) }}"
-                                        id="form-delete-{{ $tamu->no }}" method="POST" class="d-inline">
+                                    <form action="{{ route('tamu.destroy', $tamu->id) }}"
+                                        id="form-delete-{{ $tamu->id }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="button" onclick="deleteConfirm('form-delete-{{ $tamu->no }}')"
+                                        <button type="button" onclick="deleteConfirm('form-delete-{{ $tamu->id }}')"
                                             class="btn btn-sm btn-danger" title="Hapus">
                                             <i class="bi bi-trash"></i>
                                         </button>

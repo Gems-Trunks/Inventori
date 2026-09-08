@@ -29,3 +29,8 @@
         rgba(18, 18, 18, 0.95) 100%
     );
 }
+
+.btn-clone {
+    background-color: red !important; 
+    color:white !important;
+}

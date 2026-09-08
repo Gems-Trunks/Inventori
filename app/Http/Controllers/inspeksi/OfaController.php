@@ -14,9 +14,7 @@ use ZipArchive;
 
 class OfaController extends Controller
 {
-    public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi)
-    {
-    }
+    public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi) {}
 
     public const CHECKLIST_SECTIONS = [
         'A. MAIN MODUL' => [
@@ -67,17 +65,26 @@ class OfaController extends Controller
     public function export(Request $request)
     {
         return Excel::download(new InspectionExport($this->filteredQuery($request)->latest()->get(), [
-            'Project' => 'project_name', 'Code Number Unit' => 'code_number_unit', 'Tipe Unit' => 'type_unit',
-            'Serial Number Modul' => 'serial_number_modul', 'Tanggal Inspeksi' => 'tanggal_inspeksi',
-            'Tim Pelaksana' => 'team_members', 'Status' => 'approval_status', 'Disetujui Oleh' => 'approved_by',
+            'Project' => 'project_name',
+            'Code Number Unit' => 'code_number_unit',
+            'Tipe Unit' => 'type_unit',
+            'Serial Number Modul' => 'serial_number_modul',
+            'Tanggal Inspeksi' => 'tanggal_inspeksi',
+            'Tim Pelaksana' => 'team_members',
+            'Status' => 'approval_status',
+            'Disetujui Oleh' => 'approved_by',
         ]), 'Inspeksi-OFA.xlsx');
     }
 
     public function store(Request $request)
     {
-        OfaModel::create($this->validatedData($request));
+        $data = $this->validatedData($request);
 
-        return redirect()->route('inspeksi.ofa.index')->with('success', 'Data inspeksi OFA berhasil disimpan.');
+        OfaModel::create($data);
+
+        return redirect()
+            ->route('inspeksi.ofa.index')
+            ->with('success', 'Data inspeksi OFA berhasil disimpan.');
     }
 
     public function edit(OfaModel $ofa)
@@ -88,13 +95,19 @@ class OfaController extends Controller
     public function update(Request $request, OfaModel $ofa)
     {
         if (!$this->approvalService->canUpdate($ofa)) {
-            return redirect()->route('inspeksi.ofa.index')
+            return redirect()
+                ->route('inspeksi.ofa.index')
                 ->with('error', 'Inspeksi yang sudah di-approve tidak dapat diubah.');
         }
 
-        $ofa->update($this->validatedData($request));
+        $data = $this->validatedData($request);
 
-        return redirect()->route('inspeksi.ofa.index')->with('success', 'Data inspeksi OFA berhasil diperbarui.');
+        $ofa->update($data);
+
+
+        return redirect()
+            ->route('inspeksi.ofa.index')
+            ->with('success', 'Data inspeksi OFA berhasil diperbarui.');
     }
 
     public function destroy(OfaModel $ofa)
@@ -139,9 +152,28 @@ class OfaController extends Controller
 
     public function downloadApproved(Request $request)
     {
-        $inspections = $this->filteredQuery($request)->whereNotNull('approved_at')->latest()->get();
+        $period = $request->validate([
+            'month' => ['nullable', 'integer', 'between:1,12'],
+            'year' => ['nullable', 'integer', 'between:2000,2100'],
+        ]);
+        $month = $period['month'] ?? now()->month;
+        $year = $period['year'] ?? now()->year;
+
+        $inspections = $this->filteredQuery($request)
+            ->whereNotNull('approved_at')
+            ->where(function ($query) use ($month, $year) {
+                $query->where(function ($query) use ($month, $year) {
+                    $query->where('inspection_month', $month)
+                        ->where('inspection_year', $year);
+                })->orWhere(function ($query) use ($month, $year) {
+                    $query->whereYear('tanggal_inspeksi', $year)
+                        ->whereMonth('tanggal_inspeksi', $month);
+                });
+            })
+            ->latest()
+            ->get();
         if ($inspections->isEmpty()) {
-            return back()->with('error', 'Belum ada inspeksi approved untuk diunduh.');
+            return back()->with('error', "Belum ada inspeksi OFA approved untuk {$month}/{$year}.");
         }
 
         $temporaryFile = tempnam(sys_get_temp_dir(), 'ofa-approved-');
@@ -157,11 +189,12 @@ class OfaController extends Controller
             $pdf = Pdf::loadView('pdf.inspeksi_ofa', ['ofa' => $inspection])
                 ->setPaper('A4', 'portrait')
                 ->output();
-            $zip->addFromString("Checklist-OFA-{$inspection->code_number_unit}.pdf", $pdf);
+            $zip->addFromString("Checklist-OFA-{$inspection->code_number_unit}-{$inspection->id}.pdf", $pdf);
         }
         $zip->close();
 
-        return response()->download($zipPath, 'Inspeksi-OFA-Approved.zip')->deleteFileAfterSend(true);
+        return response()->download($zipPath, "Inspeksi-OFA-Approved-{$year}-" . str_pad($month, 2, '0', STR_PAD_LEFT) . '.zip')
+            ->deleteFileAfterSend(true);
     }
 
     private function validatedData(Request $request): array
@@ -172,6 +205,7 @@ class OfaController extends Controller
             'divisi_department' => ['nullable', 'string', 'max:255'],
             'type_unit' => ['required', 'string', 'max:255'],
             'jobsite' => ['required', 'string', 'max:255'],
+            'tanggal_inspeksi' => ['required', 'date'],
             'code_number_unit' => ['required', 'string', 'max:255'],
             'serial_number_modul' => ['nullable', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
@@ -188,23 +222,22 @@ class OfaController extends Controller
             'tim_pelaksana.*.departemen' => ['nullable', 'string', 'max:255'],
             'tim_pelaksana.*.perusahaan' => ['required', 'string', 'max:255'],
         ]);
-        
-        $data['item_pemeriksaan'] = collect($data['item_pemeriksaan'])->values()->all();
-        $inspector = $request->user();
-        $data['diinspeksi_oleh'] = $inspector->nrp;
 
-        $inspectorTeam = [
-            'nama' => $inspector->nama,
-            'nrp' => $inspector->nrp,
-            'jabatan' => 'Hardware Engineer',
-            'departemen' => 'ICT',
-            'perusahaan' => 'PT Star Perkasa Technology',
-        ];
-        $otherTeam = collect($data['tim_pelaksana'])
-            ->reject(fn ($member) => ($member['nrp'] ?? null) === $inspector->nrp)
+        $data['item_pemeriksaan'] = collect($data['item_pemeriksaan'])
             ->values()
             ->all();
-        $data['tim_pelaksana'] = array_merge([$inspectorTeam], $otherTeam);
+
+        $inspectionDate = \Carbon\Carbon::parse($data['tanggal_inspeksi']);
+        $data['inspection_month'] = $inspectionDate->month;
+        $data['inspection_year'] = $inspectionDate->year;
+
+        $inspector = $request->user();
+
+        $data['diinspeksi_oleh'] = $inspector->nrp;
+
+        $data['tim_pelaksana'] = collect($data['tim_pelaksana'])
+            ->values()
+            ->all();
 
         return $data;
     }
@@ -229,5 +262,4 @@ class OfaController extends Controller
             $query->search($cols, $request->search);
         });
     }
-
 }

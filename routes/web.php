@@ -59,9 +59,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/create', 'create')->name('create');
             Route::post('/store/', 'store')->name('store');
-            Route::get('/edit/{no}', 'edit')->name('edit');
-            Route::put('/update/{no}', 'update')->name('update');
-            Route::delete('/destroy/{no}', 'destroy')->name('destroy');
+            Route::get('/edit/{id}', 'edit')->name('edit');
+            Route::put('/update/{id}', 'update')->name('update');
+            Route::delete('/destroy/{id}', 'destroy')->name('destroy');
             Route::get('/export', 'export')->name('export');
         });
     });

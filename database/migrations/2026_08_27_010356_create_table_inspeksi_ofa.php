@@ -26,6 +26,7 @@ return new class extends Migration
             $table->json('tim_pelaksana')->nullable();
             $table->string('diinspeksi_oleh')->nullable();
             $table->string('diperiksa_oleh')->nullable();
+            $table->date('tanggal_inspeksi')->nullable();
             $table->enum('status_pemeriksaan', [
     'belum',
     'sudah',

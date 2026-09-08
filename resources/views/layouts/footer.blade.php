@@ -9,10 +9,10 @@
             cancelButtonText: "Batal",
             confirmButtonColor: "#d62828"
         }).then((result) => {
-            if (result.isConfirmed){
+            if (result.isConfirmed) {
                 document.getElementById(formId).submit();
                 Swal.fire("Data Berhasil Dihapus!", "", "success");
-            } 
+            }
         });
     }
 </script>
@@ -39,6 +39,29 @@
     </script>
 @endif
 
+@if (session('success'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: "Success",
+                text: "{{ session('success') }}",
+                icon: "success"
+            });
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: "Error",
+                text: "{{ session('error') }}",
+                icon: "error"
+            });
+        });
+    </script>
+@endif
 {{-- sidebar wrapper supaya gak collapse --}}
 {{-- <script>
     const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';

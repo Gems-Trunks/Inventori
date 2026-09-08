@@ -211,9 +211,17 @@ class Ss6Controller extends Controller
 
     public function downloadApproved(Request $request)
     {
-        $inspections = $this->filteredQuery($request)->whereNotNull('approved_at')->latest()->get();
+        $period = $request->validate([
+            'month' => ['nullable', 'integer', 'between:1,12'],
+            'year' => ['nullable', 'integer', 'between:2000,2100'],
+        ]);
+        $month = $period['month'] ?? now()->month;
+        $year = $period['year'] ?? now()->year;
+        $inspections = $this->filteredQuery($request)->whereNotNull('approved_at')
+            ->whereYear('tanggal_inspeksi', $year)->whereMonth('tanggal_inspeksi', $month)
+            ->latest()->get();
         if ($inspections->isEmpty()) {
-            return back()->with('error', 'Belum ada inspeksi approved untuk diunduh.');
+            return back()->with('error', "Belum ada inspeksi approved untuk {$month}/{$year}.");
         }
 
         $temporaryFile = tempnam(sys_get_temp_dir(), 'ss6-approved-');
@@ -229,7 +237,7 @@ class Ss6Controller extends Controller
             $pdf = Pdf::loadView('pdf.inspeksi_ss6', ['inspeksi' => $inspection])
                 ->setPaper('A4', 'portrait')
                 ->output();
-            $zip->addFromString("Checklist-SS6-{$inspection->no_asset}.pdf", $pdf);
+            $zip->addFromString("Checklist-SS6-{$inspection->no_asset}-{$inspection->id}.pdf", $pdf);
         }
         $zip->close();
 

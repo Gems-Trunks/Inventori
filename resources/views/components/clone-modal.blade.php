@@ -10,13 +10,13 @@
                 <div class="modal-content"
                     style="border-radius: 15px; border: none; box-shadow: 0 15px 50px rgba(0,0,0,0.3);">
                     <div class="modal-header"
-                        style="background: linear-gradient(135deg, #667fea 0%, #764ba2 100%); color: white; border-radius: 15px 15px 0 0;">
-                        <h5 class="modal-title" id="cloneModalLabel">📋 Clone Data Inspeksi</h5>
+                        style="background:  #b91c1c; color: white; border-radius: 15px 15px 0 0;">
+                        <h5 class="modal-title" id="cloneModalLabel">Clone Data Inspeksi</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
                     <div class="modal-body p-4" style="color: #333;">
-                        <div class="alert alert-info border-0 shadow-sm" style="font-size: 0.9rem;">
+                        <div class="alert alert-danger border-0 shadow-sm" style="font-size: 0.9rem;">
                             <i class="fas fa-info-circle me-2"></i>
                             Sistem akan menyalin <strong>seluruh data</strong> dari bulan sumber ke bulan tujuan.
                             Tanggal setiap data akan diatur secara acak (1-25).
@@ -38,7 +38,7 @@
                         <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal"
                             style="border-radius: 8px; font-weight: 600;">Batal</button>
                         <button type="submit" class="btn px-4"
-                            style="background: #764ba2; color: white; border-radius: 8px; font-weight: 600;">
+                            style="background: #b91c1c; color: white; border-radius: 8px; font-weight: 600;">
                             <i class="fas fa-rocket me-1"></i> Jalankan Cloning
                         </button>
                     </div>

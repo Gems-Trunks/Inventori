@@ -14,11 +14,12 @@
                         onclick="return confirm('Approve semua data yang belum disetujui?')"><i
                             class="bi bi-check2-all"></i> Approve Semua</button></form>
             @endif
-            <a href="{{ route('inspeksi.icc.download-approved', request()->only('search')) }}"
-                class="btn btn-sm btn-outline-danger"><i class="bi bi-file-zip"></i> Unduh PDF Approved</a>
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                data-bs-target="#downloadApprovedModal"><i class="bi bi-file-zip"></i> Unduh PDF Approved</button>
             @if (Auth()->user()->nrp == 250504)
-                <button type="button" class="btn btn-clone btn-modern me-1" data-bs-toggle="modal" data-bs-target="#cloneModal">
-                    <i class="fas fa-copy me-1"></i> Clone Inspeksi
+                {{-- Kerja mass --}}
+                <button type="button" class="btn btn-danger btn-modern me-1" data-bs-toggle="modal" data-bs-target="#cloneModal">
+                    <i class="fas fa-copy me-1"></i> Clone Inspeksi 💀  
                 </button>
             @endif
             <a href="{{ route('inspeksi.icc.create') }}" class="btn btn-sm btn-outline-success"><i
@@ -83,6 +84,7 @@
     @if ($iccs->hasPages())
         <div class="mt-3">{{ $iccs->links() }}</div>
     @endif
+    <x-download-approved-modal route="{{ route('inspeksi.icc.download-approved') }}" :search="request('search')" />
     @if (Auth()->user()->nrp == 250504)
         <x-clone-modal route="{{ route('inspeksi.icc.clone') }}"></x-clone-modal>
     @endif
