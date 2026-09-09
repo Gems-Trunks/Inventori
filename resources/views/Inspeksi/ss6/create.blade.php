@@ -9,7 +9,7 @@
 
     <div class="card-body">
 
-        <form action="{{ route('inspeksi.ss6.store') }}" method="POST">
+        <form action="{{ route('inspeksi.ss6.store') }}" enctype="multipart/form-data" method="POST">
             @csrf
             @include('Inspeksi.ss6._form')
             <hr>
@@ -24,6 +24,7 @@
             </a>
 
         </form>
+        @push('scripts')<script src="{{ asset('asset/js/app.js') }}"></script>@endpush
 
     </div>
 

@@ -14,6 +14,7 @@ class Ss6Model extends Model
     protected $table = 'inspeksi_ss6';
 
     protected $fillable = [
+        'photo_path',
         'no_asset',
         'no_lambung',
         'tanggal_inspeksi',

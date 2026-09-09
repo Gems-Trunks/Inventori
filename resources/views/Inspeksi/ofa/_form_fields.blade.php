@@ -151,6 +151,7 @@
     </div>
 
 </div>
+@include('Inspeksi.partials.photo-upload')
 
 @push('scripts')
     <script>

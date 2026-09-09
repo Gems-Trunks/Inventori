@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form action="{{ route('inspeksi.ups.update', $ups->id) }}" method="POST">
+            <form action="{{ route('inspeksi.ups.update', $ups->id) }}" enctype="multipart/form-data" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -110,6 +110,7 @@
                             @enderror
                         </div>
                     </div>
+                    @include('Inspeksi.partials.photo-upload')
                     <div class="col-12 text-end mt-4">
                         <button type="reset" class="btn btn-light me-2">
                             <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
@@ -123,4 +124,5 @@
             </form>
         </div>
     </div>
+    @push('scripts')<script src="{{ asset('asset/js/app.js') }}"></script>@endpush
 @endsection

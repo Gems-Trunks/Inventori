@@ -9,7 +9,7 @@
 
     <div class="card-body">
 
-        <form action="{{ route('inspeksi.ss6.update', $inspeksi) }}" method="POST">
+        <form action="{{ route('inspeksi.ss6.update', $inspeksi) }}" enctype="multipart/form-data" method="POST">
             @csrf
             @method('PUT')
             @include('Inspeksi.ss6._form')
@@ -25,6 +25,7 @@
             </a>
 
         </form>
+        @push('scripts')<script src="{{ asset('asset/js/app.js') }}"></script>@endpush
 
     </div>
 

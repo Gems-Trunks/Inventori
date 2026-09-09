@@ -13,7 +13,7 @@ class StavoltModel extends Model
     protected $table = 'inspeksi_stavolts';
 
     protected $fillable = [
-        'nomor_aset', 'merek', 'type', 'sn', 'departemen', 'lokasi',
+        'photo_path', 'nomor_aset', 'merek', 'type', 'sn', 'departemen', 'lokasi',
         'tanggal_inspeksi', 'keterangan', 'casing', 'tindakan_casing',
         'kebersihan', 'tindakan_kebersihan', 'kabel_adaptor',
         'tindakan_kabel_adaptor', 'tombol_switch', 'tindakan_tombol_switch',

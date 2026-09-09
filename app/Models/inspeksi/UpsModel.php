@@ -13,6 +13,7 @@ class UpsModel extends Model
     protected $table = 'inspeksi_ups';
 
     protected $fillable = [
+        'photo_path',
         'nomor_aset',
         'merek',
         'type',

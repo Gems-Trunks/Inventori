@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesInspectionPhoto;
 use App\Exports\InspectionExport;
 use App\Models\inspeksi\Ss6Model;
 use App\Services\ApprovalService;
@@ -14,6 +15,7 @@ use ZipArchive;
 
 class Ss6Controller extends Controller
 {
+    use HandlesInspectionPhoto;
     public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi) {}
 
     public function index(Request $req)
@@ -54,6 +56,7 @@ class Ss6Controller extends Controller
 
             'keterangan' => 'nullable|string',
         ];
+        $rules = array_merge($rules, $this->photoValidationRules());
 
         // 2. Definisikan field yang ingin di-loop
         $feilds = [
@@ -91,7 +94,8 @@ class Ss6Controller extends Controller
         $validated['diinspeksi_oleh'] = auth()->user()->nrp;
 
         // 6. Simpan ke database
-        Ss6Model::create($validated);
+        $inspeksi = Ss6Model::create($validated);
+        $this->storeInspectionPhoto($req, $inspeksi);
 
         return redirect()
             ->route('inspeksi.ss6.index')
@@ -119,6 +123,7 @@ class Ss6Controller extends Controller
             'output_powercharge' => 'required|string|max:255',
             'keterangan' => 'nullable|string',
         ];
+        $rules = array_merge($rules, $this->photoValidationRules());
 
         // 2. Definisikan field yang ingin di-loop
         $feilds = [
@@ -159,6 +164,7 @@ class Ss6Controller extends Controller
         }
 
         $inspeksi->update($validated);
+        $this->storeInspectionPhoto($req, $inspeksi);
 
         return redirect()
             ->route('inspeksi.ss6.index')

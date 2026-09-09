@@ -53,6 +53,13 @@
                         <td>{{ $proyektor->approved_by ?: '-' }}</td>
                         <td class="text-center">
                             <div class="btn-group btn-group-sm gap-1">
+                                @if ($proyektor->photo_path)
+                                    <button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
+                                        data-bs-target="#photoPreviewModal" data-photo-url="{{ asset('storage/' . $proyektor->photo_path) }}"
+                                        data-photo-name="{{ $proyektor->nomor_aset ?: 'Proyektor' }}" title="Lihat Foto">
+                                        <i class="bi bi-image"></i>
+                                    </button>
+                                @endif
                                 <a href="{{ route('inspeksi.proyektor.pdf', $proyektor) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
                                 @if ($proyektor->approved_at)
                                 @else
@@ -78,4 +85,5 @@
     @if (Auth()->user()->nrp == 250504)
         <x-clone-modal route="{{ route('inspeksi.proyektor.clone') }}"></x-clone-modal>
     @endif
+    <x-photo-modal />
 @endsection

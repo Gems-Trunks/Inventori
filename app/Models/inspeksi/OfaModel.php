@@ -13,6 +13,7 @@ class OfaModel extends Model
     protected $table = 'inspeksi_ofa';
 
     protected $fillable = [
+        'photo_path',
         'tanggal_inspeksi',
         'inspection_month',
         'inspection_year',

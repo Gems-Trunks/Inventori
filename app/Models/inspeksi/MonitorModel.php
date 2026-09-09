@@ -13,7 +13,7 @@ class MonitorModel extends Model
     protected $table = 'inspeksi_monitor';
 
     protected $fillable = [
-        'nomor_aset', 'merek', 'type', 'sn', 'departemen', 'lokasi',
+        'photo_path', 'nomor_aset', 'merek', 'type', 'sn', 'departemen', 'lokasi',
         'tanggal_inspeksi', 'keterangan', 'tampilan_layer', 'kabel_power',
         'bracket_dudukan', 'kebersihan', 'stop_kontak',
         'tindakan_tampilan_layer', 'tindakan_kabel_power',

@@ -58,6 +58,13 @@
                             <td>{{ $ofa->diperiksa_oleh ?: '-' }}</td>
                             <td class="text-center">
                                 <div class="btn-group btn-group-sm gap-1">
+                                    @if ($ofa->photo_path)
+                                        <button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
+                                            data-bs-target="#photoPreviewModal" data-photo-url="{{ asset('storage/' . $ofa->photo_path) }}"
+                                            data-photo-name="{{ $ofa->code_number_unit ?: 'OFA' }}" title="Lihat Foto">
+                                            <i class="bi bi-image"></i>
+                                        </button>
+                                    @endif
 
                                     <a href="{{ route('inspeksi.ofa.pdf', $ofa) }}" class="btn btn-danger" target="_blank"
                                         title="PDF"><i class="bi bi-file-pdf"></i></a>
@@ -92,4 +99,5 @@
         <x-clone-modal route="{{ route('inspeksi.ofa.clone') }}"></x-clone-modal>
     @endif
     <x-download-approved-modal route="{{ route('inspeksi.ofa.download-approved') }}" :search="request('search')" />
+    <x-photo-modal />
 @endsection

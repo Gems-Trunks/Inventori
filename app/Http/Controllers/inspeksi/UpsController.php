@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesInspectionPhoto;
 use App\Exports\InspectionExport;
 use App\Models\inspeksi\UpsModel;
 use App\Services\ApprovalService;
@@ -14,6 +15,7 @@ use ZipArchive;
 
 class UpsController extends Controller
 {
+    use HandlesInspectionPhoto;
     public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi)
     {
     }
@@ -51,7 +53,8 @@ class UpsController extends Controller
         $data = $this->validateRequest($request);
         $data['inspektor'] = $request->user()->nrp;
 
-        UpsModel::create($data);
+        $ups = UpsModel::create($data);
+        $this->storeInspectionPhoto($request, $ups);
 
         return redirect()->route('inspeksi.ups.index')
             ->with('success', 'Data inspeksi UPS berhasil disimpan.');
@@ -73,6 +76,7 @@ class UpsController extends Controller
         $data['inspektor'] = $ups->inspektor ?: $request->user()->nrp;
 
         $ups->update($data);
+        $this->storeInspectionPhoto($request, $ups);
 
         return redirect()->route('inspeksi.ups.index')
             ->with('success', 'Data inspeksi UPS berhasil diperbarui.');
@@ -164,7 +168,7 @@ class UpsController extends Controller
 
     protected function validateRequest(Request $request): array
     {
-        return $request->validate([
+        return $request->validate(array_merge([
             'nomor_aset' => 'nullable|string|max:255',
             'merek' => 'nullable|string|max:255',
             'type' => 'nullable|string|max:255',
@@ -191,7 +195,7 @@ class UpsController extends Controller
             'tindakan_fuse' => 'nullable|string',
             'inspektor' => 'nullable|string|max:255',
             'diketahui_oleh' => 'nullable|string|max:255',
-        ]);
+        ], $this->photoValidationRules()));
     }
 
     public function clone(Request $request) {

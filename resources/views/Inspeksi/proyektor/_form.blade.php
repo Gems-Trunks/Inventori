@@ -71,6 +71,7 @@
         </tbody>
     </table>
 </div>
+@include('Inspeksi.partials.photo-upload')
 <div class="col-12"><label for="keterangan" class="form-label">Keterangan</label>
     <textarea id="keterangan" name="keterangan" class="form-control" rows="3" placeholder="Keterangan tambahan">{{ old('keterangan', $proyektor->keterangan ?? '') }}</textarea>
 </div>

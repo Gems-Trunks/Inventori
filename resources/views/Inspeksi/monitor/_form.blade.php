@@ -70,3 +70,4 @@
 
 
 </div>
+@include('Inspeksi.partials.photo-upload')

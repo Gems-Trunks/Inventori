@@ -9,14 +9,13 @@ use App\Services\ApprovalService;
 use App\Services\CloneInspeksi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
 
 class StavoltController extends Controller
 {
-    public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi)
-    {
-    }
+    public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi) {}
 
     public function index(Request $request)
     {
@@ -39,9 +38,15 @@ class StavoltController extends Controller
     public function export(Request $request)
     {
         return Excel::download(new InspectionExport($this->filteredQuery($request)->latest()->get(), [
-            'Nomor Aset' => 'nomor_aset', 'Merek' => 'merek', 'Tipe' => 'type', 'SN' => 'sn',
-            'Departemen' => 'departemen', 'Lokasi' => 'lokasi', 'Tanggal Inspeksi' => 'tanggal_inspeksi',
-            'Status' => 'approval_status', 'Disetujui Oleh' => 'approved_by',
+            'Nomor Aset' => 'nomor_aset',
+            'Merek' => 'merek',
+            'Tipe' => 'type',
+            'SN' => 'sn',
+            'Departemen' => 'departemen',
+            'Lokasi' => 'lokasi',
+            'Tanggal Inspeksi' => 'tanggal_inspeksi',
+            'Status' => 'approval_status',
+            'Disetujui Oleh' => 'approved_by',
         ]), 'Inspeksi-Stavolt.xlsx');
     }
 
@@ -49,7 +54,11 @@ class StavoltController extends Controller
     {
         $data = $this->validateRequest($request);
         $data['inspektor'] = $request->user()->nrp;
-        StavoltModel::create($data);
+
+
+        
+        $inspection = StavoltModel::create($data);
+        $this->storePhoto($request, $inspection);
 
         return redirect()->route('inspeksi.stavolt.index')
             ->with('success', 'Data inspeksi Stavolt berhasil disimpan.');
@@ -70,6 +79,8 @@ class StavoltController extends Controller
         $data = $this->validateRequest($request);
         $data['inspektor'] = $stavolt->inspektor ?: $request->user()->nrp;
         $stavolt->update($data);
+
+        $this->storePhoto($request, $stavolt);
 
         return redirect()->route('inspeksi.stavolt.index')
             ->with('success', 'Data inspeksi Stavolt berhasil diperbarui.');
@@ -185,9 +196,27 @@ class StavoltController extends Controller
             'inspektor' => 'nullable|string|max:255',
             'jabatan_inspektor' => 'nullable|string|max:255',
             'diketahui_oleh' => 'nullable|string|max:255',
+            'photos' => 'nullable|array',
+            'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
     }
 
+    private function storePhoto(Request $request, StavoltModel $stavolt): void
+    {
+        if (!$request->hasFile('photos.0')) {
+            return;
+        }
+
+        if ($stavolt->photo_path) {
+            Storage::disk('public')->delete($stavolt->photo_path);
+        }
+
+        $stavolt->update([
+            'photo_path' => $request->file('photos.0')->store("inspections/{$stavolt->id}", 'public'),
+        ]);
+    }
+
+  
     public function clone(Request $request)
     {
         return $this->cloneInspeksi->cloneInpeksi($request, new StavoltModel(), 'inspeksi.stavolt.index');

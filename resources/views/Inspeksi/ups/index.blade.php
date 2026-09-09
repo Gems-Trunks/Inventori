@@ -48,6 +48,7 @@
                         <th>Tanggal Inspeksi</th>
                         <th>Status</th>
                         <th>Disetujui Oleh</th>
+                        <th>Foto Inspeksi</th>
                         <th style="width: 150px" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -70,6 +71,13 @@
                             <td>{{ $item->approved_by ?: '-' }}</td>
                             <td class="text-center">
                                 <div class="btn-group btn-group-sm gap-1" role="group">
+                                    @if ($item->photo_path)
+                                        <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal"
+                                            data-bs-target="#photoPreviewModal" data-photo-url="{{ asset('storage/' . $item->photo_path) }}"
+                                            data-photo-name="{{ $item->nomor_aset ?: 'UPS' }}" title="Lihat Foto">
+                                            <i class="bi bi-image"></i>
+                                        </button>
+                                    @endif
                                     <a href="{{ route('inspeksi.ups.pdf', $item) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
                                     @if(!$item->approved_by)
                                     <a href="{{ route('inspeksi.ups.edit', $item->id) }}"
@@ -107,6 +115,7 @@
             <x-clone-modal route="{{ route('inspeksi.ups.clone') }}"></x-clone-modal>
         @endif
         <x-download-approved-modal route="{{ route('inspeksi.ups.download-approved') }}" :search="request('search')" />
+        <x-photo-modal />
         @if ($ups->hasPages())
             <div class="mt-3">{{ $ups->links() }}</div>
         @endif

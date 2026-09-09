@@ -55,6 +55,13 @@
                             <td>{{ $icc->approved_by ?: '-' }}</td>
                             <td class="text-center">
                                 <div class="btn-group btn-group-sm gap-1">
+                                    @if ($icc->photo_path)
+                                        <button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
+                                            data-bs-target="#photoPreviewModal" data-photo-url="{{ asset('storage/' . $icc->photo_path) }}"
+                                            data-photo-name="{{ $icc->no_lambung_unit ?: 'ICC' }}" title="Lihat Foto">
+                                            <i class="bi bi-image"></i>
+                                        </button>
+                                    @endif
                                     <a href="{{ route('inspeksi.icc.pdf', $icc) }}" class="btn btn-danger" target="_blank"
                                         title="PDF"><i class="bi bi-file-pdf"></i></a>
                                     @if (!$icc->approved_at)
@@ -88,4 +95,5 @@
     @if (Auth()->user()->nrp == 250504)
         <x-clone-modal route="{{ route('inspeksi.icc.clone') }}"></x-clone-modal>
     @endif
+    <x-photo-modal />
 @endsection

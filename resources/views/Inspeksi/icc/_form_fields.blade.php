@@ -85,3 +85,4 @@
         <textarea id="note" name="note" class="form-control" rows="3">{{ old('note', $icc->note ?? '') }}</textarea>
     </div>
 </div>
+@include('Inspeksi.partials.photo-upload')

@@ -64,10 +64,6 @@
                         </div>
                     </div>
                 </form>
-
-                <p class="mb-0 mt-3 text-center">
-                    <a href="register.html" class="text-center">Daftar akun baru</a>
-                </p>
             </div>
         </div>
     </div>

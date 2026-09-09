@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesInspectionPhoto;
 use App\Exports\InspectionExport;
 use App\Models\inspeksi\IccModel;
 use App\Services\ApprovalService;
@@ -14,6 +15,7 @@ use ZipArchive;
 
 class IccController extends Controller
 {
+    use HandlesInspectionPhoto;
     /** Item dan nomor mengikuti PPA-ADRO-F-ICTMD-035. Nomor 12 memang tidak ada pada form sumber. */
     public const CHECKLIST_ITEMS = [
         1 => 'Kamera: Lensa bersih, tidak tergores',
@@ -59,7 +61,8 @@ class IccController extends Controller
 
     public function store(Request $request)
     {
-        IccModel::create($this->validatedData($request));
+        $icc = IccModel::create($this->validatedData($request));
+        $this->storeInspectionPhoto($request, $icc);
 
         return redirect()->route('inspeksi.icc.index')->with('success', 'Data pemeliharaan ICC berhasil disimpan.');
     }
@@ -79,6 +82,7 @@ class IccController extends Controller
         }
 
         $icc->update($this->validatedData($request));
+        $this->storeInspectionPhoto($request, $icc);
 
         return redirect()->route('inspeksi.icc.index')->with('success', 'Data pemeliharaan ICC berhasil diperbarui.');
     }
@@ -144,7 +148,7 @@ class IccController extends Controller
 
     private function validatedData(Request $request): array
     {
-        $data = $request->validate([
+        $data = $request->validate(array_merge([
             'no_lambung_unit' => ['required', 'string', 'max:255'],
             'tanggal_inspeksi' => ['required', 'date'],
             'lokasi_inspeksi' => ['required', 'string', 'max:255'],
@@ -155,7 +159,7 @@ class IccController extends Controller
             'item_pemeriksaan.*.status' => ['required', 'in:iya,tidak'],
             'item_pemeriksaan.*.keterangan' => ['nullable', 'string', 'max:1000'],
             'item_pemeriksaan.*.tindakan' => ['nullable', 'string', 'max:1000'],
-        ]);
+        ], $this->photoValidationRules()));
         $data['item_pemeriksaan'] = collect($data['item_pemeriksaan'])->values()->all();
         $data['inspektor'] = $request->user()->nrp;
 

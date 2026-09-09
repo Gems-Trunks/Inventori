@@ -40,7 +40,7 @@
                         <th>Lokasi</th>
                         <th>Tanggal Inspeksi</th>
                         <th>Status</th>
-                        <th>Disetujui Oleh</th>
+                        <th>Disetujui Oleh</th> 
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -60,6 +60,13 @@
                             <td>{{ $stavolt->approved_by ?: '-' }}</td>
                             <td class="text-center">
                                 <div class="btn-group btn-group-sm gap-1">
+                                    @if ($stavolt->photo_path)
+                                        <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal"
+                                            data-bs-target="#photoPreviewModal" data-photo-url="{{ asset('storage/' . $stavolt->photo_path) }}"
+                                            data-photo-name="{{ $stavolt->nomor_aset ?: 'Stavolt' }}" title="Lihat Foto">
+                                            <i class="bi bi-image"></i>
+                                        </button>
+                                    @endif
                                     <a href="{{ route('inspeksi.stavolt.pdf', $stavolt) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
                                         <a href="{{ route('inspeksi.stavolt.edit', $stavolt) }}" class="btn btn-warning text-white" title="Edit"><i class="bi bi-pencil"></i></a>
                                         @if ($isGroupLeader)
@@ -85,5 +92,6 @@
     @if (Auth()->user()->nrp == 250504)
         <x-clone-modal route="{{ route('inspeksi.stavolt.clone') }}"></x-clone-modal>
     @endif
+    <x-photo-modal />
     </div>
 @endsection

@@ -13,6 +13,7 @@ class IccModel extends Model
     protected $table = 'inspeksi_icc';
 
     protected $fillable = [
+        'photo_path',
         'no_lambung_unit',
         'tanggal_inspeksi',
         'lokasi_inspeksi',

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesInspectionPhoto;
 use App\Exports\InspectionExport;
 use App\Models\inspeksi\OfaModel;
 use App\Services\ApprovalService;
@@ -14,6 +15,7 @@ use ZipArchive;
 
 class OfaController extends Controller
 {
+    use HandlesInspectionPhoto;
     public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi) {}
 
     public const CHECKLIST_SECTIONS = [
@@ -80,7 +82,8 @@ class OfaController extends Controller
     {
         $data = $this->validatedData($request);
 
-        OfaModel::create($data);
+        $ofa = OfaModel::create($data);
+        $this->storeInspectionPhoto($request, $ofa);
 
         return redirect()
             ->route('inspeksi.ofa.index')
@@ -103,6 +106,7 @@ class OfaController extends Controller
         $data = $this->validatedData($request);
 
         $ofa->update($data);
+        $this->storeInspectionPhoto($request, $ofa);
 
 
         return redirect()
@@ -199,7 +203,7 @@ class OfaController extends Controller
 
     private function validatedData(Request $request): array
     {
-        $data = $request->validate([
+        $data = $request->validate(array_merge([
             'project_name' => ['nullable', 'string', 'max:255'],
             'version' => ['nullable', 'string', 'max:100'],
             'divisi_department' => ['nullable', 'string', 'max:255'],
@@ -221,7 +225,7 @@ class OfaController extends Controller
             'tim_pelaksana.*.jabatan' => ['nullable', 'string', 'max:255'],
             'tim_pelaksana.*.departemen' => ['nullable', 'string', 'max:255'],
             'tim_pelaksana.*.perusahaan' => ['required', 'string', 'max:255'],
-        ]);
+        ], $this->photoValidationRules()));
 
         $data['item_pemeriksaan'] = collect($data['item_pemeriksaan'])
             ->values()

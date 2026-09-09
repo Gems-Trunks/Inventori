@@ -13,7 +13,7 @@ class ProyektorModel extends Model
     protected $table = 'inspeksi_proyektors';
 
     protected $fillable = [
-        'nomor_aset', 'departemen', 'merek', 'lokasi', 'type',
+        'photo_path', 'nomor_aset', 'departemen', 'merek', 'lokasi', 'type',
         'tanggal_inspeksi', 'sn', 'kondisi_casing',
         'tindakan_kondisi_casing', 'kebersihan', 'tindakan_kebersihan',
         'kabel_adaptor', 'tindakan_kabel_adaptor', 'lensa_proyektor',

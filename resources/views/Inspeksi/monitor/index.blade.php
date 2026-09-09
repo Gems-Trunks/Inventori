@@ -53,6 +53,13 @@
                         <td>{{ $monitor->approved_by ?: '-' }}</td>
                         <td class="text-center">
                             <div class="btn-group btn-group-sm gap-1">
+                                @if ($monitor->photo_path)
+                                    <button type="button" class="btn btn-info text-white" data-bs-toggle="modal"
+                                        data-bs-target="#photoPreviewModal" data-photo-url="{{ asset('storage/' . $monitor->photo_path) }}"
+                                        data-photo-name="{{ $monitor->nomor_aset ?: 'Monitor/TV' }}" title="Lihat Foto">
+                                        <i class="bi bi-image"></i>
+                                    </button>
+                                @endif
                                 <a href="{{ route('inspeksi.monitor.pdf', $monitor) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
                                 @if ($monitor->approved_at)
                                 @else
@@ -78,4 +85,5 @@
     @if (Auth()->user()->nrp == 250504)
         <x-clone-modal route="{{ route('inspeksi.monitor.clone') }}"></x-clone-modal>
     @endif
+    <x-photo-modal />
 @endsection

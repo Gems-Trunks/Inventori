@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\inspeksi;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\HandlesInspectionPhoto;
 use App\Exports\InspectionExport;
 use App\Models\inspeksi\MonitorModel;
 use App\Services\ApprovalService;
@@ -14,6 +15,7 @@ use ZipArchive;
 
 class MonitorController extends Controller
 {
+    use HandlesInspectionPhoto;
     public function __construct(protected ApprovalService $approvalService, protected CloneInspeksi $cloneInspeksi)
     {
     }
@@ -49,7 +51,8 @@ class MonitorController extends Controller
     {
         $data = $this->validateRequest($request);
         $data['inspektor'] = $request->user()->nrp;
-        MonitorModel::create($data);
+        $monitor = MonitorModel::create($data);
+        $this->storeInspectionPhoto($request, $monitor);
 
         return redirect()->route('inspeksi.monitor.index')->with('success', 'Data inspeksi monitor/TV berhasil disimpan.');
     }
@@ -69,6 +72,7 @@ class MonitorController extends Controller
         $data = $this->validateRequest($request);
         $data['inspektor'] = $monitor->inspektor ?: $request->user()->nrp;
         $monitor->update($data);
+        $this->storeInspectionPhoto($request, $monitor);
 
         return redirect()->route('inspeksi.monitor.index')->with('success', 'Data inspeksi monitor/TV berhasil diperbarui.');
     }
@@ -158,7 +162,7 @@ class MonitorController extends Controller
 
     private function validateRequest(Request $request): array
     {
-        return $request->validate([
+        return $request->validate(array_merge([
             'nomor_aset' => 'nullable|string|max:255', 'merek' => 'nullable|string|max:255',
             'type' => 'nullable|string|max:255', 'sn' => 'nullable|string|max:255',
             'departemen' => 'nullable|string|max:255', 'lokasi' => 'nullable|string|max:255',
@@ -170,7 +174,7 @@ class MonitorController extends Controller
             'tindakan_kebersihan' => 'nullable|string', 'tindakan_stop_kontak' => 'nullable|string',
             'inspektor' => 'nullable|string|max:255', 'jabatan_inspektor' => 'nullable|string|max:255',
             'diketahui_oleh' => 'nullable|string|max:255',
-        ]);
+        ], $this->photoValidationRules()));
     }
 
     public function clone(Request $request)

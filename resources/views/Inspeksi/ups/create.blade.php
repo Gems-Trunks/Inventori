@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form action="{{ route('inspeksi.ups.store') }}" method="POST">
+            <form action="{{ route('inspeksi.ups.store') }}" enctype="multipart/form-data" method="POST">
                 @csrf
 
                 <div class="row g-3">
@@ -147,6 +147,7 @@
                             @enderror
                         </div>
                     </div>
+                    @include('Inspeksi.partials.photo-upload')
                     {{-- Submit Buttons --}}
                     <div class="col-12 text-end mt-4">
                         <button type="reset" class="btn btn-light me-2">
@@ -160,4 +161,5 @@
             </form>
         </div>
     </div>
+    @push('scripts')<script src="{{ asset('asset/js/app.js') }}"></script>@endpush
 @endsection

@@ -80,6 +80,11 @@
                      <td class="text-center">
 
                         <div class="btn-group gap-1">
+                           @if ($item->photo_path)
+                              <button type="button" class="btn btn-info btn-sm text-white" data-bs-toggle="modal"
+                                 data-bs-target="#photoPreviewModal" data-photo-url="{{ asset('storage/' . $item->photo_path) }}"
+                                 data-photo-name="{{ $item->no_asset ?: 'SS6' }}" title="Lihat Foto"><i class="bi bi-image"></i></button>
+                           @endif
                            <a href="{{ route('inspeksi.ss6.pdf', $item) }}" target="_blank" class="btn btn-danger btn-sm"><i class="bi bi-file-pdf"></i> PDF</a>
                            @if ($item->approved_at)
                            @else
@@ -126,5 +131,6 @@
    @if (Auth()->user()->nrp == 250504)
       <x-clone-modal route="{{ route('inspeksi.ss6.clone') }}"></x-clone-modal>
    @endif
+   <x-photo-modal />
 
 @endsection

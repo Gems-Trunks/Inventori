@@ -71,6 +71,7 @@
 
    </div>
 </div>
+@include('Inspeksi.partials.photo-upload')
 
 
 <hr>
