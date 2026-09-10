@@ -13,7 +13,18 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['nrp' => '250504'],
             [
-                'nama' => 'bayu',
+                'nama' => 'Bayu Rezky Ramadan',
+                'jabatan' => 'helper',
+                'password' => Hash::make('250504'),
+                'role' => 'admin',
+            ]
+        );
+
+        User::firstOrCreate(
+            ['nrp' => '26000009'],
+            [
+                'nama' => 'Elprida Panjaitan',
+                'jabatan' => 'admin',
                 'password' => Hash::make('250504'),
                 'role' => 'admin',
             ]
@@ -23,6 +34,7 @@ class UserSeeder extends Seeder
             ['nrp' => '01010101',],
             [
                 'nama' => 'security',
+                'jabatan' => 'security',
                 'password' => Hash::make('01010101'),
                 'role' => 'user'
             ]

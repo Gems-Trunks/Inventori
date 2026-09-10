@@ -7,6 +7,22 @@ use Illuminate\Http\Request;
 
 class CloneInspeksi
 {
+    public function prepareCloneAttributes(array $attributes): array
+    {
+        unset($attributes['id']);
+        unset($attributes['created_at']);
+        unset($attributes['updated_at']);
+
+        // Jangan ikut clone file foto / photo_path dari inspeksi asal.
+        foreach (['photo_path', 'foto_path', 'image_path'] as $field) {
+            if (array_key_exists($field, $attributes)) {
+                unset($attributes[$field]);
+            }
+        }
+
+        return $attributes;
+    }
+
     public function cloneInpeksi(Request $request, Model $data, string $route)
     {
         try {
@@ -42,11 +58,7 @@ class CloneInspeksi
             $count = 0;
 
             foreach ($dataAsal as $item) {
-                $attributes = $item->getAttributes();
-
-                unset($attributes['id']);
-                unset($attributes['created_at']);
-                unset($attributes['updated_at']);
+                $attributes = $this->prepareCloneAttributes($item->getAttributes());
 
                 $randomDay = str_pad(rand(1, 25), 2, '0', STR_PAD_LEFT);
                 $attributes['tanggal_inspeksi'] = "{$targetYear}-{$targetMonth}-{$randomDay}";

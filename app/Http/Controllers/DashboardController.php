@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\BukuTamuModel;
 use App\Models\InventarisModel;
+use App\Models\inspeksi\IccModel;
 use App\Models\inspeksi\MonitorModel;
+use App\Models\inspeksi\OfaModel;
 use App\Models\inspeksi\ProyektorModel;
 use App\Models\inspeksi\StavoltModel;
 use App\Models\inspeksi\UpsModel;
@@ -15,16 +17,29 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
+
+        $isHardwareEngineer = in_array(strtolower(trim((string) $user->jabatan)), [
+            'hardware engineer',
+            'hardware_enggineer',
+            'hardware engg',
+            'hardware_engg',
+        ], true);
+
+        $isIctTechnician = in_array(strtolower(trim((string) $user->jabatan)), [
+            'ict technician',
+            'ict_technician',
+            'ict',
+        ], true);
+
         // Data untuk Admin
         $totalInventaris = null;
         $dipinjam = null;
         $inventarisTerbaru = null;
-        
+
         // Data untuk Admin & Security
         $totalTamuHariIni = null;
         $tamuTerbaru = null;
-        
+
         // Data untuk semua user (Admin, GL, Staff, Non-staff)
         $inspeksi = [
             'stavolt' => StavoltModel::count(),
@@ -33,6 +48,38 @@ class DashboardController extends Controller
             'proyektor' => ProyektorModel::count(),
         ];
         $totalInspeksi = array_sum($inspeksi);
+
+        // OFA dashboard data for Hardware Engineer
+        $totalOfaData = null;
+        $ofaThisMonth = null;
+        $latestOfaInspectors = null;
+
+        if ($isHardwareEngineer) {
+            $totalOfaData = OfaModel::count();
+            $ofaThisMonth = OfaModel::whereMonth('tanggal_inspeksi', now()->month)
+                ->whereYear('tanggal_inspeksi', now()->year)
+                ->count();
+            $latestOfaInspectors = OfaModel::query()
+                ->latest('tanggal_inspeksi')
+                ->take(5)
+                ->get();
+        }
+
+        // ICC dashboard data for ICT Technician
+        $totalIccData = null;
+        $iccThisMonth = null;
+        $latestIccInspectors = null;
+
+        if ($isIctTechnician) {
+            $totalIccData = IccModel::count();
+            $iccThisMonth = IccModel::whereMonth('tanggal_inspeksi', now()->month)
+                ->whereYear('tanggal_inspeksi', now()->year)
+                ->count();
+            $latestIccInspectors = IccModel::query()
+                ->latest('tanggal_inspeksi')
+                ->take(5)
+                ->get();
+        }
 
         // Admin dapat melihat semua data
         if ($user->role === 'admin') {
@@ -51,7 +98,9 @@ class DashboardController extends Controller
 
         return view('dashboard', compact(
             'totalInventaris', 'dipinjam', 'totalTamuHariIni',
-            'inspeksi', 'totalInspeksi', 'inventarisTerbaru', 'tamuTerbaru', 'user'
+            'inspeksi', 'totalInspeksi', 'inventarisTerbaru', 'tamuTerbaru', 'user',
+            'isHardwareEngineer', 'isIctTechnician', 'totalOfaData', 'ofaThisMonth', 'latestOfaInspectors',
+            'totalIccData', 'iccThisMonth', 'latestIccInspectors'
         ));
     }
 }

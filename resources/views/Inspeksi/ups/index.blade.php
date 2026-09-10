@@ -7,14 +7,16 @@
             <x-counter-badge title="Total Data Inspeksi UPS" bgColor="bg-info-subtle" :counter="$ups->total()" />
             <div class="d-flex flex-wrap gap-2">
                 <x-data-search :action="route('inspeksi.ups.index')" placeholder="Cari data UPS" />
-                <a href="{{ route('inspeksi.ups.export', request()->only('search')) }}" class="btn btn-sm btn-outline-success">
+                <a href="{{ route('inspeksi.ups.export', request()->only('search')) }}"
+                    class="btn btn-sm btn-outline-success">
                     <i class="bi bi-file-excel"></i> Export Excel
                 </a>
                 @if ($isGroupLeader)
                     <form action="{{ route('inspeksi.ups.approve-all') }}" method="POST">
                         @csrf
                         <input type="hidden" name="search" value="{{ request('search') }}">
-                        <button class="btn btn-sm btn-success" onclick="return confirm('Approve semua inspeksi yang belum disetujui?')">
+                        <button class="btn btn-sm btn-success"
+                            onclick="return confirm('Approve semua inspeksi yang belum disetujui?')">
                             <i class="bi bi-check2-all"></i> Approve Semua
                         </button>
                     </form>
@@ -24,7 +26,8 @@
                     <i class="bi bi-file-zip"></i> Unduh PDF Approved
                 </button>
                 @if (Auth()->user()->nrp == 250504)
-                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#cloneModal">
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                        data-bs-target="#cloneModal">
                         <i class="fas fa-copy"></i> Clone Inspeksi 💀
                     </button>
                 @endif
@@ -48,7 +51,6 @@
                         <th>Tanggal Inspeksi</th>
                         <th>Status</th>
                         <th>Disetujui Oleh</th>
-                        <th>Foto Inspeksi</th>
                         <th style="width: 150px" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -73,22 +75,25 @@
                                 <div class="btn-group btn-group-sm gap-1" role="group">
                                     @if ($item->photo_path)
                                         <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal"
-                                            data-bs-target="#photoPreviewModal" data-photo-url="{{ asset('storage/' . $item->photo_path) }}"
+                                            data-bs-target="#photoPreviewModal"
+                                            data-photo-url="{{ asset('storage/' . $item->photo_path) }}"
                                             data-photo-name="{{ $item->nomor_aset ?: 'UPS' }}" title="Lihat Foto">
                                             <i class="bi bi-image"></i>
                                         </button>
                                     @endif
-                                    <a href="{{ route('inspeksi.ups.pdf', $item) }}" class="btn btn-danger" target="_blank" title="PDF"><i class="bi bi-file-pdf"></i></a>
-                                    @if(!$item->approved_by)
-                                    <a href="{{ route('inspeksi.ups.edit', $item->id) }}"
-                                        class="btn btn-warning text-white" title="Edit"><i class="bi bi-pencil"></i></a>
-                                        
+                                    <a href="{{ route('inspeksi.ups.pdf', $item) }}" class="btn btn-danger" target="_blank"
+                                        title="PDF"><i class="bi bi-file-pdf"></i></a>
+                                    @if ($item->approved_at)
                                     @else
-                                    @if ($isGroupLeader)
-                                        <form action="{{ route('inspeksi.ups.approve', $item) }}" method="POST">
-                                            @csrf<button class="btn btn-success"
-                                                onclick="return confirm('Approve inspeksi ini?')" title="Approve"><i
-                                                    class="bi bi-check-lg"></i></button></form>
+                                        <a href="{{ route('inspeksi.ups.edit', $item->id) }}"
+                                            class="btn btn-warning text-white" title="Edit"><i
+                                                class="bi bi-pencil"></i></a>
+                                        @if ($isGroupLeader)
+                                            <form action="{{ route('inspeksi.ups.approve', $item) }}" method="POST">
+                                                @csrf<button class="btn btn-success"
+                                                    onclick="return confirm('Approve inspeksi ini?')" title="Approve"><i
+                                                        class="bi bi-check-lg"></i></button></form>
+                                        @endif
                                     @endif
                                     <form action="{{ route('inspeksi.ups.destroy', $item->id) }}"
                                         id="form-delete-{{ $item->id }}" method="POST" class="d-inline">@csrf
@@ -96,7 +101,6 @@
                                             onclick="deleteConfirm('form-delete-{{ $item->id }}')"
                                             class="btn btn-danger" title="Hapus"><i class="bi bi-trash"></i></button>
                                     </form>
-                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -111,7 +115,7 @@
             </table>
         </div>
 
-        @if(Auth()->user()->nrp == 250504)
+        @if (Auth()->user()->nrp == 250504)
             <x-clone-modal route="{{ route('inspeksi.ups.clone') }}"></x-clone-modal>
         @endif
         <x-download-approved-modal route="{{ route('inspeksi.ups.download-approved') }}" :search="request('search')" />

@@ -2,6 +2,10 @@
 @section('judul', 'Dashboard')
 @section('subjudul', 'Ringkasan Operasional')
 @section('konten')
+@php
+    $isHardwareEngineer = $isHardwareEngineer ?? false;
+    $isIctTechnician = $isIctTechnician ?? false;
+@endphp
     <style>
         .dashboard-hero {
             background: linear-gradient(125deg, #8f1515, #d62828);
@@ -55,10 +59,14 @@
                 <p class="text-white-50 mb-1">{{ now()->translatedFormat('l, d F Y') }}</p>
                 <h2 class="fw-bold mb-2">Selamat datang, {{ Auth::user()->nama }}!</h2>
                 <p class="mb-0 text-white-50">
-                    @if(Auth::user()->role === 'admin')
+                    @if($isHardwareEngineer)
+                        Pantau inspeksi OFA, lihat jumlah inspeksi pada bulan ini, dan cek siapa yang terakhir melakukan inspeksi.
+                    @elseif($isIctTechnician)
+                        Pantau inspeksi ICC, lihat jumlah inspeksi pada bulan ini, dan cek siapa yang terakhir melakukan inspeksi.
+                    @elseif(Auth::user()->role === 'admin')
                         Pantau peminjaman perangkat, kunjungan tamu, dan inspeksi dalam satu tempat.
                     @elseif(Auth::user()->jabatan === 'security')
-                        Pantau kunjungan tamu dan inspeksi dalam satu tempat.
+                        Pantau kunjungan tamu dalam satu tempat.
                     @else
                         Pantau dan catat inspeksi perangkat dalam satu tempat.
                     @endif
@@ -71,6 +79,164 @@
 
         </div>
     </div>
+
+    @if($isHardwareEngineer)
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4">
+                <div class="card dashboard-stat">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <small class="text-body-secondary">Total Data Inspeksi</small>
+                                <div class="fs-3 fw-bold text-danger">{{ $totalOfaData }}</div>
+                            </div>
+                            <span class="stat-icon bg-danger-subtle text-danger"><i class="bi bi-clipboard-check"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card dashboard-stat">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <small class="text-body-secondary">Inspeksi Bulan Ini</small>
+                                <div class="fs-3 fw-bold text-danger">{{ $ofaThisMonth }}</div>
+                            </div>
+                            <span class="stat-icon bg-success-subtle text-success"><i class="bi bi-calendar-event"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card dashboard-stat">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <small class="text-body-secondary">Akses Cepat</small>
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    <a href="{{ route('inspeksi.ofa.create') }}" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-clipboard-plus me-1"></i>Isi Inspeksi
+                                    </a>
+                                    <a href="{{ route('inspeksi.ofa.index') }}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-list-ul me-1"></i>Buka Index
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-12">
+                <div class="card dashboard-stat">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <h5 class="mb-1">Inspeksi terbaru</h5>
+                                <small class="text-body-secondary">Siapa yang melakukan inspeksi terakhir</small>
+                            </div>
+                        </div>
+                        @forelse($latestOfaInspectors as $latest)
+                            @php
+                                $names = collect($latest->tim_pelaksana ?? [])->pluck('nama')->filter()->implode(', ');
+                                $names = $names ?: ($latest->diinspeksi_oleh ?: 'Petugas belum diisi');
+                            @endphp
+                            <div class="d-flex align-items-center gap-2 py-2 border-top">
+                                <span class="dashboard-list-icon bg-warning-subtle text-warning"><i class="bi bi-person-check"></i></span>
+                                <div class="text-truncate">
+                                    <div class="fw-semibold text-truncate">{{ $names }}</div>
+                                    <small class="text-body-secondary">
+                                        {{ $latest->code_number_unit ?: '-' }} • {{ $latest->tanggal_inspeksi?->translatedFormat('d F Y') ?? '-' }}
+                                    </small>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center text-body-secondary py-4"><i class="bi bi-person-x fs-3 d-block mb-2"></i>Belum ada inspeksi OFA.</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
+    @elseif($isIctTechnician)
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4">
+                <div class="card dashboard-stat">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <small class="text-body-secondary">Total Data Inspeksi</small>
+                                <div class="fs-3 fw-bold text-danger">{{ $totalIccData }}</div>
+                            </div>
+                            <span class="stat-icon bg-danger-subtle text-danger"><i class="bi bi-clipboard-check"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card dashboard-stat">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <small class="text-body-secondary">Inspeksi Bulan Ini</small>
+                                <div class="fs-3 fw-bold text-danger">{{ $iccThisMonth }}</div>
+                            </div>
+                            <span class="stat-icon bg-success-subtle text-success"><i class="bi bi-calendar-event"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card dashboard-stat">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <small class="text-body-secondary">Akses Cepat</small>
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    <a href="{{ route('inspeksi.icc.create') }}" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-clipboard-plus me-1"></i>Isi Inspeksi
+                                    </a>
+                                    <a href="{{ route('inspeksi.icc.index') }}" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-list-ul me-1"></i>Buka Index
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-lg-12">
+                <div class="card dashboard-stat">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <div>
+                                <h5 class="mb-1">Inspeksi terbaru</h5>
+                                <small class="text-body-secondary">Siapa yang melakukan inspeksi terakhir</small>
+                            </div>
+                        </div>
+                        @forelse($latestIccInspectors as $latest)
+                            <div class="d-flex align-items-center gap-2 py-2 border-top">
+                                <span class="dashboard-list-icon bg-warning-subtle text-warning"><i class="bi bi-person-check"></i></span>
+                                <div class="text-truncate">
+                                    <div class="fw-semibold text-truncate">{{ $latest->inspektor ?: ($latest->diperiksa_oleh ?: 'Petugas belum diisi') }}</div>
+                                    <small class="text-body-secondary">
+                                        {{ $latest->no_lambung_unit ?: '-' }} • {{ $latest->tanggal_inspeksi?->translatedFormat('d F Y') ?? '-' }}
+                                    </small>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center text-body-secondary py-4"><i class="bi bi-person-x fs-3 d-block mb-2"></i>Belum ada inspeksi ICC.</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
 
 
@@ -112,7 +278,7 @@
                 </div>
             </div>
         @endcan
-        @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->can('isGL') || Auth::user()->can('isIct'))
+        @if(Auth::user()->role === 'admin' || Auth::user()->can('isGL') || Auth::user()->can('isIct'))
             <div class="col-sm-6 col-xl-3">
                 <div class="card dashboard-stat">
                     <div class="card-body d-flex align-items-center gap-3"><span
@@ -216,7 +382,7 @@
 
     <div class="row g-4">
         <div class="col-lg-7">
-            @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->can('isGL') || Auth::user()->can('isIct'))
+            @if(Auth::user()->role === 'admin' || Auth::user()->can('isGL') || Auth::user()->can('isIct'))
                 <div class="card dashboard-stat">
                     <div class="card-body p-4">
                         <h5 class="mb-1">Ringkasan inspeksi</h5>
@@ -257,7 +423,10 @@
                                         class="bi bi-person-plus d-block fs-5 mb-1"></i><small class="fw-semibold">Tambah
                                         tamu</small></a></div>
                         @endcan
-                        @if(Auth::user()->role === 'admin' || Auth::user()->jabatan === 'security' || Auth::user()->can('isGL') || Auth::user()->can('isIct'))
+                        @if(Auth::user()->jabatan === 'security')
+                            <div class="col-6"><a class="quick-link d-block p-3" href="{{ route('tamu.index') }}"><i
+                                        class="bi bi-book d-block fs-5 mb-1"></i><small class="fw-semibold">Buku Tamu</small></a></div>
+                        @elseif(Auth::user()->role === 'admin' || Auth::user()->can('isGL') || Auth::user()->can('isIct'))
                             <div class="col-6"><a class="quick-link d-block p-3"
                                     href="{{ route('inspeksi.ups.create') }}"><i
                                         class="bi bi-clipboard-plus d-block fs-5 mb-1"></i><small class="fw-semibold">Inspeksi

@@ -1,79 +1,177 @@
 // Ganti status
 
-
 // Upload photo
-const input = document.getElementById('photoInput');
-const previewBox = document.getElementById('previewBox');
-let selectedFiles = [];
+function setupPhotoPreviewBindings() {
+    const panels = Array.from(document.querySelectorAll('.photo-upload-panel'));
 
-if (input && previewBox) {
-    input.addEventListener('change', (e) => {
-        selectedFiles = Array.from(e.target.files).slice(0, 1);
-        renderPreview();
-        syncFilesToInput();
-    });
-}
+    panels.forEach((panel) => {
+        const previewBox = panel.querySelector('#previewBox');
+        const inputs = Array.from(panel.querySelectorAll('input[type="file"][name="photos[]"]'));
 
-function renderPreview() {
-    previewBox.innerHTML = '';
+        if (!previewBox || inputs.length === 0) {
+            return;
+        }
 
-    if (selectedFiles.length === 0) {
-        previewBox.className = 'photo-preview-empty';
-        previewBox.innerHTML = '<i class="bi bi-image text-body-secondary"></i><span>Belum ada foto dipilih</span>';
-        return;
-    }
+        const state = new Map();
+        inputs.forEach((input) => state.set(input, []));
 
-    previewBox.className = '';
-    selectedFiles.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'photo-preview-card';
+        const renderPreview = (input, files) => {
+            previewBox.innerHTML = '';
 
-            const image = document.createElement('img');
-            image.className = 'photo-preview-image';
-            image.src = event.target.result;
-            image.alt = `Preview ${file.name}`;
+            if (files.length === 0) {
+                previewBox.className = 'photo-preview-empty';
+                previewBox.innerHTML = '<i class="bi bi-image text-body-secondary"></i><span>Belum ada foto dipilih</span>';
+                return;
+            }
 
-            const details = document.createElement('div');
-            details.className = 'photo-preview-details';
+            previewBox.className = '';
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'photo-preview-card';
 
-            const fileName = document.createElement('div');
-            fileName.className = 'photo-preview-name';
-            fileName.textContent = file.name;
+                    const image = document.createElement('img');
+                    image.className = 'photo-preview-image';
+                    image.src = event.target.result;
+                    image.alt = `Preview ${file.name}`;
 
-            const uploadStatus = document.createElement('span');
-            uploadStatus.className = 'badge text-bg-success';
-            uploadStatus.textContent = 'Siap diunggah';
-            details.append(fileName, uploadStatus);
+                    const details = document.createElement('div');
+                    details.className = 'photo-preview-details';
 
-            const removeButton = document.createElement('button');
-            removeButton.type = 'button';
-            removeButton.className = 'photo-remove-button';
-            removeButton.title = 'Hapus foto';
-            removeButton.setAttribute('aria-label', 'Hapus foto');
-            removeButton.innerHTML = '<i class="bi bi-trash3"></i>';
-            removeButton.addEventListener('click', () => removePhoto(index));
+                    const fileName = document.createElement('div');
+                    fileName.className = 'photo-preview-name';
+                    fileName.textContent = file.name;
 
-            wrapper.append(image, details, removeButton);
-            previewBox.appendChild(wrapper);
+                    const uploadStatus = document.createElement('span');
+                    uploadStatus.className = 'badge text-bg-success';
+                    uploadStatus.textContent = 'Siap diunggah';
+                    details.append(fileName, uploadStatus);
+
+                    const removeButton = document.createElement('button');
+                    removeButton.type = 'button';
+                    removeButton.className = 'photo-remove-button';
+                    removeButton.title = 'Hapus foto';
+                    removeButton.setAttribute('aria-label', 'Hapus foto');
+                    removeButton.innerHTML = '<i class="bi bi-trash3"></i>';
+                    removeButton.addEventListener('click', () => removePhoto(input, index));
+
+                    wrapper.append(image, details, removeButton);
+                    previewBox.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
+            });
         };
-        reader.readAsDataURL(file);
+
+        const removePhoto = (input, index) => {
+            const files = state.get(input) || [];
+            files.splice(index, 1);
+            state.set(input, files);
+            renderPreview(input, files);
+            syncFilesToInput(input, files);
+        };
+
+        const syncFilesToInput = (input, files) => {
+            const dataTransfer = new DataTransfer();
+            files.forEach((file) => dataTransfer.items.add(file));
+            input.files = dataTransfer.files;
+        };
+
+        inputs.forEach((input) => {
+            input.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files || []).slice(0, 1);
+                state.set(input, files);
+                renderPreview(input, files);
+                syncFilesToInput(input, files);
+            });
+        });
     });
 }
 
-function removePhoto(index) {
-    selectedFiles.splice(index, 1);
-    renderPreview();
-    syncFilesToInput();
-}
+setupPhotoPreviewBindings();
 
-function syncFilesToInput() {
-    if (!input) {
-        return;
-    }
+const unitSearchInput = document.querySelector('[data-unit-select2]');
+const unitSearchDropdown = document.getElementById('unitSearchDropdown');
+const unitSearchResults = document.getElementById('unitSearchResults');
+const typeUnitField = document.getElementById('type_unit');
+const serialNumberModulField = document.getElementById('serial_number_modul');
 
-    const dataTransfer = new DataTransfer();
-    selectedFiles.forEach(file => dataTransfer.items.add(file));
-    input.files = dataTransfer.files;
+if (unitSearchInput && unitSearchDropdown && unitSearchResults) {
+    let timer = null;
+
+    const renderEmpty = () => {
+        unitSearchResults.innerHTML = '<div class="list-group-item text-muted small">Tidak ada data unit</div>';
+    };
+
+    const runSearch = (keyword = '') => {
+        const q = encodeURIComponent(keyword.trim());
+
+        fetch(`/api/units/select2?q=${q}`, {
+            headers: {
+                Accept: 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((payload) => {
+                const results = payload.results ?? [];
+
+                unitSearchResults.innerHTML = '';
+
+                if (!results.length) {
+                    renderEmpty();
+                    return;
+                }
+
+                results.forEach((unit) => {
+                    const item = document.createElement('button');
+                    item.type = 'button';
+                    item.className = 'list-group-item list-group-item-action';
+                    item.innerHTML = `<span class="fw-semibold">${unit.code_unit ?? unit.text}</span><span class="d-block small text-muted">${unit.text}</span>`;
+                    item.addEventListener('click', () => {
+                        if (unitSearchInput) {
+                            unitSearchInput.value = unit.code_unit ?? unit.code_unit ?? '';
+                        }
+
+                        if (typeUnitField) {
+                            typeUnitField.value = unit.type_unit ?? unit.model ?? '';
+                        }
+
+                        if (serialNumberModulField) {
+                            serialNumberModulField.value = unit.serial_number ?? '';
+                        }
+
+                        unitSearchDropdown.style.display = 'none';
+                    });
+
+                    unitSearchResults.appendChild(item);
+                });
+            })
+            .catch(() => {
+                renderEmpty();
+            });
+    };
+
+    unitSearchInput.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => runSearch(unitSearchInput.value), 250);
+
+        if (unitSearchInput.value.trim().length > 0) {
+            unitSearchDropdown.style.display = 'block';
+        } else {
+            unitSearchDropdown.style.display = 'none';
+        }
+    });
+
+    unitSearchInput.addEventListener('focus', () => {
+        if (unitSearchInput.value.trim().length > 0) {
+            runSearch(unitSearchInput.value);
+            unitSearchDropdown.style.display = 'block';
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!unitSearchDropdown.contains(event.target) && event.target !== unitSearchInput) {
+            unitSearchDropdown.style.display = 'none';
+        }
+    });
 }

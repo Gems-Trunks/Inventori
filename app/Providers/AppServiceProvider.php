@@ -51,6 +51,8 @@ class AppServiceProvider extends ServiceProvider
                 'ict',
                 'hardware_enggineer',
                 'hardware engineer',
+                'hardware engg',
+                'hardware_engg',
                 'ict_technician',
                 'ict technician',
                 'non_staff',

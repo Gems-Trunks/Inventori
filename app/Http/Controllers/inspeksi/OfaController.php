@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Concerns\HandlesInspectionPhoto;
 use App\Exports\InspectionExport;
 use App\Models\inspeksi\OfaModel;
+use App\Models\UnitsModel;
 use App\Services\ApprovalService;
 use App\Services\CloneInspeksi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
+use Illuminate\Http\JsonResponse;
 
 class OfaController extends Controller
 {
@@ -76,6 +78,46 @@ class OfaController extends Controller
             'Status' => 'approval_status',
             'Disetujui Oleh' => 'approved_by',
         ]), 'Inspeksi-OFA.xlsx');
+    }
+
+    public function select2(Request $request): JsonResponse
+    {
+        $search = $request->input('q', '');
+        $perPage = 20; // jumlah item per "page" scroll select2
+
+        $query = UnitsModel::query();
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('code_unit', 'like', "%{$search}%")
+                    ->orWhere('model', 'like', "%{$search}%")
+                    ->orWhere('serial_number', 'like', "%{$search}%");
+            });
+        }
+
+        $units = $query->orderBy('code_unit')->paginate($perPage);
+
+        // format hasil sesuai kebutuhan select2 (id, text)
+        $results = $units->getCollection()->map(function ($unit) {
+            return [
+                'id'   => $unit->id,
+                // text ini yang akan tampil di dropdown select2
+                'text' => "{$unit->code_unit} - {$unit->model} ({$unit->serial_number})",
+                // data tambahan kalau mau dipakai di JS setelah dipilih
+                'code_unit'     => $unit->code_unit,
+                'model'         => $unit->model,
+                'serial_number' => $unit->serial_number,
+                'type_unit'     => $unit->type_unit ?? $unit->model,
+            ];
+        });
+
+        return response()->json([
+            'results'    => $results,
+            'pagination' => [
+                // true = select2 akan load "page" berikutnya saat di-scroll
+                'more' => $units->currentPage() < $units->lastPage(),
+            ],
+        ]);
     }
 
     public function store(Request $request)

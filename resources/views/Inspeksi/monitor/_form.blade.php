@@ -69,5 +69,5 @@
 
 
 
+    @include('Inspeksi.partials.photo-upload')
 </div>
-@include('Inspeksi.partials.photo-upload')

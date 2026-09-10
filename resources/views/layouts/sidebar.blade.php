@@ -1,3 +1,9 @@
+@php
+    $userJabatan = strtolower(trim((string) (Auth::user()->jabatan ?? '')));
+    $isIctTechnician = in_array($userJabatan, ['ict', 'ict technician', 'ict_technician'], true);
+    $isHardwareEngineer = in_array($userJabatan, ['hardware engineer', 'hardware_enggineer', 'hardware engg', 'hardware_engg'], true);
+@endphp
+
 <aside class="app-sidebar shadow" data-bs-theme="dark">
     <div>
         <div class="sidebar-brand">
@@ -53,56 +59,74 @@
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('inspeksi.stavolt.index') }}"
-                                        class="nav-link {{ request()->routeIs('inspeksi.stavolt.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Inspeksi Stavolt</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('inspeksi.ups.index') }}"
-                                        class="nav-link {{ request()->routeIs('inspeksi.ups.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Inspeksi UPS</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('inspeksi.monitor.index') }}"
-                                        class="nav-link {{ request()->routeIs('inspeksi.monitor.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Inspeksi Monitor/Tv</p>
-                                    </a>
-                                </li>
+                                @if($isIctTechnician)
+                                    <li class="nav-item">
+                                        <a href="{{ route('inspeksi.icc.index') }}"
+                                            class="nav-link {{ request()->routeIs('inspeksi.icc.*') ? 'active' : '' }}">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Inspeksi ICC</p>
+                                        </a>
+                                    </li>
+                                @elseif($isHardwareEngineer)
+                                    <li class="nav-item">
+                                        <a href="{{ route('inspeksi.ofa.index') }}"
+                                            class="nav-link {{ request()->routeIs('inspeksi.ofa.*') ? 'active' : '' }}">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Inspeksi OFA</p>
+                                        </a>
+                                    </li>
+                                @else
+                                    <li class="nav-item">
+                                        <a href="{{ route('inspeksi.stavolt.index') }}"
+                                            class="nav-link {{ request()->routeIs('inspeksi.stavolt.*') ? 'active' : '' }}">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Inspeksi Stavolt</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('inspeksi.ups.index') }}"
+                                            class="nav-link {{ request()->routeIs('inspeksi.ups.*') ? 'active' : '' }}">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Inspeksi UPS</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('inspeksi.monitor.index') }}"
+                                            class="nav-link {{ request()->routeIs('inspeksi.monitor.*') ? 'active' : '' }}">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Inspeksi Monitor/Tv</p>
+                                        </a>
+                                    </li>
 
-                                <li class="nav-item">
-                                    <a href="{{ route('inspeksi.proyektor.index') }}"
-                                        class="nav-link {{ request()->routeIs('inspeksi.proyektor.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Inspeksi Proyektor</p>
-                                    </a>
-                                </li>
-                                <li class="nav-items">
-                                    <a href="{{ route('inspeksi.ss6.index') }}"
-                                        class="nav-link {{ request()->routeIs('inspeksi.ss6.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Inspeksi SS6</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('inspeksi.ofa.index') }}"
-                                        class="nav-link {{ request()->routeIs('inspeksi.ofa.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Inspeksi OFA</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('inspeksi.icc.index') }}"
-                                        class="nav-link {{ request()->routeIs('inspeksi.icc.*') ? 'active' : '' }}">
-                                        <i class="nav-icon bi bi-circle"></i>
-                                        <p>Inspeksi ICC</p>
-                                    </a>
-                                </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('inspeksi.proyektor.index') }}"
+                                            class="nav-link {{ request()->routeIs('inspeksi.proyektor.*') ? 'active' : '' }}">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Inspeksi Proyektor</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-items">
+                                        <a href="{{ route('inspeksi.ss6.index') }}"
+                                            class="nav-link {{ request()->routeIs('inspeksi.ss6.*') ? 'active' : '' }}">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Inspeksi SS6</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('inspeksi.ofa.index') }}"
+                                            class="nav-link {{ request()->routeIs('inspeksi.ofa.*') ? 'active' : '' }}">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Inspeksi OFA</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('inspeksi.icc.index') }}"
+                                            class="nav-link {{ request()->routeIs('inspeksi.icc.*') ? 'active' : '' }}">
+                                            <i class="nav-icon bi bi-circle"></i>
+                                            <p>Inspeksi ICC</p>
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     @endif

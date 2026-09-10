@@ -84,5 +84,5 @@
     <div class="col-12"><label for="note" class="form-label">Catatan Tambahan</label>
         <textarea id="note" name="note" class="form-control" rows="3">{{ old('note', $icc->note ?? '') }}</textarea>
     </div>
+    @include('Inspeksi.partials.photo-upload')
 </div>
-@include('Inspeksi.partials.photo-upload')
