@@ -5,10 +5,12 @@ namespace App\Http\Controllers\inspeksi;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Concerns\HandlesInspectionPhoto;
 use App\Exports\InspectionExport;
+use App\Models\IccUnitModels;
 use App\Models\inspeksi\IccModel;
 use App\Services\ApprovalService;
 use App\Services\CloneInspeksi;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use ZipArchive;
@@ -172,6 +174,43 @@ class IccController extends Controller
             $cols = ['no_lambung_unit', 'lokasi_inspeksi', 'inspektor'];
             $query->search($cols, $request->search);
         });
+    }
+
+    public function select2(Request $request): JsonResponse
+    {
+        $search = trim((string) $request->input('q', $request->input('search', '')));
+        $perPage = 20;
+
+        $query = IccUnitModels::query();
+
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('device_name', 'like', "%{$search}%")
+                    ->orWhere('fleet', 'like', "%{$search}%")
+                    ->orWhere('sim', 'like', "%{$search}%")
+                    ->orWhere('imei', 'like', "%{$search}%");
+            });
+        }
+
+        $units = $query->orderBy('device_name')->paginate($perPage);
+
+        $results = $units->getCollection()->map(function ($unit) {
+            return [
+                'id' => $unit->id,
+                'text' => "{$unit->device_name} - {$unit->imei} - {$unit->fleet} - {$unit->sim}",
+                'code_unit' => $unit->device_name,
+                'fleet' => $unit->fleet,
+                'sim' => $unit->sim,
+                'imei' => $unit->imei,
+            ];
+        });
+
+        return response()->json([
+            'results' => $results,
+            'pagination' => [
+                'more' => $units->currentPage() < $units->lastPage(),
+            ],
+        ]);
     }
 
     public function clone(Request $request)
